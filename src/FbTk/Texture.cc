@@ -1,4 +1,4 @@
-// Texture.hh for Fluxbox Window Manager 
+// Texture.hh for Fluxbox Window Manager
 // Copyright (c) 2002 - 2006 Henrik Kinnunen (fluxgen at fluxbox dot org)
 //
 // from Image.cc for Blackbox - an X11 Window manager
@@ -27,9 +27,9 @@
 #include "StringUtil.hh"
 #include <X11/Xlib.h>
 #ifdef HAVE_CSTRING
-  #include <cstring>
+#include <cstring>
 #else
-  #include <string.h>
+#include <string.h>
 #endif
 
 #include "ColorLUT.hh"
@@ -37,103 +37,102 @@
 namespace {
 
 unsigned short inline brighten(unsigned short c) {
-    return 0x101 * FbTk::ColorLUT::BRIGHTER_8[c];
+  return 0x101 * FbTk::ColorLUT::BRIGHTER_8[c];
 }
 
 unsigned short inline darken(unsigned short c) {
-    return 0x101 * FbTk::ColorLUT::PRE_MULTIPLY_0_75[c];
+  return 0x101 * FbTk::ColorLUT::PRE_MULTIPLY_0_75[c];
 }
-
 }
 
 namespace FbTk {
 
-void Texture::setFromString(const char * const texture_str) {
-    if (texture_str == 0)
-        return;
+void Texture::setFromString(const char *const texture_str) {
+  if (texture_str == 0)
+    return;
 
-    const std::string t = FbTk::StringUtil::toLower(texture_str);
-    const char* ts = t.c_str();
+  const std::string t = FbTk::StringUtil::toLower(texture_str);
+  const char *ts = t.c_str();
 
-    if (strstr(ts, "parentrelative")) {
-        setType(Texture::PARENTRELATIVE);
-    } else {
-        setType(Texture::NONE);
+  if (strstr(ts, "parentrelative")) {
+    setType(Texture::PARENTRELATIVE);
+  } else {
+    setType(Texture::NONE);
 
-        if (strstr(ts, "gradient")) {
-            addType(Texture::GRADIENT);
-            if (strstr(ts, "crossdiagonal"))
-                addType(Texture::CROSSDIAGONAL);
-            else if (strstr(ts, "rectangle"))
-                addType(Texture::RECTANGLE);
-            else if (strstr(ts, "pyramid"))
-                addType(Texture::PYRAMID);
-            else if (strstr(ts, "pipecross"))
-                addType(Texture::PIPECROSS);
-            else if (strstr(ts, "elliptic"))
-                addType(Texture::ELLIPTIC);
-            else if (strstr(ts, "diagonal"))
-                addType(Texture::DIAGONAL);
-            else if (strstr(ts, "horizontal"))
-                addType(Texture::HORIZONTAL);
-            else if (strstr(ts, "vertical"))
-                addType(Texture::VERTICAL);
-            else
-                addType(Texture::DIAGONAL);
-        } else if (strstr(ts, "solid"))
-            addType(Texture::SOLID);
-        else
-            addType(Texture::DEFAULT_TEXTURE);
+    if (strstr(ts, "gradient")) {
+      addType(Texture::GRADIENT);
+      if (strstr(ts, "crossdiagonal"))
+        addType(Texture::CROSSDIAGONAL);
+      else if (strstr(ts, "rectangle"))
+        addType(Texture::RECTANGLE);
+      else if (strstr(ts, "pyramid"))
+        addType(Texture::PYRAMID);
+      else if (strstr(ts, "pipecross"))
+        addType(Texture::PIPECROSS);
+      else if (strstr(ts, "elliptic"))
+        addType(Texture::ELLIPTIC);
+      else if (strstr(ts, "diagonal"))
+        addType(Texture::DIAGONAL);
+      else if (strstr(ts, "horizontal"))
+        addType(Texture::HORIZONTAL);
+      else if (strstr(ts, "vertical"))
+        addType(Texture::VERTICAL);
+      else
+        addType(Texture::DIAGONAL);
+    } else if (strstr(ts, "solid"))
+      addType(Texture::SOLID);
+    else
+      addType(Texture::DEFAULT_TEXTURE);
 
-        if (strstr(ts, "raised"))
-            addType(Texture::RAISED);
-        else if (strstr(ts, "sunken"))
-            addType(Texture::SUNKEN);
-        else if (strstr(ts, "flat"))
-            addType(Texture::FLAT);
-        else
-            addType(Texture::DEFAULT_LEVEL);
+    if (strstr(ts, "raised"))
+      addType(Texture::RAISED);
+    else if (strstr(ts, "sunken"))
+      addType(Texture::SUNKEN);
+    else if (strstr(ts, "flat"))
+      addType(Texture::FLAT);
+    else
+      addType(Texture::DEFAULT_LEVEL);
 
-        if (! (type() & Texture::FLAT)) {
-            if (strstr(ts, "bevel2"))
-                addType(Texture::BEVEL2);
-            else
-                addType(Texture::BEVEL1);
-        }
-
-        if (strstr(ts, "invert"))
-            addType(Texture::INVERT);
-
-        if (strstr(ts, "interlaced"))
-            addType(Texture::INTERLACED);
-
-        if (strstr(ts, "tiled"))
-            addType(Texture::TILED);
+    if (!(type() & Texture::FLAT)) {
+      if (strstr(ts, "bevel2"))
+        addType(Texture::BEVEL2);
+      else
+        addType(Texture::BEVEL1);
     }
+
+    if (strstr(ts, "invert"))
+      addType(Texture::INVERT);
+
+    if (strstr(ts, "interlaced"))
+      addType(Texture::INTERLACED);
+
+    if (strstr(ts, "tiled"))
+      addType(Texture::TILED);
+  }
 }
 
 void Texture::calcHiLoColors(int screen_num) {
-    Display *disp = FbTk::App::instance()->display();
-    Colormap colm = DefaultColormap(disp, screen_num);
-    XColor xcol;
+  Display *disp = FbTk::App::instance()->display();
+  Colormap colm = DefaultColormap(disp, screen_num);
+  XColor xcol;
 
-    xcol.red = ::brighten(m_color.red());
-    xcol.green = ::brighten(m_color.green());
-    xcol.blue = ::brighten(m_color.blue());
+  xcol.red = ::brighten(m_color.red());
+  xcol.green = ::brighten(m_color.green());
+  xcol.blue = ::brighten(m_color.blue());
 
-    if (! XAllocColor(disp, colm, &xcol))
-        xcol.pixel = 0;
+  if (!XAllocColor(disp, colm, &xcol))
+    xcol.pixel = 0;
 
-    m_hicolor.setPixel(xcol.pixel);
+  m_hicolor.setPixel(xcol.pixel);
 
-    xcol.red = ::darken(m_color.red());
-    xcol.green = ::darken(m_color.green());
-    xcol.blue = ::darken(m_color.blue());
+  xcol.red = ::darken(m_color.red());
+  xcol.green = ::darken(m_color.green());
+  xcol.blue = ::darken(m_color.blue());
 
-    if (! XAllocColor(disp, colm, &xcol))
-        xcol.pixel = 0;
+  if (!XAllocColor(disp, colm, &xcol))
+    xcol.pixel = 0;
 
-    m_locolor.setPixel(xcol.pixel);
+  m_locolor.setPixel(xcol.pixel);
 }
 
 } // end namespace FbTk

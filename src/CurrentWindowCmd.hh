@@ -23,270 +23,310 @@
 #ifndef CURRENTWINDOWCMD_HH
 #define CURRENTWINDOWCMD_HH
 
+#include "ClientPattern.hh"
 #include "FbTk/Command.hh"
 #include "Window.hh"
-#include "ClientPattern.hh"
 
 /// helper class for window commands
-/// calls real_execute if there's a focused window or a window in button press/release window
-class WindowHelperCmd: public FbTk::Command<void> {
+/// calls real_execute if there's a focused window or a window in button
+/// press/release window
+class WindowHelperCmd : public FbTk::Command<void> {
 public:
-    explicit WindowHelperCmd() { }
+  explicit WindowHelperCmd() {}
 
-    void execute();
+  void execute();
 
 protected:
-    FluxboxWindow &fbwindow();
-    virtual void real_execute() = 0;
+  FluxboxWindow &fbwindow();
+  virtual void real_execute() = 0;
 };
 
-class WindowHelperBoolCmd: public FbTk::Command<bool> {
+class WindowHelperBoolCmd : public FbTk::Command<bool> {
 public:
-    explicit WindowHelperBoolCmd() { }
+  explicit WindowHelperBoolCmd() {}
 
-    bool execute();
+  bool execute();
 
 protected:
-    FluxboxWindow &fbwindow();
-    WinClient &winclient();
-    virtual bool real_execute() = 0;
+  FluxboxWindow &fbwindow();
+  WinClient &winclient();
+  virtual bool real_execute() = 0;
 };
 
 /// command that calls FluxboxWindow::<the function> on execute()
 /// similar to FbTk::SimpleCommand<T>
-class CurrentWindowCmd: public WindowHelperCmd {
+class CurrentWindowCmd : public WindowHelperCmd {
 public:
-    typedef void (FluxboxWindow::* Action)();
-    explicit CurrentWindowCmd(Action action): m_action(action) { }
-    void real_execute();
+  typedef void (FluxboxWindow::*Action)();
+  explicit CurrentWindowCmd(Action action) : m_action(action) {}
+  void real_execute();
+
 private:
-    Action m_action;
+  Action m_action;
 };
 
 class SetHeadCmd : public WindowHelperCmd {
 public:
-    explicit SetHeadCmd(int head) : m_head(head) { }
+  explicit SetHeadCmd(int head) : m_head(head) {}
+
 protected:
-    void real_execute();
+  void real_execute();
+
 private:
-    const int m_head;
+  const int m_head;
 };
 
-class SendToWorkspaceCmd: public WindowHelperCmd {
+class SendToWorkspaceCmd : public WindowHelperCmd {
 public:
-    explicit SendToWorkspaceCmd(int workspace_num, bool take = false):
-        m_workspace_num(workspace_num), m_take(take) { }
+  explicit SendToWorkspaceCmd(int workspace_num, bool take = false)
+      : m_workspace_num(workspace_num), m_take(take) {}
+
 protected:
-    void real_execute();
+  void real_execute();
+
 private:
-    const int m_workspace_num;
-    const bool m_take;
+  const int m_workspace_num;
+  const bool m_take;
 };
 
-class SendToNextWorkspaceCmd: public WindowHelperCmd {
+class SendToNextWorkspaceCmd : public WindowHelperCmd {
 public:
-    explicit SendToNextWorkspaceCmd(int delta, bool take = false):
-        m_delta(delta), m_take(take) { }
+  explicit SendToNextWorkspaceCmd(int delta, bool take = false)
+      : m_delta(delta), m_take(take) {}
+
 protected:
-    void real_execute();
+  void real_execute();
+
 private:
-    const int m_delta;
-    const bool m_take;
+  const int m_delta;
+  const bool m_take;
 };
 
-class SendToNextHeadCmd: public WindowHelperCmd {
+class SendToNextHeadCmd : public WindowHelperCmd {
 public:
-    explicit SendToNextHeadCmd(int delta): m_delta(delta) { }
+  explicit SendToNextHeadCmd(int delta) : m_delta(delta) {}
+
 protected:
-    void real_execute();
+  void real_execute();
+
 private:
-    const int m_delta;
+  const int m_delta;
 };
 
 // goto tab
-class GoToTabCmd: public WindowHelperCmd {
+class GoToTabCmd : public WindowHelperCmd {
 public:
-    explicit GoToTabCmd(int tab_num):m_tab_num(tab_num) { }
+  explicit GoToTabCmd(int tab_num) : m_tab_num(tab_num) {}
+
 protected:
-    void real_execute();
+  void real_execute();
+
 private:
-    const int m_tab_num;
+  const int m_tab_num;
 };
 
 // begin moving with mouse
-class StartMovingCmd: public WindowHelperCmd {
+class StartMovingCmd : public WindowHelperCmd {
 public:
-    StartMovingCmd() { }
+  StartMovingCmd() {}
+
 protected:
-    void real_execute();
+  void real_execute();
 };
 
 // begin resizing with mouse
-class StartResizingCmd: public WindowHelperCmd {
+class StartResizingCmd : public WindowHelperCmd {
 public:
-    explicit StartResizingCmd(FluxboxWindow::ResizeModel mode, int corner_size_px, int corner_size_pc):
-        m_mode(mode), m_corner_size_px(corner_size_px), m_corner_size_pc(corner_size_pc) { }
-    static FbTk::Command<void> *parse(const std::string &command,
-                                const std::string &args, bool trusted);
+  explicit StartResizingCmd(FluxboxWindow::ResizeModel mode, int corner_size_px,
+                            int corner_size_pc)
+      : m_mode(mode), m_corner_size_px(corner_size_px),
+        m_corner_size_pc(corner_size_pc) {}
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
+
 protected:
-    void real_execute();
+  void real_execute();
+
 private:
-    const FluxboxWindow::ResizeModel m_mode;
-    const int m_corner_size_px; // Corner size in pixels
-    const int m_corner_size_pc; // and in percent of half window width/height
+  const FluxboxWindow::ResizeModel m_mode;
+  const int m_corner_size_px; // Corner size in pixels
+  const int m_corner_size_pc; // and in percent of half window width/height
 };
 
 // begin tabbing with mouse
-class StartTabbingCmd: public WindowHelperCmd {
+class StartTabbingCmd : public WindowHelperCmd {
 public:
-    StartTabbingCmd() { }
+  StartTabbingCmd() {}
+
 protected:
-    void real_execute();
+  void real_execute();
 };
 
 // move cmd, relative position
-class MoveCmd: public WindowHelperCmd {
+class MoveCmd : public WindowHelperCmd {
 public:
-    explicit MoveCmd(const int step_size_x, const int step_size_y);
-    static FbTk::Command<void> *parse(const std::string &command,
-                                const std::string &args, bool trusted);
+  explicit MoveCmd(const int step_size_x, const int step_size_y);
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
+
 protected:
-    void real_execute();
+  void real_execute();
 
 private:
-    const int m_step_size_x;
-    const int m_step_size_y;
+  const int m_step_size_x;
+  const int m_step_size_y;
 };
 
 // resize cmd, relative size
-class ResizeCmd: public WindowHelperCmd{
+class ResizeCmd : public WindowHelperCmd {
 public:
-    explicit ResizeCmd(int step_size_x, int step_size_y, bool is_relative_x, bool is_relative_y);
-    static FbTk::Command<void> *parse(const std::string &command,
-                                const std::string &args, bool trusted);
+  explicit ResizeCmd(int step_size_x, int step_size_y, bool is_relative_x,
+                     bool is_relative_y);
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
+
 protected:
-    void real_execute();
+  void real_execute();
 
 private:
-    const int m_step_size_x;
-    const int m_step_size_y;
-    const bool m_is_relative_x;
-    const bool m_is_relative_y;
+  const int m_step_size_x;
+  const int m_step_size_y;
+  const bool m_is_relative_x;
+  const bool m_is_relative_y;
 };
 
-class MoveToCmd: public WindowHelperCmd {
+class MoveToCmd : public WindowHelperCmd {
 public:
-    explicit MoveToCmd(int pos_x, int pos_y, bool ignore_x, bool ignore_y, bool is_relative_x, bool is_relative_y,
-                       FluxboxWindow::ReferenceCorner refc):
-        m_pos_x(pos_x), m_pos_y(pos_y),
-        m_ignore_x(ignore_x), m_ignore_y(ignore_y),
-        m_is_relative_x(is_relative_x), m_is_relative_y(is_relative_y),
-        m_corner(refc) { }
+  explicit MoveToCmd(int pos_x, int pos_y, bool ignore_x, bool ignore_y,
+                     bool is_relative_x, bool is_relative_y,
+                     FluxboxWindow::ReferenceCorner refc)
+      : m_pos_x(pos_x), m_pos_y(pos_y), m_ignore_x(ignore_x),
+        m_ignore_y(ignore_y), m_is_relative_x(is_relative_x),
+        m_is_relative_y(is_relative_y), m_corner(refc) {}
 
-    static FbTk::Command<void> *parse(const std::string &command,
-                                const std::string &args, bool trusted);
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
+
 protected:
-    void real_execute();
+  void real_execute();
 
 private:
-    int m_pos_x, m_pos_y;
-    bool m_ignore_x, m_ignore_y, m_is_relative_x, m_is_relative_y;
-    FluxboxWindow::ReferenceCorner m_corner;
+  int m_pos_x, m_pos_y;
+  bool m_ignore_x, m_ignore_y, m_is_relative_x, m_is_relative_y;
+  FluxboxWindow::ReferenceCorner m_corner;
 };
 
 // resize cmd
-class ResizeToCmd: public WindowHelperCmd{
+class ResizeToCmd : public WindowHelperCmd {
 public:
-    explicit ResizeToCmd(int step_size_x, int step_size_y, bool is_relative_x, bool is_relative_y);
+  explicit ResizeToCmd(int step_size_x, int step_size_y, bool is_relative_x,
+                       bool is_relative_y);
+
 protected:
-    void real_execute();
+  void real_execute();
+
 private:
-    const int m_step_size_x;
-    const int m_step_size_y;
-    const bool m_is_relative_x;
-    const bool m_is_relative_y;
+  const int m_step_size_x;
+  const int m_step_size_y;
+  const bool m_is_relative_x;
+  const bool m_is_relative_y;
 };
 
-class FullscreenCmd: public WindowHelperCmd{
+class FullscreenCmd : public WindowHelperCmd {
 public:
-    explicit FullscreenCmd() { }
+  explicit FullscreenCmd() {}
+
 protected:
-    void real_execute();
+  void real_execute();
 };
 
-class SetTitleDialogCmd: public WindowHelperCmd {
+class SetTitleDialogCmd : public WindowHelperCmd {
 public:
-    explicit SetTitleDialogCmd() { }
+  explicit SetTitleDialogCmd() {}
+
 protected:
-    void real_execute();
+  void real_execute();
 };
 
-class SetTitleCmd: public WindowHelperCmd {
+class SetTitleCmd : public WindowHelperCmd {
 public:
-    explicit SetTitleCmd(std::string newtitle): title(newtitle) { }
+  explicit SetTitleCmd(std::string newtitle) : title(newtitle) {}
+
 protected:
-    void real_execute();
+  void real_execute();
+
 private:
-    std::string title;
+  std::string title;
 };
 
-class SetDecorCmd: public WindowHelperCmd {
+class SetDecorCmd : public WindowHelperCmd {
 public:
-    explicit SetDecorCmd(const std::string &args);
+  explicit SetDecorCmd(const std::string &args);
+
 protected:
-    void real_execute();
+  void real_execute();
+
 private:
-    unsigned int m_mask;
+  unsigned int m_mask;
 };
 
-class SetAlphaCmd: public WindowHelperCmd {
+class SetAlphaCmd : public WindowHelperCmd {
 public:
-    SetAlphaCmd(int focus, bool rel, int unfocus, bool unrel);
-    static FbTk::Command<void> *parse(const std::string &command,
-                                const std::string &args, bool trusted);
+  SetAlphaCmd(int focus, bool rel, int unfocus, bool unrel);
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
+
 protected:
-    void real_execute();
+  void real_execute();
+
 private:
-    int m_focus, m_unfocus;
-    int m_relative, m_un_relative;
+  int m_focus, m_unfocus;
+  int m_relative, m_un_relative;
 };
 
-class SetLayerCmd: public WindowHelperCmd {
+class SetLayerCmd : public WindowHelperCmd {
 public:
-    explicit SetLayerCmd(int layer): m_layer(layer) { }
-    static FbTk::Command<void> *parse(const std::string &command,
-                                      const std::string &args, bool trusted);
+  explicit SetLayerCmd(int layer) : m_layer(layer) {}
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
+
 protected:
-    void real_execute();
+  void real_execute();
+
 private:
-    int m_layer;
+  int m_layer;
 };
 
-class ChangeLayerCmd: public WindowHelperCmd {
+class ChangeLayerCmd : public WindowHelperCmd {
 public:
-    explicit ChangeLayerCmd(int diff): m_diff(diff) { }
-    static FbTk::Command<void> *parse(const std::string &command,
-                                      const std::string &args, bool trusted);
+  explicit ChangeLayerCmd(int diff) : m_diff(diff) {}
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
+
 protected:
-    void real_execute();
+  void real_execute();
+
 private:
-    int m_diff;
+  int m_diff;
 };
 
-class MatchCmd: public WindowHelperBoolCmd {
+class MatchCmd : public WindowHelperBoolCmd {
 public:
-    MatchCmd(const std::string &pat): m_pat(pat.c_str()) { };
+  MatchCmd(const std::string &pat) : m_pat(pat.c_str()){};
+
 protected:
-    bool real_execute();
+  bool real_execute();
+
 private:
-    ClientPattern m_pat;
+  ClientPattern m_pat;
 };
 
-class ActivateTabCmd: public WindowHelperCmd {
+class ActivateTabCmd : public WindowHelperCmd {
 public:
-    explicit ActivateTabCmd() { }
+  explicit ActivateTabCmd() {}
+
 protected:
-    void real_execute();
+  void real_execute();
 };
 
 #endif // CURRENTWINDOWCMD_HH

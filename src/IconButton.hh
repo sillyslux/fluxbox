@@ -27,9 +27,9 @@
 
 #include "FbTk/CachedPixmap.hh"
 #include "FbTk/FbPixmap.hh"
+#include "FbTk/Signal.hh"
 #include "FbTk/TextButton.hh"
 #include "FbTk/Timer.hh"
-#include "FbTk/Signal.hh"
 
 class IconbarTheme;
 
@@ -37,67 +37,68 @@ namespace FbTk {
 template <class T> class ThemeProxy;
 }
 
-class IconButton: public FbTk::TextButton {
+class IconButton : public FbTk::TextButton {
 public:
-    IconButton(const FbTk::FbWindow &parent,
-               FbTk::ThemeProxy<IconbarTheme> &focused_theme,
-               FbTk::ThemeProxy<IconbarTheme> &unfocused_theme,
-               Focusable &window);
-    virtual ~IconButton();
+  IconButton(const FbTk::FbWindow &parent,
+             FbTk::ThemeProxy<IconbarTheme> &focused_theme,
+             FbTk::ThemeProxy<IconbarTheme> &unfocused_theme,
+             Focusable &window);
+  virtual ~IconButton();
 
-    void exposeEvent(XExposeEvent &event);
-    void enterNotifyEvent(XCrossingEvent &ce);
-    void leaveNotifyEvent(XCrossingEvent &ce);
-    void clear();
-    void clearArea(int x, int y,
-                   unsigned int width, unsigned int height,
-                   bool exposure = false);
-    void moveResize(int x, int y,
-                    unsigned int width, unsigned int height);
-    void resize(unsigned int width, unsigned int height);
+  void exposeEvent(XExposeEvent &event);
+  void enterNotifyEvent(XCrossingEvent &ce);
+  void leaveNotifyEvent(XCrossingEvent &ce);
+  void clear();
+  void clearArea(int x, int y, unsigned int width, unsigned int height,
+                 bool exposure = false);
+  void moveResize(int x, int y, unsigned int width, unsigned int height);
+  void resize(unsigned int width, unsigned int height);
 
-    void reconfigTheme();
+  void reconfigTheme();
 
-    void setPixmap(bool use);
+  void setPixmap(bool use);
 
-    Focusable &win() { return m_win; }
-    const Focusable &win() const { return m_win; }
+  Focusable &win() { return m_win; }
+  const Focusable &win() const { return m_win; }
 
-    bool setOrientation(FbTk::Orientation orient);
+  bool setOrientation(FbTk::Orientation orient);
 
-    virtual unsigned int preferredWidth() const;
-    void showTooltip();
+  virtual unsigned int preferredWidth() const;
+  void showTooltip();
 
-    const FbTk::Signal<> &titleChanged() { return m_title_changed; }
+  const FbTk::Signal<> &titleChanged() { return m_title_changed; }
 
-    static unsigned int updateLaziness() { return 100 * FbTk::FbTime::IN_MILLISECONDS; }
+  static unsigned int updateLaziness() {
+    return 100 * FbTk::FbTime::IN_MILLISECONDS;
+  }
 
 protected:
-    void drawText(int x, int y, FbTk::FbDrawable *drawable_override);
+  void drawText(int x, int y, FbTk::FbDrawable *drawable_override);
+
 private:
-    void reconfigAndClear();
-    void setupWindow();
+  void reconfigAndClear();
+  void setupWindow();
 
-    /// Refresh all pixmaps and windows
-    /// @param setup Wether to setup window again.
-    void refreshEverything(bool setup);
-    /// Called when client title changed.
-    void clientTitleChanged();
+  /// Refresh all pixmaps and windows
+  /// @param setup Wether to setup window again.
+  void refreshEverything(bool setup);
+  /// Called when client title changed.
+  void clientTitleChanged();
 
-    Focusable &m_win;
-    FbTk::FbWindow m_icon_window;
-    FbTk::FbPixmap m_icon_pixmap;
-    FbTk::FbPixmap m_icon_mask;
-    bool m_use_pixmap;
-    /// whether or not this instance has the tooltip attention 
-    /// i.e if it got enter notify
-    bool m_has_tooltip;
-    FocusableTheme<IconbarTheme> m_theme;
-    // cached pixmaps
-    FbTk::CachedPixmap m_pm;
-    FbTk::SignalTracker m_signals;
-    FbTk::Signal<> m_title_changed;
-    FbTk::Timer m_title_update_timer;
+  Focusable &m_win;
+  FbTk::FbWindow m_icon_window;
+  FbTk::FbPixmap m_icon_pixmap;
+  FbTk::FbPixmap m_icon_mask;
+  bool m_use_pixmap;
+  /// whether or not this instance has the tooltip attention
+  /// i.e if it got enter notify
+  bool m_has_tooltip;
+  FocusableTheme<IconbarTheme> m_theme;
+  // cached pixmaps
+  FbTk::CachedPixmap m_pm;
+  FbTk::SignalTracker m_signals;
+  FbTk::Signal<> m_title_changed;
+  FbTk::Timer m_title_update_timer;
 };
 
 #endif // ICONBUTTON_HH

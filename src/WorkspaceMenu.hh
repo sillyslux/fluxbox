@@ -34,19 +34,19 @@ class BScreen;
  * workspace name.
  * It also contains client menus for all clients.
  */
-class WorkspaceMenu: public FbMenu, private FbTk::SignalTracker {
+class WorkspaceMenu : public FbMenu, private FbTk::SignalTracker {
 public:
-    explicit WorkspaceMenu(BScreen &screen);
-    virtual ~WorkspaceMenu() { }
+  explicit WorkspaceMenu(BScreen &screen);
+  virtual ~WorkspaceMenu() {}
 
 private:
-    /// initialize menu for the screen
-    void init(BScreen &screen);
-    /// Called when workspace info was changed 
-    /// ( number of workspace, workspace names etc )
-    void workspaceInfoChanged(BScreen& screen);
-    /// Called when workspace was switched.
-    void workspaceChanged(BScreen& screen);
+  /// initialize menu for the screen
+  void init(BScreen &screen);
+  /// Called when workspace info was changed
+  /// ( number of workspace, workspace names etc )
+  void workspaceInfoChanged(BScreen &screen);
+  /// Called when workspace was switched.
+  void workspaceChanged(BScreen &screen);
 };
 
 #endif //  WORKSPACEMENU_HH

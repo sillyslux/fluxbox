@@ -28,76 +28,77 @@
 #include "Color.hh"
 #include "FbPixmap.hh"
 
-namespace FbTk  {
+namespace FbTk {
 
 /**
    Holds texture type and info
 */
 class Texture {
 public:
+  enum Bevel {
+    // why are we not using the lowest-order bit?
+    FLAT = 0x00002,
+    SUNKEN = 0x00004,
+    RAISED = 0x00008,
+    DEFAULT_LEVEL = FLAT
+  };
 
-    enum Bevel {
-        // why are we not using the lowest-order bit?
-        FLAT =     0x00002,
-        SUNKEN =   0x00004,
-        RAISED =   0x00008,
-        DEFAULT_LEVEL = FLAT
-    };
+  enum Textures {
+    NONE = 0x00000,
+    SOLID = 0x00010,
+    GRADIENT = 0x00020,
+    DEFAULT_TEXTURE = SOLID
+  };
 
-    enum Textures {
-        NONE =     0x00000,
-        SOLID =    0x00010,
-        GRADIENT = 0x00020,
-        DEFAULT_TEXTURE = SOLID
-    };
+  enum Gradients {
+    HORIZONTAL = 0x00040,
+    VERTICAL = 0x00080,
+    DIAGONAL = 0x00100,
+    CROSSDIAGONAL = 0x00200,
+    RECTANGLE = 0x00400,
+    PYRAMID = 0x00800,
+    PIPECROSS = 0x01000,
+    ELLIPTIC = 0x02000
+  };
 
-    enum Gradients {
-        HORIZONTAL =     0x00040,
-        VERTICAL =       0x00080,
-        DIAGONAL =       0x00100,
-        CROSSDIAGONAL =  0x00200,
-        RECTANGLE =      0x00400,
-        PYRAMID =        0x00800,
-        PIPECROSS =      0x01000,
-        ELLIPTIC =       0x02000
-    };
+  enum {
+    BEVEL1 = 0x04000,
+    BEVEL2 = 0x08000, // bevel types
+    INVERT = 0x10000, ///< inverted image
+    PARENTRELATIVE = 0x20000,
+    INTERLACED = 0x40000,
+    TILED = 0x80000 ///< tiled pixmap
+  };
 
-    enum {
-        BEVEL1 =         0x04000,
-        BEVEL2 =         0x08000, // bevel types
-        INVERT =         0x10000, ///< inverted image
-        PARENTRELATIVE = 0x20000,
-        INTERLACED =     0x40000,
-        TILED =          0x80000  ///< tiled pixmap
-    };
+  Texture() : m_type(0) {}
 
-    Texture():m_type(0) { }
+  void setType(unsigned long t) { m_type = t; }
+  void addType(unsigned long t) { m_type |= t; }
+  void setFromString(const char *const str);
 
-    void setType(unsigned long t) { m_type = t; }
-    void addType(unsigned long t) { m_type |= t; }
-    void setFromString(const char * const str);
+  Color &color() { return m_color; }
+  Color &colorTo() { return m_color_to; }
+  Color &hiColor() { return m_hicolor; }
+  Color &loColor() { return m_locolor; }
 
-    Color &color() { return m_color; }
-    Color &colorTo() { return m_color_to; }
-    Color &hiColor() { return m_hicolor; }
-    Color &loColor() { return m_locolor; }
+  FbPixmap &pixmap() { return m_pixmap; }
 
-    FbPixmap &pixmap() { return m_pixmap; }
+  void calcHiLoColors(int screen_num);
 
-    void calcHiLoColors(int screen_num);
-
-    const Color &color() const { return m_color; }
-    const Color &colorTo() const { return m_color_to; }
-    const Color &hiColor() const { return m_hicolor; }
-    const Color &loColor() const { return m_locolor; }
-    const FbTk::FbPixmap &pixmap() const { return m_pixmap; }
-    unsigned long type() const { return m_type; }
-    bool usePixmap() const { return !( type() == (FLAT | SOLID) && pixmap().drawable() == 0); }
+  const Color &color() const { return m_color; }
+  const Color &colorTo() const { return m_color_to; }
+  const Color &hiColor() const { return m_hicolor; }
+  const Color &loColor() const { return m_locolor; }
+  const FbTk::FbPixmap &pixmap() const { return m_pixmap; }
+  unsigned long type() const { return m_type; }
+  bool usePixmap() const {
+    return !(type() == (FLAT | SOLID) && pixmap().drawable() == 0);
+  }
 
 private:
-    FbTk::Color m_color, m_color_to, m_hicolor, m_locolor;
-    FbTk::FbPixmap m_pixmap;
-    unsigned long m_type;
+  FbTk::Color m_color, m_color_to, m_hicolor, m_locolor;
+  FbTk::FbPixmap m_pixmap;
+  unsigned long m_type;
 };
 
 } // end namespace FbTk

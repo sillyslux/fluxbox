@@ -21,28 +21,25 @@
 
 #include "RootCmdMenuItem.hh"
 
-#include "defaults.hh"
 #include "FbCommands.hh"
+#include "defaults.hh"
 #include "fluxbox.hh"
 
 #include "FbTk/StringUtil.hh"
 
-RootCmdMenuItem::RootCmdMenuItem(const FbTk::FbString &label, 
-                             const std::string &filename,
-                             const std::string &cmd):
-    FbTk::MenuItem(label), 
-    m_filename(filename) {
+RootCmdMenuItem::RootCmdMenuItem(const FbTk::FbString &label,
+                                 const std::string &filename,
+                                 const std::string &cmd)
+    : FbTk::MenuItem(label), m_filename(filename) {
 
-    std::string prog = cmd.empty() ? realProgramName("fbsetbg") : cmd;
-    FbTk::RefCount<FbTk::Command<void> >
-        setwp_cmd(new FbCommands::ExecuteCmd(prog + " \"" + m_filename + "\""));
-    setCommand(setwp_cmd);
-    setToggleItem(true);
-    setCloseOnClick(false);
+  std::string prog = cmd.empty() ? realProgramName("fbsetbg") : cmd;
+  FbTk::RefCount<FbTk::Command<void>> setwp_cmd(
+      new FbCommands::ExecuteCmd(prog + " \"" + m_filename + "\""));
+  setCommand(setwp_cmd);
+  setToggleItem(true);
+  setCloseOnClick(false);
 }
-
 
 bool RootCmdMenuItem::isSelected() const {
-    return Fluxbox::instance()->getStyleFilename() == m_filename;
+  return Fluxbox::instance()->getStyleFilename() == m_filename;
 }
-

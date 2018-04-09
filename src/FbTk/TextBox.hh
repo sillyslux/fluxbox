@@ -22,74 +22,75 @@
 #ifndef FBTK_TEXTBOX_HH
 #define FBTK_TEXTBOX_HH
 
-#include "FbWindow.hh"
 #include "EventHandler.hh"
 #include "FbString.hh"
+#include "FbWindow.hh"
 
 namespace FbTk {
 
 class Font;
 
-class TextBox:public FbWindow, public EventHandler {
+class TextBox : public FbWindow, public EventHandler {
 public:
-    TextBox(int screen_num, const Font &font, const std::string &text);
-    TextBox(const FbWindow &parent, const Font &font, const std::string &text);
-    virtual ~TextBox();
+  TextBox(int screen_num, const Font &font, const std::string &text);
+  TextBox(const FbWindow &parent, const Font &font, const std::string &text);
+  virtual ~TextBox();
 
-    void setText(const FbTk::BiDiString &text);
-    void setPadding(int padding);
-    void setFont(const Font &font);
-    void setGC(GC gc);
-    void setCursorPosition(int cursor);
-    void setInputFocus();
-    void cursorEnd();
-    void cursorHome();
-    void cursorForward();
-    void cursorBackward();
-    void deleteForward();
-    void insertText(const std::string &val);
-    void backspace();
-    void killToEnd();
+  void setText(const FbTk::BiDiString &text);
+  void setPadding(int padding);
+  void setFont(const Font &font);
+  void setGC(GC gc);
+  void setCursorPosition(int cursor);
+  void setInputFocus();
+  void cursorEnd();
+  void cursorHome();
+  void cursorForward();
+  void cursorBackward();
+  void deleteForward();
+  void insertText(const std::string &val);
+  void backspace();
+  void killToEnd();
 
-    void moveResize(int x, int y,
-                    unsigned int width, unsigned int height);
-    void resize(unsigned int width, unsigned int height);
-    void clear();
+  void moveResize(int x, int y, unsigned int width, unsigned int height);
+  void resize(unsigned int width, unsigned int height);
+  void clear();
 
-    void exposeEvent(XExposeEvent &event);
-    void buttonPressEvent(XButtonEvent &event);
-    void keyPressEvent(XKeyEvent &event);
-    void handleEvent(XEvent &event);
+  void exposeEvent(XExposeEvent &event);
+  void buttonPressEvent(XButtonEvent &event);
+  void keyPressEvent(XKeyEvent &event);
+  void handleEvent(XEvent &event);
 
-    const FbString &text() const { return m_text.logical(); }
-    const Font &font() const { return *m_font; }
-    GC gc() const { return m_gc; }
-    int cursorPosition() const { return m_cursor_pos; }
-    int textStartPos() const { return m_start_pos; }
+  const FbString &text() const { return m_text.logical(); }
+  const Font &font() const { return *m_font; }
+  GC gc() const { return m_gc; }
+  int cursorPosition() const { return m_cursor_pos; }
+  int textStartPos() const { return m_start_pos; }
 
-    bool hasSelection() const {
-        return (m_select_pos != std::string::npos) && (m_select_pos != m_cursor_pos + m_start_pos); }
-    void select(std::string::size_type pos, unsigned length);
-    void selectAll();
+  bool hasSelection() const {
+    return (m_select_pos != std::string::npos) &&
+           (m_select_pos != m_cursor_pos + m_start_pos);
+  }
+  void select(std::string::size_type pos, unsigned length);
+  void selectAll();
 
-    unsigned int findEmptySpaceLeft();
-    unsigned int findEmptySpaceRight();
+  unsigned int findEmptySpaceLeft();
+  unsigned int findEmptySpaceRight();
 
 private:
-    void adjustEndPos();
-    void adjustStartPos();
+  void adjustEndPos();
+  void adjustStartPos();
 
-    void adjustPos();
+  void adjustPos();
 
-    typedef struct { std::string::size_type begin, end; } StringRange;
-    StringRange charRange(std::string::size_type pos) const;
+  typedef struct { std::string::size_type begin, end; } StringRange;
+  StringRange charRange(std::string::size_type pos) const;
 
-    const FbTk::Font *m_font;
-    BiDiString m_text;
-    GC m_gc;
-    std::string::size_type m_cursor_pos, m_start_pos, m_end_pos, m_select_pos;
-    int m_padding;
-    XIC m_xic;
+  const FbTk::Font *m_font;
+  BiDiString m_text;
+  GC m_gc;
+  std::string::size_type m_cursor_pos, m_start_pos, m_end_pos, m_select_pos;
+  int m_padding;
+  XIC m_xic;
 };
 
 } // end namespace FbTk

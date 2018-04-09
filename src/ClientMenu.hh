@@ -34,36 +34,33 @@ class Focusable;
  * A menu holding a set of client menus.
  * @see WorkspaceMenu
  */
-class ClientMenu: public FbMenu {
+class ClientMenu : public FbMenu {
 public:
+  typedef std::list<FluxboxWindow *> Focusables;
 
-    typedef std::list<FluxboxWindow *> Focusables;
+  /**
+   * @param screen the screen to show this menu on
+   * @param client a list of clients to show in this menu
+   * @param listen_for_iconlist_changes Listen for list changes from the \c
+   * screen.
+   */
+  ClientMenu(BScreen &screen, Focusables &clients,
+             bool listen_for_iconlist_changes);
 
-    /**
-     * @param screen the screen to show this menu on
-     * @param client a list of clients to show in this menu
-     * @param listen_for_iconlist_changes Listen for list changes from the \c screen.
-     */
-    ClientMenu(BScreen &screen, 
-               Focusables &clients, bool listen_for_iconlist_changes);
+  /// refresh the entire menu
+  void refreshMenu();
 
-    /// refresh the entire menu
-    void refreshMenu();
+  /// Called when window title changed.
+  void titleChanged(Focusable &win);
 
-    /// Called when window title changed.
-    void titleChanged(Focusable& win);
-
-    /// Called when a client dies. Removes the corresponding menu item
-    void clientDied(Focusable& win);
+  /// Called when a client dies. Removes the corresponding menu item
+  void clientDied(Focusable &win);
 
 private:
+  void updateClientList(BScreen &screen) { refreshMenu(); }
 
-    void updateClientList(BScreen& screen) {
-        refreshMenu();
-    }
-
-    Focusables &m_list; ///< clients in the menu
-    FbTk::SignalTracker m_slots; ///< track all the slots
+  Focusables &m_list;          ///< clients in the menu
+  FbTk::SignalTracker m_slots; ///< track all the slots
 };
 
 #endif // CLIENTMENU_HH

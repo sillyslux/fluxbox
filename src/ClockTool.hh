@@ -23,14 +23,13 @@
 #ifndef CLOCKTOOL_HH
 #define CLOCKTOOL_HH
 
-
 #include "ToolbarItem.hh"
 
+#include "FbTk/FbString.hh"
+#include "FbTk/Resource.hh"
 #include "FbTk/Signal.hh"
 #include "FbTk/TextButton.hh"
-#include "FbTk/Resource.hh"
 #include "FbTk/Timer.hh"
-#include "FbTk/FbString.hh"
 
 class ToolTheme;
 class BScreen;
@@ -41,47 +40,46 @@ class Menu;
 template <class T> class ThemeProxy;
 }
 
-class ClockTool:public ToolbarItem {
+class ClockTool : public ToolbarItem {
 public:
-    ClockTool(const FbTk::FbWindow &parent, FbTk::ThemeProxy<ToolTheme> &theme,
-              BScreen &screen, FbTk::Menu &menu);
-    virtual ~ClockTool();
+  ClockTool(const FbTk::FbWindow &parent, FbTk::ThemeProxy<ToolTheme> &theme,
+            BScreen &screen, FbTk::Menu &menu);
+  virtual ~ClockTool();
 
-    void move(int x, int y);
-    void resize(unsigned int width, unsigned int height);
-    void moveResize(int x, int y,
-                    unsigned int width, unsigned int height);
+  void move(int x, int y);
+  void resize(unsigned int width, unsigned int height);
+  void moveResize(int x, int y, unsigned int width, unsigned int height);
 
-    void show();
-    void hide();
-    void setTimeFormat(const std::string &format);
-    // accessors
-    unsigned int width() const;
-    unsigned int height() const;
-    unsigned int borderWidth() const;
-    const std::string &timeFormat() const { return *m_timeformat; }
+  void show();
+  void hide();
+  void setTimeFormat(const std::string &format);
+  // accessors
+  unsigned int width() const;
+  unsigned int height() const;
+  unsigned int borderWidth() const;
+  const std::string &timeFormat() const { return *m_timeformat; }
 
-    void setOrientation(FbTk::Orientation orient);
+  void setOrientation(FbTk::Orientation orient);
 
-    void parentMoved() { m_button.parentMoved(); }
+  void parentMoved() { m_button.parentMoved(); }
 
 private:
-    void updateTime();
-    void themeReconfigured();
-    void renderTheme(int alpha);
-    void reRender();
-    void updateSizing();
+  void updateTime();
+  void themeReconfigured();
+  void renderTheme(int alpha);
+  void reRender();
+  void updateSizing();
 
-    FbTk::TextButton                    m_button;
+  FbTk::TextButton m_button;
 
-    const FbTk::ThemeProxy<ToolTheme>&  m_theme;
-    BScreen&                            m_screen;
-    Pixmap                              m_pixmap;
-    FbTk::Timer                         m_timer;
+  const FbTk::ThemeProxy<ToolTheme> &m_theme;
+  BScreen &m_screen;
+  Pixmap m_pixmap;
+  FbTk::Timer m_timer;
 
-    FbTk::Resource<std::string>         m_timeformat;
-    FbTk::StringConvertor               m_stringconvertor;
-    FbTk::SignalTracker                 m_tracker;
+  FbTk::Resource<std::string> m_timeformat;
+  FbTk::StringConvertor m_stringconvertor;
+  FbTk::SignalTracker m_tracker;
 };
 
 #endif // CLOCKTOOL_HH

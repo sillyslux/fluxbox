@@ -27,46 +27,46 @@
 
 using std::string;
 
-ToolbarTheme::ToolbarTheme(int screen_num):
-    FbTk::Theme(screen_num),
-    m_toolbar(*this, "toolbar", "Toolbar"),
-    m_border(*this, "toolbar", "Toolbar"),
-    m_bevel_width(*this, "toolbar.bevelWidth", "Toolbar.BevelWidth"),
-    m_shape(*this, "toolbar.shaped", "Toolbar.Shaped"),
-    m_height(*this, "toolbar.height", "Toolbar.Height"),
-    m_button_size(*this, "toolbar.button.size", "Toolbar.Button.Size") {
-    // set default value
-    *m_bevel_width = 0;
-    *m_shape = false;
-    *m_height = 0;
-    *m_button_size = -1;
-    FbTk::ThemeManager::instance().loadTheme(*this);
+ToolbarTheme::ToolbarTheme(int screen_num)
+    : FbTk::Theme(screen_num), m_toolbar(*this, "toolbar", "Toolbar"),
+      m_border(*this, "toolbar", "Toolbar"),
+      m_bevel_width(*this, "toolbar.bevelWidth", "Toolbar.BevelWidth"),
+      m_shape(*this, "toolbar.shaped", "Toolbar.Shaped"),
+      m_height(*this, "toolbar.height", "Toolbar.Height"),
+      m_button_size(*this, "toolbar.button.size", "Toolbar.Button.Size") {
+  // set default value
+  *m_bevel_width = 0;
+  *m_shape = false;
+  *m_height = 0;
+  *m_button_size = -1;
+  FbTk::ThemeManager::instance().loadTheme(*this);
 }
 
-ToolbarTheme::~ToolbarTheme() {
-
-}
+ToolbarTheme::~ToolbarTheme() {}
 
 bool ToolbarTheme::fallback(FbTk::ThemeItem_base &item) {
-    if (item.name().find(".borderWidth") != string::npos) {
-        return FbTk::ThemeManager::instance().loadItem(item, "borderWidth", "BorderWidth");
-    } else if (item.name().find(".borderColor") != string::npos) {
-        return FbTk::ThemeManager::instance().loadItem(item, "borderColor", "BorderColor");
-    } else if (item.name() == "toolbar.bevelWidth") {
-        return FbTk::ThemeManager::instance().loadItem(item, "bevelWidth", "BevelWidth");
-    }
-    return false;
+  if (item.name().find(".borderWidth") != string::npos) {
+    return FbTk::ThemeManager::instance().loadItem(item, "borderWidth",
+                                                   "BorderWidth");
+  } else if (item.name().find(".borderColor") != string::npos) {
+    return FbTk::ThemeManager::instance().loadItem(item, "borderColor",
+                                                   "BorderColor");
+  } else if (item.name() == "toolbar.bevelWidth") {
+    return FbTk::ThemeManager::instance().loadItem(item, "bevelWidth",
+                                                   "BevelWidth");
+  }
+  return false;
 }
 
 void ToolbarTheme::reconfigTheme() {
-    if (*m_bevel_width > 20)
-        *m_bevel_width = 20;
+  if (*m_bevel_width > 20)
+    *m_bevel_width = 20;
 
-    if (*m_height > 100)
-        *m_height = 100;
-    else if (*m_height < 0)
-        *m_height = 0;
+  if (*m_height > 100)
+    *m_height = 100;
+  else if (*m_height < 0)
+    *m_height = 0;
 
-    if (*m_button_size > 100)
-        *m_button_size = 100;
+  if (*m_button_size > 100)
+    *m_button_size = 100;
 }

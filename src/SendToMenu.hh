@@ -1,7 +1,7 @@
 // SendToMenu.hh for Fluxbox
 // Copyright (c) 2003 - 2008 Henrik Kinnunen (fluxgen at fluxbox dot org)
 //                and Simon Bowden    (rathnor at users.sourceforge.net)
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
@@ -33,21 +33,20 @@ class BScreen;
  * Creates the "send to menu".
  * Displays all the workspaces for which the current window can be sent to.
  */
-class SendToMenu:public FbMenu, private FbTk::SignalTracker {
+class SendToMenu : public FbMenu, private FbTk::SignalTracker {
 public:
-    /// @param screen the screen on which this menu should be created on.
-    explicit SendToMenu(BScreen &screen);
-    virtual ~SendToMenu();
-    /// @see FbTk::Menu
-    void show();
-private:
-    /// workspace count changed on screen
-    void rebuildMenuForScreen( BScreen& screen ) {
-        rebuildMenu();
-    }
+  /// @param screen the screen on which this menu should be created on.
+  explicit SendToMenu(BScreen &screen);
+  virtual ~SendToMenu();
+  /// @see FbTk::Menu
+  void show();
 
-    /// Rebuild the menu from scratch.
-    void rebuildMenu();
+private:
+  /// workspace count changed on screen
+  void rebuildMenuForScreen(BScreen &screen) { rebuildMenu(); }
+
+  /// Rebuild the menu from scratch.
+  void rebuildMenu();
 };
 
 #endif // SENDTOMENU_HH

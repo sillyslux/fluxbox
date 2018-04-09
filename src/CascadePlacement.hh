@@ -22,21 +22,21 @@
 #ifndef CASCADEPLACEMENT_HH
 #define CASCADEPLACEMENT_HH
 
-#include "PlacementStrategy.hh"
 #include "FbTk/NotCopyable.hh"
+#include "PlacementStrategy.hh"
 
 class BScreen;
 
-class CascadePlacement: public PlacementStrategy, 
-                        private FbTk::NotCopyable {
+class CascadePlacement : public PlacementStrategy, private FbTk::NotCopyable {
 public:
-    explicit CascadePlacement(const BScreen &screen);
-    ~CascadePlacement();
-    bool placeWindow(const FluxboxWindow &window, int head,
-                     int &place_x, int &place_y);
+  explicit CascadePlacement(const BScreen &screen);
+  ~CascadePlacement();
+  bool placeWindow(const FluxboxWindow &window, int head, int &place_x,
+                   int &place_y);
+
 private:
-    int *m_cascade_x; ///< need a cascade for each head (Xinerama)
-    int *m_cascade_y; ///< need a cascade for each head (Xinerama)
+  int *m_cascade_x; ///< need a cascade for each head (Xinerama)
+  int *m_cascade_y; ///< need a cascade for each head (Xinerama)
 };
 
 #endif // CASCADEPLACEMENT_HH

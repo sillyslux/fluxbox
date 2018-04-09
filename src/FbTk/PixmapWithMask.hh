@@ -27,24 +27,24 @@ namespace FbTk {
 
 class PixmapWithMask {
 public:
-    PixmapWithMask() { }
-    PixmapWithMask(Pixmap pm, Pixmap mask):m_pixmap(pm), m_mask(mask) { }
+  PixmapWithMask() {}
+  PixmapWithMask(Pixmap pm, Pixmap mask) : m_pixmap(pm), m_mask(mask) {}
 
-    void scale(unsigned int width, unsigned int height) {
-        pixmap().scale(width, height);
-        mask().scale(width, height);
-    }
-    unsigned int width() const { return m_pixmap.width(); }
-    unsigned int height() const { return m_pixmap.height(); }
-    FbPixmap &pixmap() { return m_pixmap; }
-    FbPixmap &mask() { return m_mask; }
+  void scale(unsigned int width, unsigned int height) {
+    pixmap().scale(width, height);
+    mask().scale(width, height);
+  }
+  unsigned int width() const { return m_pixmap.width(); }
+  unsigned int height() const { return m_pixmap.height(); }
+  FbPixmap &pixmap() { return m_pixmap; }
+  FbPixmap &mask() { return m_mask; }
 
-    const FbPixmap &pixmap() const { return m_pixmap; }
-    const FbPixmap &mask() const { return m_mask; }
+  const FbPixmap &pixmap() const { return m_pixmap; }
+  const FbPixmap &mask() const { return m_mask; }
 
 private:
-    FbPixmap m_pixmap;
-    FbPixmap m_mask;
+  FbPixmap m_pixmap;
+  FbPixmap m_mask;
 };
 
 } // end namespace FbTk

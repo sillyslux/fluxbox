@@ -25,35 +25,31 @@
 
 #include "ToolTheme.hh"
 
-class WorkspaceNameTheme: public ToolTheme,
-                          public FbTk::ThemeProxy<WorkspaceNameTheme> {
+class WorkspaceNameTheme : public ToolTheme,
+                           public FbTk::ThemeProxy<WorkspaceNameTheme> {
 public:
-    WorkspaceNameTheme(int screen_num, 
-                       const std::string &name, 
-                       const std::string &alt_name):
-            ToolTheme(screen_num, name, alt_name) {
-        FbTk::ThemeManager::instance().loadTheme(*this);
+  WorkspaceNameTheme(int screen_num, const std::string &name,
+                     const std::string &alt_name)
+      : ToolTheme(screen_num, name, alt_name) {
+    FbTk::ThemeManager::instance().loadTheme(*this);
+  }
+
+  bool fallback(FbTk::ThemeItem_base &item) {
+    if (item.name() == "toolbar.workspace.textColor") {
+      return FbTk::ThemeManager::instance().loadItem(
+          item, "toolbar.label.textColor", "Toolbar.Label.TextColor");
+    } else if (item.name() == "toolbar.workspace") {
+      return FbTk::ThemeManager::instance().loadItem(item, "toolbar.label",
+                                                     "Toolbar.Label");
     }
 
-    bool fallback(FbTk::ThemeItem_base &item) {
-        if (item.name() == "toolbar.workspace.textColor") {
-            return FbTk::ThemeManager::instance().loadItem(item, 
-                                                           "toolbar.label.textColor", 
-                                                           "Toolbar.Label.TextColor");
-        } else if (item.name() == "toolbar.workspace") {
-            return FbTk::ThemeManager::instance().loadItem(item, 
-                                                           "toolbar.label", 
-                                                           "Toolbar.Label");
-        }
+    return ToolTheme::fallback(item);
+  }
 
-        return ToolTheme::fallback(item);
-    }
+  virtual FbTk::Signal<> &reconfigSig() { return FbTk::Theme::reconfigSig(); }
 
-    virtual FbTk::Signal<> &reconfigSig() { return FbTk::Theme::reconfigSig(); }
-
-    virtual WorkspaceNameTheme &operator *() { return *this; }
-    virtual const WorkspaceNameTheme &operator *() const { return *this; }
-
+  virtual WorkspaceNameTheme &operator*() { return *this; }
+  virtual const WorkspaceNameTheme &operator*() const { return *this; }
 };
 
 #endif // WORKSPACENAMETHEME_HH

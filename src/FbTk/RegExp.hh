@@ -33,28 +33,27 @@
  */
 
 #ifdef USE_REGEXP
-#include <sys/types.h>
 #include <regex.h>
+#include <sys/types.h>
 #endif // USE_REGEXP
 
 namespace FbTk {
 
-class RegExp: private NotCopyable {
+class RegExp : private NotCopyable {
 public:
-    RegExp(const std::string &str, bool full_match = true);
-    ~RegExp();
+  RegExp(const std::string &str, bool full_match = true);
+  ~RegExp();
 
-    bool match(const std::string &str) const;
+  bool match(const std::string &str) const;
 
-    bool error() const;
+  bool error() const;
 
 private:
 #ifdef USE_REGEXP
-    regex_t* m_regex;
-#else // notdef USE_REGEXP
-    std::string m_str;
+  regex_t *m_regex;
+#else  // notdef USE_REGEXP
+  std::string m_str;
 #endif // USE_REGEXP
-
 };
 
 } // end namespace FbTk

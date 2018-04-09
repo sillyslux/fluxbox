@@ -19,102 +19,95 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-
 #include "TooltipWindow.hh"
-#include "Screen.hh"
 #include "FbWinFrameTheme.hh"
-
+#include "Screen.hh"
 
 TooltipWindow::TooltipWindow(const FbTk::FbWindow &parent, BScreen &screen,
-                             FbTk::ThemeProxy<FbWinFrameTheme> &theme):
-    OSDWindow(parent, screen, theme),
-    m_delay(-1) {
+                             FbTk::ThemeProxy<FbWinFrameTheme> &theme)
+    : OSDWindow(parent, screen, theme), m_delay(-1) {
 
-    FbTk::RefCount<FbTk::Command<void> > 
-        raisecmd(new FbTk::SimpleCommand<TooltipWindow>(*this, 
-                                                        &TooltipWindow::raiseTooltip));
-    m_timer.setCommand(raisecmd);
-    m_timer.fireOnce(true);
-
+  FbTk::RefCount<FbTk::Command<void>> raisecmd(
+      new FbTk::SimpleCommand<TooltipWindow>(*this,
+                                             &TooltipWindow::raiseTooltip));
+  m_timer.setCommand(raisecmd);
+  m_timer.fireOnce(true);
 }
 
-void TooltipWindow::showText(const FbTk::BiDiString& text) {
+void TooltipWindow::showText(const FbTk::BiDiString &text) {
 
-    m_lastText = text;
-    if (m_delay == 0)
-        raiseTooltip();
-    else
-        m_timer.start();
-
+  m_lastText = text;
+  if (m_delay == 0)
+    raiseTooltip();
+  else
+    m_timer.start();
 }
 
 void TooltipWindow::raiseTooltip() {
 
-    if (m_lastText.logical().empty())
-        return;
+  if (m_lastText.logical().empty())
+    return;
 
-    resizeForText(m_lastText);
-    reconfigTheme();
+  resizeForText(m_lastText);
+  reconfigTheme();
 
-    FbTk::Font& font = theme()->iconbarTheme().text().font();
+  FbTk::Font &font = theme()->iconbarTheme().text().font();
 
-    int h = font.height() + theme()->bevelWidth() * 2;
-    int w = font.textWidth(m_lastText) + theme()->bevelWidth() * 2;
+  int h = font.height() + theme()->bevelWidth() * 2;
+  int w = font.textWidth(m_lastText) + theme()->bevelWidth() * 2;
 
-    Window root_ret; // not used
-    Window window_ret; // not used
-    int rx = 0, ry = 0;
-    int wx, wy; // not used
-    unsigned int mask; // not used
+  Window root_ret;   // not used
+  Window window_ret; // not used
+  int rx = 0, ry = 0;
+  int wx, wy;        // not used
+  unsigned int mask; // not used
 
-    XQueryPointer(display(), screen().rootWindow().window(),
-                  &root_ret, &window_ret, &rx, &ry, &wx, &wy, &mask);
+  XQueryPointer(display(), screen().rootWindow().window(), &root_ret,
+                &window_ret, &rx, &ry, &wx, &wy, &mask);
 
-    int head = screen().getHead(rx, ry);
-    int head_top = screen().getHeadY(head);
-    int head_left = screen().getHeadX(head);
-    int head_right = head_left + screen().getHeadWidth(head);
+  int head = screen().getHead(rx, ry);
+  int head_top = screen().getHeadY(head);
+  int head_left = screen().getHeadX(head);
+  int head_right = head_left + screen().getHeadWidth(head);
 
-    // center the mouse horizontally
-    rx -= w/2;
-    int yoffset = 10;
-    if (ry - yoffset - h >= head_top)
-        ry -= yoffset + h;
-    else
-        ry += yoffset;
+  // center the mouse horizontally
+  rx -= w / 2;
+  int yoffset = 10;
+  if (ry - yoffset - h >= head_top)
+    ry -= yoffset + h;
+  else
+    ry += yoffset;
 
-    // check that we are not out of screen
-    if (rx + w > head_right)
-        rx = head_right - w;
-    if (rx < head_left)
-        rx = head_left;
+  // check that we are not out of screen
+  if (rx + w > head_right)
+    rx = head_right - w;
+  if (rx < head_left)
+    rx = head_left;
 
-    moveResize(rx,ry,w, h);
+  moveResize(rx, ry, w, h);
 
-    show();
-    clear();
-    // TODO: make this use a TextButton like TextDialog does
-    font.drawText(*this, screen().screenNumber(),
-                  theme()->iconbarTheme().text().textGC(), 
-                  m_lastText,
-                  theme()->bevelWidth(),
-                  theme()->bevelWidth() + font.ascent());
+  show();
+  clear();
+  // TODO: make this use a TextButton like TextDialog does
+  font.drawText(*this, screen().screenNumber(),
+                theme()->iconbarTheme().text().textGC(), m_lastText,
+                theme()->bevelWidth(), theme()->bevelWidth() + font.ascent());
 }
 
-void TooltipWindow::updateText(const FbTk::BiDiString& text) {
-    m_lastText = text;
-    raiseTooltip();
+void TooltipWindow::updateText(const FbTk::BiDiString &text) {
+  m_lastText = text;
+  raiseTooltip();
 }
 
 void TooltipWindow::show() {
-    if (isVisible())
-        return;
-    setVisible(true);
-    raise();
-    FbTk::FbWindow::show();
+  if (isVisible())
+    return;
+  setVisible(true);
+  raise();
+  FbTk::FbWindow::show();
 }
 
 void TooltipWindow::hide() {
-    m_timer.stop();
-    OSDWindow::hide();
+  m_timer.stop();
+  OSDWindow::hide();
 }

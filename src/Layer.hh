@@ -24,77 +24,81 @@
 
 #include "FbTk/StringUtil.hh"
 
-/** 
+/**
  * (This is not the layer->raise/lower handling stuff, @see FbTk::Layer)
  * Class to store layer numbers (special Resource type)
- * we have a special resource type because we need to be able to name certain layers
+ * we have a special resource type because we need to be able to name certain
+ * layers
  * a Resource<int> wouldn't allow this
  */
-class  ResourceLayer {
+class ResourceLayer {
 public:
-    enum {
-        MENU = 0,
-        ABOVE_DOCK = 2,
-        DOCK = 4,
-        TOP = 6,
-        NORMAL = 8,
-        BOTTOM = 10,
-        DESKTOP = 12,
-        NUM_LAYERS = 13
-    };
+  enum {
+    MENU = 0,
+    ABOVE_DOCK = 2,
+    DOCK = 4,
+    TOP = 6,
+    NORMAL = 8,
+    BOTTOM = 10,
+    DESKTOP = 12,
+    NUM_LAYERS = 13
+  };
 
-    explicit ResourceLayer(int i) : m_num(i) {};
+  explicit ResourceLayer(int i) : m_num(i){};
 
-    static int getNumFromString(const std::string &str) {
-        int tempnum = 0;
-        std::string v = FbTk::StringUtil::toLower(str);
-        if (FbTk::StringUtil::extractNumber(str, tempnum))
-            return tempnum;
-        if (v == "menu")
-            return ::ResourceLayer::MENU;
-        if (v == "abovedock")
-            return ::ResourceLayer::ABOVE_DOCK;
-        if (v == "dock")
-            return ::ResourceLayer::DOCK;
-        if (v == "top")
-            return ::ResourceLayer::TOP;
-        if (v == "normal")
-            return ::ResourceLayer::NORMAL;
-        if (v == "bottom")
-            return ::ResourceLayer::BOTTOM;
-        if (v == "desktop")
-            return ::ResourceLayer::DESKTOP;
-        return -1;
+  static int getNumFromString(const std::string &str) {
+    int tempnum = 0;
+    std::string v = FbTk::StringUtil::toLower(str);
+    if (FbTk::StringUtil::extractNumber(str, tempnum))
+      return tempnum;
+    if (v == "menu")
+      return ::ResourceLayer::MENU;
+    if (v == "abovedock")
+      return ::ResourceLayer::ABOVE_DOCK;
+    if (v == "dock")
+      return ::ResourceLayer::DOCK;
+    if (v == "top")
+      return ::ResourceLayer::TOP;
+    if (v == "normal")
+      return ::ResourceLayer::NORMAL;
+    if (v == "bottom")
+      return ::ResourceLayer::BOTTOM;
+    if (v == "desktop")
+      return ::ResourceLayer::DESKTOP;
+    return -1;
+  }
+
+  static std::string getString(int num) {
+    switch (num) {
+    case ::ResourceLayer::MENU:
+      return std::string("Menu");
+    case ::ResourceLayer::ABOVE_DOCK:
+      return std::string("AboveDock");
+    case ::ResourceLayer::DOCK:
+      return std::string("Dock");
+    case ::ResourceLayer::TOP:
+      return std::string("Top");
+    case ::ResourceLayer::NORMAL:
+      return std::string("Normal");
+    case ::ResourceLayer::BOTTOM:
+      return std::string("Bottom");
+    case ::ResourceLayer::DESKTOP:
+      return std::string("Desktop");
+    default:
+      return FbTk::StringUtil::number2String(num);
     }
+  }
 
-    static std::string getString(int num) {
-        switch (num) {
-        case ::ResourceLayer::MENU:
-            return std::string("Menu");
-        case ::ResourceLayer::ABOVE_DOCK:
-            return std::string("AboveDock");
-        case ::ResourceLayer::DOCK:
-            return std::string("Dock");
-        case ::ResourceLayer::TOP:
-            return std::string("Top");
-        case ::ResourceLayer::NORMAL:
-            return std::string("Normal");
-        case ::ResourceLayer::BOTTOM:
-            return std::string("Bottom");
-        case ::ResourceLayer::DESKTOP:
-            return std::string("Desktop");
-        default:
-           return FbTk::StringUtil::number2String(num);
-        }
-    }
+  int getNum() const { return m_num; }
+  std::string getString() const { return getString(m_num); }
 
-    int getNum() const { return m_num; }
-    std::string getString() const { return getString(m_num); }
-
-    ResourceLayer &operator=(int num) { m_num = num; return *this; }
+  ResourceLayer &operator=(int num) {
+    m_num = num;
+    return *this;
+  }
 
 private:
-    int m_num;
+  int m_num;
 };
 
 #endif // RESOURCE_LAYER_HH

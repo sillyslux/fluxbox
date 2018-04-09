@@ -29,10 +29,10 @@ namespace FbTk {
 // abstract base class providing access and validation
 class ITypeAheadable {
 public:
-    virtual ~ITypeAheadable() { }
+  virtual ~ITypeAheadable() {}
 
-    virtual const std::string &iTypeString() const = 0;
-    virtual bool isEnabled() const { return true; }
+  virtual const std::string &iTypeString() const = 0;
+  virtual bool isEnabled() const { return true; }
 };
 
 } // end namespace FbTk

@@ -1,7 +1,7 @@
-// FbString.hh for fluxbox 
+// FbString.hh for fluxbox
 // Copyright (c) 2006 Henrik Kinnunen (fluxgen at fluxbox dot org)
 // Copyright (c) 2006 Simon Bowden    (rathnor at fluxbox dot org)
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
@@ -40,19 +40,18 @@ typedef std::string FbString;
 class BiDiString {
 
 public:
+  BiDiString(const FbString &logical = FbString());
 
-    BiDiString(const FbString& logical = FbString());
+  const FbString &logical() const { return m_logical; }
+  const FbString &visual() const;
 
-    const FbString& logical() const { return m_logical; }
-    const FbString& visual() const;
-
-    const FbString& setLogical(const FbString& logical);
+  const FbString &setLogical(const FbString &logical);
 
 private:
-    FbString m_logical;
+  FbString m_logical;
 #ifdef HAVE_FRIBIDI
-    mutable FbString m_visual;
-    mutable bool m_visual_dirty;
+  mutable FbString m_visual;
+  mutable bool m_visual_dirty;
 #endif
 };
 
@@ -76,27 +75,25 @@ bool haveUTF8();
 
 } // namespace FbStringUtil
 
-class StringConvertor: private NotCopyable {
+class StringConvertor : private NotCopyable {
 public:
+  enum EncodingTarget { ToFbString, ToLocaleStr };
 
-    enum EncodingTarget { ToFbString, ToLocaleStr };
+  StringConvertor(EncodingTarget target);
+  ~StringConvertor();
 
-    StringConvertor(EncodingTarget target);
-    ~StringConvertor();
+  bool setSource(const std::string &encoding);
+  void reset();
 
-    bool setSource(const std::string &encoding);
-    void reset();
-
-    FbString recode(const FbString &src);
+  FbString recode(const FbString &src);
 
 private:
 #ifdef HAVE_ICONV
-    iconv_t m_iconv;
+  iconv_t m_iconv;
 #endif
-    std::string m_destencoding;
+  std::string m_destencoding;
 };
 
 } // namespace FbTk
 
 #endif // FBTK_FBSTRING_HH
-

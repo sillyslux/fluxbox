@@ -24,8 +24,8 @@
 
 #include <X11/Xlib.h>
 
-#include "FbString.hh"
 #include "Color.hh"
+#include "FbString.hh"
 #include "Orientation.hh"
 
 namespace FbTk {
@@ -38,91 +38,95 @@ class FbDrawable;
 */
 class Font {
 public:
+  static const char DEFAULT_FONT[];
 
-    static const char DEFAULT_FONT[];
+  /// called at FbTk::App destruction time, cleans up cache
+  static void shutdown();
 
+  /// @return true if multibyte is enabled, else false
+  static bool multibyte();
+  /// @return true if utf-8 mode is enabled, else false
+  static bool utf8();
 
-    /// called at FbTk::App destruction time, cleans up cache
-    static void shutdown();
+  explicit Font(const char *name = DEFAULT_FONT);
+  virtual ~Font();
+  /**
+      Load a font
+      @return true on success, else false and it'll fall back on the last
+      loaded font
+  */
+  bool load(const std::string &name);
 
-    /// @return true if multibyte is enabled, else false
-    static bool multibyte();
-    /// @return true if utf-8 mode is enabled, else false
-    static bool utf8();
+  void setHalo(bool flag) {
+    m_halo = flag;
+    if (m_halo)
+      setShadow(false);
+  }
+  void setHaloColor(const Color &color) { m_halo_color = color; }
 
+  void setShadow(bool flag) {
+    m_shadow = flag;
+    if (m_shadow)
+      setHalo(false);
+  }
+  void setShadowColor(const Color &color) { m_shadow_color = color; }
+  void setShadowOffX(int offx) { m_shadow_offx = offx; }
+  void setShadowOffY(int offy) { m_shadow_offy = offy; }
 
-    explicit Font(const char* name = DEFAULT_FONT);
-    virtual ~Font();
-    /**
-        Load a font
-        @return true on success, else false and it'll fall back on the last
-        loaded font
-    */
-    bool load(const std::string &name);
+  /**
+     @param text text to check size
+     @param size length of text in bytes
+     @return size of text in pixels
+  */
+  unsigned int textWidth(const char *text, unsigned int size) const;
+  unsigned int textWidth(const BiDiString &text) const;
 
-    void setHalo(bool flag)   { m_halo = flag; if (m_halo) setShadow(false); }
-    void setHaloColor(const Color& color) { m_halo_color = color; }
+  unsigned int height() const;
+  int ascent() const;
+  int descent() const;
 
-    void setShadow(bool flag) { m_shadow = flag; if (m_shadow) setHalo(false); }
-    void setShadowColor(const Color& color) { m_shadow_color = color; }
-    void setShadowOffX(int offx) { m_shadow_offx = offx; }
-    void setShadowOffY(int offy) { m_shadow_offy = offy; }
+  /**
+     Returns whether we can draw this font in the given orientation.
+     (will instantiate that orientation, so do plan to use it...)
+     @param orient the orientation to test
+  */
+  bool validOrientation(FbTk::Orientation orient);
 
-    /**
-       @param text text to check size
-       @param size length of text in bytes
-       @return size of text in pixels
-    */
-    unsigned int textWidth(const char* text, unsigned int size) const;
-    unsigned int textWidth(const BiDiString &text) const;
+  /**
+     Draws text to drawable
+     @param w the drawable
+     @param screen screen number
+     @param gc Graphic Context
+     @param text the text buffer
+     @param len size of text buffer
+     @param x position
+     @param y position
+     @param rotate if the text should be drawn rotated (if it's rotated before)
+  */
+  void drawText(const FbDrawable &w, int screen, GC gc, const char *text,
+                size_t len, int x, int y,
+                FbTk::Orientation orient = ROT0) const;
+  void drawText(const FbDrawable &w, int screen, GC gc, const BiDiString &text,
+                int x, int y, FbTk::Orientation orient = ROT0) const {
+    drawText(w, screen, gc, text.visual().c_str(), text.visual().size(), x, y,
+             orient);
+  }
 
-    unsigned int height() const;
-    int ascent() const;
-    int descent() const;
+  bool hasShadow() const { return m_shadow; }
+  bool hasHalo() const { return m_halo; }
 
-    /**
-       Returns whether we can draw this font in the given orientation.
-       (will instantiate that orientation, so do plan to use it...)
-       @param orient the orientation to test
-    */
-    bool validOrientation(FbTk::Orientation orient);
-
-    /**
-       Draws text to drawable
-       @param w the drawable
-       @param screen screen number
-       @param gc Graphic Context
-       @param text the text buffer
-       @param len size of text buffer
-       @param x position
-       @param y position
-       @param rotate if the text should be drawn rotated (if it's rotated before)
-    */
-    void drawText(const FbDrawable &w, int screen, GC gc,
-                  const char* text, size_t len,
-                  int x, int y, FbTk::Orientation orient = ROT0) const;
-    void drawText(const FbDrawable &w, int screen, GC gc,
-                  const BiDiString &text,
-                  int x, int y, FbTk::Orientation orient = ROT0) const {
-        drawText(w, screen, gc, text.visual().c_str(), text.visual().size(), x, y, orient);
-    }
-
-
-    bool hasShadow() const { return m_shadow; }
-    bool hasHalo() const { return m_halo; }
 private:
+  FbTk::FontImp *m_fontimp; ///< font implementation
+  std::string m_fontstr;    ///< font name
 
-    FbTk::FontImp* m_fontimp; ///< font implementation
-    std::string m_fontstr; ///< font name
-
-    bool m_shadow; ///< shadow text
-    Color m_shadow_color; ///< shadow color
-    int m_shadow_offx; ///< offset y for shadow
-    int m_shadow_offy; ///< offset x for shadow
-    bool m_halo; ///< halo text
-    Color m_halo_color; ///< halo color
+  bool m_shadow;        ///< shadow text
+  Color m_shadow_color; ///< shadow color
+  int m_shadow_offx;    ///< offset y for shadow
+  int m_shadow_offy;    ///< offset x for shadow
+  bool m_halo;          ///< halo text
+  Color m_halo_color;   ///< halo color
 };
 
-} //end namespace FbTk
+} // end namespace FbTk
 
-#endif //FBTK_FONT_HH
+#endif // FBTK_FONT_HH

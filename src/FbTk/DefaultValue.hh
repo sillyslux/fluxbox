@@ -30,25 +30,27 @@ namespace FbTk {
 
 // Ret = type of value that gets returned
 // Def = type of default value -- may be Accessor<Ret> &, for example
-template <typename Ret, typename Def=Ret &>
-class DefaultValue: public Accessor<Ret> {
+template <typename Ret, typename Def = Ret &>
+class DefaultValue : public Accessor<Ret> {
 public:
-    DefaultValue(const Def def):
-        m_default(def), m_actual(def), m_use_default(true) { }
+  DefaultValue(const Def def)
+      : m_default(def), m_actual(def), m_use_default(true) {}
 
-    void restoreDefault() { m_use_default = true; }
-    bool isDefault() const { return m_use_default; }
+  void restoreDefault() { m_use_default = true; }
+  bool isDefault() const { return m_use_default; }
 
-    DefaultValue<Ret, Def> &operator =(const Ret &val) {
-        m_use_default = false; m_actual = val; return *this;
-    }
+  DefaultValue<Ret, Def> &operator=(const Ret &val) {
+    m_use_default = false;
+    m_actual = val;
+    return *this;
+  }
 
-    operator Ret() const { return m_use_default ? m_default : m_actual; }
+  operator Ret() const { return m_use_default ? m_default : m_actual; }
 
 private:
-    const Def m_default;
-    Ret m_actual;
-    bool m_use_default;
+  const Def m_default;
+  Ret m_actual;
+  bool m_use_default;
 };
 
 } // end namespace FbTk

@@ -1,7 +1,7 @@
 // MultiButtonMenuItem.hh for FbTk
 // Copyright (c) 2003 Henrik Kinnunen (fluxgen at fluxbox dot org)
 //                and Simon Bowden    (rathnor at users.sourceforge.net)
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
@@ -28,23 +28,24 @@
 namespace FbTk {
 
 /// Handles commands for the specified numbers of buttons
-class MultiButtonMenuItem: public FbTk::MenuItem {
+class MultiButtonMenuItem : public FbTk::MenuItem {
 public:
-    MultiButtonMenuItem(int buttons, const FbTk::BiDiString& label);  
-    MultiButtonMenuItem(int buttons, const FbTk::BiDiString& label, Menu *submenu);
-    virtual ~MultiButtonMenuItem();
-    /// sets command to specified button
-    void setCommand(int button, FbTk::RefCount<FbTk::Command<void> > &cmd);
-    /// executes command for the button click
-    virtual void click(int button, int time, unsigned int mods);
-    /// @return number of buttons this instance handles
-    unsigned int buttons() const { return m_buttons; }
+  MultiButtonMenuItem(int buttons, const FbTk::BiDiString &label);
+  MultiButtonMenuItem(int buttons, const FbTk::BiDiString &label,
+                      Menu *submenu);
+  virtual ~MultiButtonMenuItem();
+  /// sets command to specified button
+  void setCommand(int button, FbTk::RefCount<FbTk::Command<void>> &cmd);
+  /// executes command for the button click
+  virtual void click(int button, int time, unsigned int mods);
+  /// @return number of buttons this instance handles
+  unsigned int buttons() const { return m_buttons; }
 
 private:
-    void init(int buttons);
+  void init(int buttons);
 
-    FbTk::RefCount<FbTk::Command<void> > *m_button_exe;
-    unsigned int m_buttons;
+  FbTk::RefCount<FbTk::Command<void>> *m_button_exe;
+  unsigned int m_buttons;
 };
 
 } // end namespace FbTk

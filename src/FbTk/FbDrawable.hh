@@ -29,48 +29,44 @@ namespace FbTk {
 /// Basic drawing functions for X drawables
 class FbDrawable {
 public:
-    FbDrawable();
-    virtual ~FbDrawable() { }
-    virtual void copyArea(Drawable src, GC gc,
-                          int src_x, int src_y,
-                          int dest_x, int dest_y,
-                          unsigned int width, unsigned int height);
+  FbDrawable();
+  virtual ~FbDrawable() {}
+  virtual void copyArea(Drawable src, GC gc, int src_x, int src_y, int dest_x,
+                        int dest_y, unsigned int width, unsigned int height);
 
-    virtual void fillRectangle(GC gc, int x, int y,
-                               unsigned int width, unsigned int height);
+  virtual void fillRectangle(GC gc, int x, int y, unsigned int width,
+                             unsigned int height);
 
-    virtual void drawRectangle(GC gc, int x, int y, 
-                               unsigned int width, unsigned int height);
+  virtual void drawRectangle(GC gc, int x, int y, unsigned int width,
+                             unsigned int height);
 
-    virtual void drawLine(GC gc, int start_x, int start_y, 
-                          int end_x, int end_y);
-    virtual void fillPolygon(GC gc, XPoint *points, int npoints,
-                             int shape, int mode);
+  virtual void drawLine(GC gc, int start_x, int start_y, int end_x, int end_y);
+  virtual void fillPolygon(GC gc, XPoint *points, int npoints, int shape,
+                           int mode);
 
-    /// type of arrow that should be drawn
-    enum TriangleType { 
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN
-    };
+  /// type of arrow that should be drawn
+  enum TriangleType { LEFT, RIGHT, UP, DOWN };
 
-    // x, y, width and height define a space within which we're drawing a triangle
-    // scale defines number of triangles that'd fit in a space of 100 width x 100 height
-    // (i.e. 200 = half size, 300 = a third).
+  // x, y, width and height define a space within which we're drawing a triangle
+  // scale defines number of triangles that'd fit in a space of 100 width x 100
+  // height
+  // (i.e. 200 = half size, 300 = a third).
 
-    virtual void drawTriangle(GC gc, TriangleType type, int x, int y, unsigned int width, unsigned int height, int scale);
+  virtual void drawTriangle(GC gc, TriangleType type, int x, int y,
+                            unsigned int width, unsigned int height, int scale);
 
-    virtual XImage *image(int x, int y, unsigned int width, unsigned int height) const;
+  virtual XImage *image(int x, int y, unsigned int width,
+                        unsigned int height) const;
 
-    /// X drawable
-    virtual Drawable drawable() const = 0;
-    virtual unsigned int width() const = 0;
-    virtual unsigned int height() const = 0;
-    virtual unsigned int depth() const = 0;
-    static Display *display() { return s_display; }
+  /// X drawable
+  virtual Drawable drawable() const = 0;
+  virtual unsigned int width() const = 0;
+  virtual unsigned int height() const = 0;
+  virtual unsigned int depth() const = 0;
+  static Display *display() { return s_display; }
+
 protected:
-    static Display *s_display; // display connection
+  static Display *s_display; // display connection
 };
 
 } // end namespace FbTk

@@ -22,43 +22,43 @@
 #ifndef TEXTDIALOG_HH
 #define TEXTDIALOG_HH
 
+#include "FbTk/GContext.hh"
 #include "FbTk/TextBox.hh"
 #include "FbTk/TextButton.hh"
-#include "FbTk/GContext.hh"
 
 class BScreen;
 
-class TextDialog: public FbTk::FbWindow, public FbTk::EventHandler {
+class TextDialog : public FbTk::FbWindow, public FbTk::EventHandler {
 public:
-    TextDialog(BScreen &screen, const std::string &title);
-    virtual ~TextDialog();
+  TextDialog(BScreen &screen, const std::string &title);
+  virtual ~TextDialog();
 
-    /// Sets the entry text.
-    void setText(const FbTk::BiDiString& text);
+  /// Sets the entry text.
+  void setText(const FbTk::BiDiString &text);
 
-    void show();
-    void hide();
+  void show();
+  void hide();
 
-    void exposeEvent(XExposeEvent &event);
-    void motionNotifyEvent(XMotionEvent &event);
-    void buttonPressEvent(XButtonEvent &event);
-    void handleEvent(XEvent &event);
-    void keyPressEvent(XKeyEvent &event);
+  void exposeEvent(XExposeEvent &event);
+  void motionNotifyEvent(XMotionEvent &event);
+  void buttonPressEvent(XButtonEvent &event);
+  void handleEvent(XEvent &event);
+  void keyPressEvent(XKeyEvent &event);
 
 protected:
-    virtual void exec(const std::string &text) = 0;
-    virtual void tabComplete() { }
+  virtual void exec(const std::string &text) = 0;
+  virtual void tabComplete() {}
 
-    void init();
-    void render();
-    void updateSizes();
+  void init();
+  void render();
+  void updateSizes();
 
-    FbTk::TextBox m_textbox; //< entry field
-    FbTk::TextButton m_label; //< text in the titlebar
-    FbTk::GContext m_gc;
-    BScreen &m_screen;
-    int m_move_x, m_move_y;
-    Pixmap m_pixmap;
+  FbTk::TextBox m_textbox;  //< entry field
+  FbTk::TextButton m_label; //< text in the titlebar
+  FbTk::GContext m_gc;
+  BScreen &m_screen;
+  int m_move_x, m_move_y;
+  Pixmap m_pixmap;
 };
 
 #endif // TEXTDIALOG_HH

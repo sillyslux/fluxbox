@@ -22,31 +22,31 @@
 #ifndef SLITTHEME_HH
 #define SLITTHEME_HH
 
-#include "FbTk/Theme.hh"
-#include "FbTk/Texture.hh"
 #include "FbTk/Color.hh"
+#include "FbTk/Texture.hh"
+#include "FbTk/Theme.hh"
 
-class SlitTheme: public FbTk::Theme, public FbTk::ThemeProxy<SlitTheme> {
+class SlitTheme : public FbTk::Theme, public FbTk::ThemeProxy<SlitTheme> {
 public:
-    explicit SlitTheme(int screen_num);
+  explicit SlitTheme(int screen_num);
 
-    void reconfigTheme();
-    bool fallback(FbTk::ThemeItem_base &item);
+  void reconfigTheme();
+  bool fallback(FbTk::ThemeItem_base &item);
 
-    const FbTk::Texture &texture() const { return *m_texture; }
-    const FbTk::Color &borderColor() const { return *m_border_color; }
-    int borderWidth() const { return *m_border_width; }
-    int bevelWidth() const { return *m_bevel_width; }
+  const FbTk::Texture &texture() const { return *m_texture; }
+  const FbTk::Color &borderColor() const { return *m_border_color; }
+  int borderWidth() const { return *m_border_width; }
+  int bevelWidth() const { return *m_bevel_width; }
 
-    virtual FbTk::Signal<> &reconfigSig() { return FbTk::Theme::reconfigSig(); }
+  virtual FbTk::Signal<> &reconfigSig() { return FbTk::Theme::reconfigSig(); }
 
-    virtual SlitTheme &operator *() { return *this; }
-    virtual const SlitTheme &operator *() const { return *this; }
+  virtual SlitTheme &operator*() { return *this; }
+  virtual const SlitTheme &operator*() const { return *this; }
 
 private:
-    FbTk::ThemeItem<FbTk::Texture> m_texture;
-    FbTk::ThemeItem<int> m_border_width, m_bevel_width;
-    FbTk::ThemeItem<FbTk::Color> m_border_color;
+  FbTk::ThemeItem<FbTk::Texture> m_texture;
+  FbTk::ThemeItem<int> m_border_width, m_bevel_width;
+  FbTk::ThemeItem<FbTk::Color> m_border_color;
 };
 
 #endif // SLITTHEME_HH

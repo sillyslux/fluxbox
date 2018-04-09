@@ -25,33 +25,33 @@
 #include "Command.hh"
 #include "RefCount.hh"
 
-#include <vector>
 #include <cstdlib> // size_t
+#include <vector>
 
 namespace FbTk {
 
 /// executes a list of commands
-class MacroCommand:public Command<void> {
+class MacroCommand : public Command<void> {
 public:
-    void add(RefCount<Command<void> > &com);
-    size_t size() const;
-    virtual void execute();
+  void add(RefCount<Command<void>> &com);
+  size_t size() const;
+  virtual void execute();
 
 private:
-    std::vector<RefCount<Command<void> > > m_commandlist;
+  std::vector<RefCount<Command<void>>> m_commandlist;
 };
 
 /// executes one command at a time
-class ToggleCommand:public Command<void> {
+class ToggleCommand : public Command<void> {
 public:
-    ToggleCommand();
-    void add(RefCount<Command<void> > &com);
-    size_t size() const;
-    virtual void execute();
+  ToggleCommand();
+  void add(RefCount<Command<void>> &com);
+  size_t size() const;
+  virtual void execute();
 
 private:
-    std::vector<RefCount<Command<void> > > m_commandlist;
-    size_t m_state;
+  std::vector<RefCount<Command<void>>> m_commandlist;
+  size_t m_state;
 };
 
 } // end namespace FbTk

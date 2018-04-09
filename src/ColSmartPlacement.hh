@@ -24,10 +24,10 @@
 
 #include "PlacementStrategy.hh"
 
-class ColSmartPlacement: public PlacementStrategy {
+class ColSmartPlacement : public PlacementStrategy {
 public:
-    bool placeWindow(const FluxboxWindow &win, int head,
-                     int &place_x, int &place_y);
+  bool placeWindow(const FluxboxWindow &win, int head, int &place_x,
+                   int &place_y);
 };
 
 #endif // COLSMARTPLACEMENT_HH

@@ -34,5 +34,4 @@
 #error "You dont have sstream or strstream headers!"
 #endif // HAVE_STRSTREAM
 
-
 #endif // FBTK_STRINGSTREAM_HH

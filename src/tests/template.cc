@@ -24,78 +24,68 @@
  *
  */
 #include "App.hh"
-#include "FbWindow.hh"
-#include "Font.hh"
+#include "Color.hh"
 #include "EventHandler.hh"
 #include "EventManager.hh"
+#include "FbWindow.hh"
+#include "Font.hh"
 #include "GContext.hh"
-#include "Color.hh"
 
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
 
-#include <string>
 #include <iostream>
+#include <string>
 using namespace std;
 
-class App:public FbTk::App, public FbTk::EventHandler {
+class App : public FbTk::App, public FbTk::EventHandler {
 public:
-    App(const char *displayname):
-        FbTk::App(displayname),
-        m_win(DefaultScreen(display()),
-              0, 0, 640, 480, KeyPressMask | ExposureMask | 
-              ButtonPressMask | ButtonReleaseMask | ButtonMotionMask) { 
+  App(const char *displayname)
+      : FbTk::App(displayname),
+        m_win(DefaultScreen(display()), 0, 0, 640, 480,
+              KeyPressMask | ExposureMask | ButtonPressMask |
+                  ButtonReleaseMask | ButtonMotionMask) {
 
-        m_win.show();
-        m_win.setBackgroundColor(FbTk::Color("white", m_win.screenNumber()));
-        FbTk::EventManager::instance()->add(*this, m_win);
-    }
+    m_win.show();
+    m_win.setBackgroundColor(FbTk::Color("white", m_win.screenNumber()));
+    FbTk::EventManager::instance()->add(*this, m_win);
+  }
 
-    ~App() {
-    }
+  ~App() {}
 
-    void keyPressEvent(XKeyEvent &ke) {
-        cerr<<"KeyPress"<<endl;
-        KeySym ks;
-        char keychar[1];
-        XLookupString(&ke, keychar, 1, &ks, 0);
-        if (ks == XK_Escape)
-            end();
-    }
-    void buttonPressEvent(XButtonEvent &be) {
-        cerr<<"ButtonPress"<<endl;
-    }
-    void buttonReleaseEvent(XButtonEvent &be) {
-        cerr<<"ButtonRelease"<<endl;
-    }
-    void motionNotifyEvent(XMotionEvent &event) {
-        cerr<<"MotionNotify"<<endl;
-    }
-    void exposeEvent(XExposeEvent &event) {
-        cerr<<"ExposeEvent"<<endl;
-        redraw();
-    }
+  void keyPressEvent(XKeyEvent &ke) {
+    cerr << "KeyPress" << endl;
+    KeySym ks;
+    char keychar[1];
+    XLookupString(&ke, keychar, 1, &ks, 0);
+    if (ks == XK_Escape)
+      end();
+  }
+  void buttonPressEvent(XButtonEvent &be) { cerr << "ButtonPress" << endl; }
+  void buttonReleaseEvent(XButtonEvent &be) { cerr << "ButtonRelease" << endl; }
+  void motionNotifyEvent(XMotionEvent &event) {
+    cerr << "MotionNotify" << endl;
+  }
+  void exposeEvent(XExposeEvent &event) {
+    cerr << "ExposeEvent" << endl;
+    redraw();
+  }
 
-    void redraw() {
-
-    }
-
+  void redraw() {}
 
 private:
-    FbTk::FbWindow m_win;
-
+  FbTk::FbWindow m_win;
 };
 
 int main(int argc, char **argv) {
-    string displayname("");
-    for (int a=1; a<argc; ++a) {
-        if (strcmp("-display", argv[a]) == 0 && a + 1 < argc) {
-            displayname = argv[++a];
-        }
+  string displayname("");
+  for (int a = 1; a < argc; ++a) {
+    if (strcmp("-display", argv[a]) == 0 && a + 1 < argc) {
+      displayname = argv[++a];
     }
+  }
 
-    App app(displayname.c_str());
+  App app(displayname.c_str());
 
-    app.eventLoop();
-	
+  app.eventLoop();
 }

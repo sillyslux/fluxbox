@@ -30,43 +30,53 @@
 class BScreen;
 
 /// holds slit client info
-class SlitClient: private FbTk::NotCopyable {
+class SlitClient : private FbTk::NotCopyable {
 public:
-    /// For adding an actual window
-    SlitClient(BScreen *screen, Window win);
-    /// For adding a placeholder
-    explicit SlitClient(const char *name);
+  /// For adding an actual window
+  SlitClient(BScreen *screen, Window win);
+  /// For adding a placeholder
+  explicit SlitClient(const char *name);
 
-    const FbTk::BiDiString &matchName() const { return m_match_name; }
-    Window window() const { return m_window; }
-    Window clientWindow() const { return m_client_window; }
-    Window iconWindow() const { return m_icon_window; }
-    int x() const { return m_x; }
-    int y() const { return m_y; }
-    unsigned int width() const { return m_width; }
-    unsigned int height() const { return m_height; }
-    bool visible() const { return m_visible; }
+  const FbTk::BiDiString &matchName() const { return m_match_name; }
+  Window window() const { return m_window; }
+  Window clientWindow() const { return m_client_window; }
+  Window iconWindow() const { return m_icon_window; }
+  int x() const { return m_x; }
+  int y() const { return m_y; }
+  unsigned int width() const { return m_width; }
+  unsigned int height() const { return m_height; }
+  bool visible() const { return m_visible; }
 
+  void setIconWindow(Window win) { m_icon_window = win; }
+  void setWindow(Window win) { m_window = win; }
+  void move(int x, int y) {
+    m_x = x;
+    m_y = y;
+  }
+  void resize(unsigned int width, unsigned int height) {
+    m_width = width;
+    m_height = height;
+  }
+  void moveResize(int x, int y, unsigned int width, unsigned int height) {
+    m_x = x;
+    m_y = y;
+    m_width = width;
+    m_height = height;
+  }
+  void hide();
+  void show();
+  void setVisible(bool value) { m_visible = value; }
 
-    void setIconWindow(Window win) { m_icon_window = win; }
-    void setWindow(Window win) { m_window = win; }
-    void move(int x, int y) { m_x = x; m_y = y; }
-    void resize(unsigned int width, unsigned int height) { m_width = width; m_height = height; }
-    void moveResize(int x, int y, unsigned int width, unsigned int height) { m_x = x; m_y = y; m_width = width; m_height = height; }
-    void hide();
-    void show();
-    void setVisible(bool value) { m_visible = value; }
-
-    void initialize(BScreen *screen = 0, Window win= None);
-    void disableEvents();
-    void enableEvents();
+  void initialize(BScreen *screen = 0, Window win = None);
+  void disableEvents();
+  void enableEvents();
 
 private:
-    FbTk::BiDiString m_match_name;
-    Window m_window, m_client_window, m_icon_window;
-    int m_x, m_y;
-    unsigned int m_width, m_height;
-    bool m_visible; ///< whether the client should be visible or not
+  FbTk::BiDiString m_match_name;
+  Window m_window, m_client_window, m_icon_window;
+  int m_x, m_y;
+  unsigned int m_width, m_height;
+  bool m_visible; ///< whether the client should be visible or not
 };
 
 #endif // SLITCLIENT_HH

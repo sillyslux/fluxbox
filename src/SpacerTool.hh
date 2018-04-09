@@ -24,29 +24,27 @@
 
 #include "ToolbarItem.hh"
 
-
-class SpacerTool: public ToolbarItem {
+class SpacerTool : public ToolbarItem {
 public:
-    SpacerTool(int size = -1);
-    virtual ~SpacerTool();
-    void move(int x, int y) {}
-    void resize(unsigned int x, unsigned int y) {}
-    void moveResize(int x, int y,
-                    unsigned int width, unsigned int height) {}
-    void show() {}
-    void hide() {}
+  SpacerTool(int size = -1);
+  virtual ~SpacerTool();
+  void move(int x, int y) {}
+  void resize(unsigned int x, unsigned int y) {}
+  void moveResize(int x, int y, unsigned int width, unsigned int height) {}
+  void show() {}
+  void hide() {}
 
-    unsigned int width() const;
-    unsigned int height() const;
-    unsigned int borderWidth() const {return 0;}
+  unsigned int width() const;
+  unsigned int height() const;
+  unsigned int borderWidth() const { return 0; }
 
-    void parentMoved() {}
-    void updateSizing() {}
+  void parentMoved() {}
+  void updateSizing() {}
 
-    virtual void renderTheme(int alpha) {}
+  virtual void renderTheme(int alpha) {}
 
 private:
-    int m_size;
+  int m_size;
 };
 
 #endif // SPACERTOOL_HH

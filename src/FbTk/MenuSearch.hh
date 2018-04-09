@@ -1,14 +1,13 @@
 #ifndef _MENU_SEARCH_HH_
 #define _MENU_SEARCH_HH_
 
-#include <vector>
-#include <string>
 #include <cstddef>
+#include <string>
+#include <vector>
 
 namespace FbTk {
 
 class MenuItem;
-
 
 // a small helper which applies search operations on a list of MenuItems*.
 // the former incarnation of this class was FbTk::TypeAhead in combination with
@@ -19,43 +18,40 @@ class MenuItem;
 // MenuSearch is case insensitive.
 class MenuSearch {
 public:
+  enum Mode {
+    NOWHERE,
+    ITEMSTART,
+    SOMEWHERE,
 
-    enum Mode {
-        NOWHERE,
-        ITEMSTART,
-        SOMEWHERE,
+    DEFAULT = ITEMSTART
+  };
 
-        DEFAULT = ITEMSTART
-    };
+  static void setMode(Mode m);
 
-    static void setMode(Mode m);
+  MenuSearch(const std::vector<FbTk::MenuItem *> &items);
 
+  size_t size() const;
+  void clear();
+  void add(char c);
+  void backspace();
 
-    MenuSearch(const std::vector<FbTk::MenuItem*>& items);
+  // is 'pattern' matching something?
+  bool has_match();
 
-    size_t size() const;
-    void clear();
-    void add(char c);
-    void backspace();
+  // would 'the_pattern' match something?
+  bool would_match(const std::string &the_pattern);
 
-    // is 'pattern' matching something?
-    bool has_match();
+  size_t num_matches();
 
-    // would 'the_pattern' match something?
-    bool would_match(const std::string& the_pattern);
+  // returns true if m_text matches against m_items[i] and stores
+  // the position where it matches in the string
+  bool get_match(size_t i, size_t &idx);
 
-    size_t num_matches();
+  std::string pattern;
 
-    // returns true if m_text matches against m_items[i] and stores
-    // the position where it matches in the string
-    bool get_match(size_t i, size_t& idx);
-
-    std::string pattern;
 private:
-    const std::vector<FbTk::MenuItem*>& m_items;
+  const std::vector<FbTk::MenuItem *> &m_items;
 };
-
 }
-
 
 #endif

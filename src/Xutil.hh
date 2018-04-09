@@ -23,8 +23,8 @@
 #ifndef XUTIL_HH
 #define XUTIL_HH
 
-#include <X11/Xlib.h>
 #include "FbTk/FbString.hh"
+#include <X11/Xlib.h>
 
 namespace Xutil {
 
@@ -32,7 +32,6 @@ FbTk::FbString getWMName(Window window);
 
 FbTk::FbString getWMClassName(Window win);
 FbTk::FbString getWMClassClass(Window win);
-
 
 } // end namespace Xutil
 

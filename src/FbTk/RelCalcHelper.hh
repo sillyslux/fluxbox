@@ -19,25 +19,23 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-#ifndef  FBTK_RELCALCHELPER_HH
+#ifndef FBTK_RELCALCHELPER_HH
 #define FBTK_RELCALCHELPER_HH
 
 #ifdef HAVE_CMATH
-  #include <cmath>
+#include <cmath>
 #else
-  #include <math.h>
+#include <math.h>
 #endif
 
 namespace FbTk {
 
 namespace RelCalcHelper {
 
-  int calPercentageOf(int i, int j);
+int calPercentageOf(int i, int j);
 
-  int calPercentageValueOf(int i, int j);
-
+int calPercentageValueOf(int i, int j);
 }
-
 }
 
 #endif // FBTK_RELCALCHELPER_HH

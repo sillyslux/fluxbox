@@ -32,35 +32,33 @@ template <class T> class ThemeProxy;
 class BiDiString;
 }
 
-class OSDWindow: public FbTk::FbWindow {
+class OSDWindow : public FbTk::FbWindow {
 public:
-    OSDWindow(const FbTk::FbWindow &parent, BScreen &screen,
-              FbTk::ThemeProxy<FbWinFrameTheme> &theme):
-        FbTk::FbWindow(parent, 0, 0, 10, 10, 0, false, true),
-        m_screen(screen), m_theme(theme),
-        m_pixmap(None), m_visible(false) { }
+  OSDWindow(const FbTk::FbWindow &parent, BScreen &screen,
+            FbTk::ThemeProxy<FbWinFrameTheme> &theme)
+      : FbTk::FbWindow(parent, 0, 0, 10, 10, 0, false, true), m_screen(screen),
+        m_theme(theme), m_pixmap(None), m_visible(false) {}
 
-    void reconfigTheme();
-    void resizeForText(const FbTk::BiDiString &text);
-    void showText(const FbTk::BiDiString &text);
-    void hide();
+  void reconfigTheme();
+  void resizeForText(const FbTk::BiDiString &text);
+  void showText(const FbTk::BiDiString &text);
+  void hide();
 
-    bool isVisible() const { return m_visible; }
-    BScreen &screen() const { return m_screen; }
-    FbTk::ThemeProxy<FbWinFrameTheme> &theme() { return m_theme; }
+  bool isVisible() const { return m_visible; }
+  BScreen &screen() const { return m_screen; }
+  FbTk::ThemeProxy<FbWinFrameTheme> &theme() { return m_theme; }
+
 protected:
-    /// Force visible status, use with care.
-    void setVisible(bool visible) {
-        m_visible = visible;
-    }
+  /// Force visible status, use with care.
+  void setVisible(bool visible) { m_visible = visible; }
 
 private:
-    void show();
+  void show();
 
-    BScreen &m_screen;
-    FbTk::ThemeProxy<FbWinFrameTheme> &m_theme;
-    Pixmap m_pixmap;
-    bool m_visible;
+  BScreen &m_screen;
+  FbTk::ThemeProxy<FbWinFrameTheme> &m_theme;
+  Pixmap m_pixmap;
+  bool m_visible;
 };
 
 #endif // OSDWINDOW_HH

@@ -25,12 +25,13 @@
 
 #include "FbTk/RadioMenuItem.hh"
 
-class StyleMenuItem: public FbTk::RadioMenuItem {
+class StyleMenuItem : public FbTk::RadioMenuItem {
 public:
-    StyleMenuItem(const FbTk::FbString &label, const std::string &filename);
-    bool isSelected() const;
+  StyleMenuItem(const FbTk::FbString &label, const std::string &filename);
+  bool isSelected() const;
+
 private:
-    const std::string m_filename;
+  const std::string m_filename;
 };
 
 #endif // STYLEMENUITEM_HH

@@ -25,8 +25,8 @@
 
 #include "Layer.hh"
 #include "NotCopyable.hh"
-#include <vector>
 #include <cstdlib> // size_t
+#include <vector>
 
 namespace FbTk {
 
@@ -34,47 +34,48 @@ class FbWindow;
 
 class LayerItem : private NotCopyable {
 public:
-    typedef std::vector<FbWindow *> Windows;
+  typedef std::vector<FbWindow *> Windows;
 
-    LayerItem(FbWindow &win, Layer &layer);
-    ~LayerItem();
+  LayerItem(FbWindow &win, Layer &layer);
+  ~LayerItem();
 
-    void setLayer(Layer &layer);
+  void setLayer(Layer &layer);
 
-    void raise();
-    void lower();
-    void tempRaise(); // this raise gets reverted by a restack()
+  void raise();
+  void lower();
+  void tempRaise(); // this raise gets reverted by a restack()
 
-    // send to next layer up
-    void raiseLayer();
-    void lowerLayer();
-    void moveToLayer(int layernum);
+  // send to next layer up
+  void raiseLayer();
+  void lowerLayer();
+  void moveToLayer(int layernum);
 
-    // this is needed for step and cycle functions
-    // (you need to know the next one visible, otherwise nothing may appear to happen)
-    // not yet implemented
-    bool visible() const { return true; } 
+  // this is needed for step and cycle functions
+  // (you need to know the next one visible, otherwise nothing may appear to
+  // happen)
+  // not yet implemented
+  bool visible() const { return true; }
 
-    const Layer &getLayer() const { return *m_layer; }
-    Layer &getLayer() { return *m_layer; }
-    int getLayerNum() { return m_layer->getLayerNum(); }
+  const Layer &getLayer() const { return *m_layer; }
+  Layer &getLayer() { return *m_layer; }
+  int getLayerNum() { return m_layer->getLayerNum(); }
 
-    // an LayerItem holds several windows that are equivalent in a layer 
-    // (i.e. if one is raised, then they should all be).
-    void addWindow(FbWindow &win);
-    void removeWindow(FbWindow &win);
+  // an LayerItem holds several windows that are equivalent in a layer
+  // (i.e. if one is raised, then they should all be).
+  void addWindow(FbWindow &win);
+  void removeWindow(FbWindow &win);
 
-    // using this you can bring one window to the top of this item (equivalent to add then remove)
-    void bringToTop(FbWindow &win);
+  // using this you can bring one window to the top of this item (equivalent to
+  // add then remove)
+  void bringToTop(FbWindow &win);
 
-    Windows &getWindows() { return m_windows; }
-    size_t numWindows() const { return m_windows.size(); }
+  Windows &getWindows() { return m_windows; }
+  size_t numWindows() const { return m_windows.size(); }
 
 private:
-    Layer *m_layer;
-    Windows m_windows;
+  Layer *m_layer;
+  Windows m_windows;
 };
-
 }
 
 #endif // FBTK_LAYERITEM_HH

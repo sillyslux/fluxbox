@@ -28,212 +28,225 @@
 #include "ClientPattern.hh"
 #include "FocusControl.hh"
 
-class WindowListCmd: public FbTk::Command<void> {
+class WindowListCmd : public FbTk::Command<void> {
 public:
-    WindowListCmd(FbTk::RefCount<FbTk::Command<void> > cmd, int opts,
-                  FbTk::RefCount<FbTk::Command<bool> > filter):
-            m_cmd(cmd), m_opts(opts), m_filter(filter) { }
+  WindowListCmd(FbTk::RefCount<FbTk::Command<void>> cmd, int opts,
+                FbTk::RefCount<FbTk::Command<bool>> filter)
+      : m_cmd(cmd), m_opts(opts), m_filter(filter) {}
 
-    void execute();
-    static FbTk::Command<void> *parse(const std::string &command,
-                                const std::string &args, bool trusted);
-
-private:
-    FbTk::RefCount<FbTk::Command<void> > m_cmd;
-    int m_opts;
-    FbTk::RefCount<FbTk::Command<bool> > m_filter;
-};
-
-class SomeCmd: public FbTk::Command<bool> {
-public:
-    SomeCmd(FbTk::RefCount<FbTk::Command<bool> > cmd): m_cmd(cmd) { }
-
-    bool execute();
-    static FbTk::Command<bool> *parse(const std::string &command,
+  void execute();
+  static FbTk::Command<void> *parse(const std::string &command,
                                     const std::string &args, bool trusted);
 
 private:
-    FbTk::RefCount<FbTk::Command<bool> > m_cmd;
+  FbTk::RefCount<FbTk::Command<void>> m_cmd;
+  int m_opts;
+  FbTk::RefCount<FbTk::Command<bool>> m_filter;
 };
 
-class EveryCmd: public FbTk::Command<bool> {
+class SomeCmd : public FbTk::Command<bool> {
 public:
-    EveryCmd(FbTk::RefCount<FbTk::Command<bool> > cmd): m_cmd(cmd) { }
+  SomeCmd(FbTk::RefCount<FbTk::Command<bool>> cmd) : m_cmd(cmd) {}
 
-    bool execute();
+  bool execute();
+  static FbTk::Command<bool> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
 
 private:
-    FbTk::RefCount<FbTk::Command<bool> > m_cmd;
+  FbTk::RefCount<FbTk::Command<bool>> m_cmd;
 };
 
-class AttachCmd: public FbTk::Command<void> {
+class EveryCmd : public FbTk::Command<bool> {
 public:
-    explicit AttachCmd(const std::string &pat): m_pat(pat.c_str()) { }
-    void execute();
+  EveryCmd(FbTk::RefCount<FbTk::Command<bool>> cmd) : m_cmd(cmd) {}
+
+  bool execute();
+
 private:
-    const ClientPattern m_pat;
+  FbTk::RefCount<FbTk::Command<bool>> m_cmd;
 };
 
-class NextWindowCmd: public FbTk::Command<void> {
+class AttachCmd : public FbTk::Command<void> {
 public:
-    explicit NextWindowCmd(int option, std::string &pat):
-            m_option(option), m_pat(pat.c_str()) { }
-    void execute();
+  explicit AttachCmd(const std::string &pat) : m_pat(pat.c_str()) {}
+  void execute();
+
 private:
-    const int m_option;
-    const ClientPattern m_pat;
+  const ClientPattern m_pat;
 };
 
-class PrevWindowCmd: public FbTk::Command<void> {
+class NextWindowCmd : public FbTk::Command<void> {
 public:
-    explicit PrevWindowCmd(int option, std::string &pat):
-            m_option(option), m_pat(pat.c_str()) { }
-    void execute();
+  explicit NextWindowCmd(int option, std::string &pat)
+      : m_option(option), m_pat(pat.c_str()) {}
+  void execute();
+
 private:
-    const int m_option;
-    const ClientPattern m_pat;
+  const int m_option;
+  const ClientPattern m_pat;
 };
 
-class GoToWindowCmd: public FbTk::Command<void> {
+class PrevWindowCmd : public FbTk::Command<void> {
 public:
-    GoToWindowCmd(int num, int option, std::string &pat):
-            m_num(num), m_option(option), m_pat(pat.c_str()) { }
-    void execute();
-    static FbTk::Command<void> *parse(const std::string &command,
-                                const std::string &args, bool trusted);
+  explicit PrevWindowCmd(int option, std::string &pat)
+      : m_option(option), m_pat(pat.c_str()) {}
+  void execute();
+
 private:
-    const int m_num;
-    const int m_option;
-    const ClientPattern m_pat;
+  const int m_option;
+  const ClientPattern m_pat;
 };
 
-class DirFocusCmd: public FbTk::Command<void> {
+class GoToWindowCmd : public FbTk::Command<void> {
 public:
-    explicit DirFocusCmd(const FocusControl::FocusDir dir): m_dir(dir) { }
-    void execute();
-    static FbTk::Command<void> *parse(const std::string &command,
-                                const std::string &args, bool trusted);
+  GoToWindowCmd(int num, int option, std::string &pat)
+      : m_num(num), m_option(option), m_pat(pat.c_str()) {}
+  void execute();
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
+
 private:
-    const FocusControl::FocusDir m_dir;
+  const int m_num;
+  const int m_option;
+  const ClientPattern m_pat;
 };
 
-class AddWorkspaceCmd: public FbTk::Command<void> {
+class DirFocusCmd : public FbTk::Command<void> {
 public:
-    void execute();
-};
+  explicit DirFocusCmd(const FocusControl::FocusDir dir) : m_dir(dir) {}
+  void execute();
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
 
-class RemoveLastWorkspaceCmd: public FbTk::Command<void> {
-public:
-    void execute();
-};
-
-class NextWorkspaceCmd: public FbTk::Command<void> {
-public:
-    explicit NextWorkspaceCmd(int option):m_option(option) { }
-    void execute();
 private:
-    const int m_option;
+  const FocusControl::FocusDir m_dir;
 };
 
-class PrevWorkspaceCmd: public FbTk::Command<void> {
+class AddWorkspaceCmd : public FbTk::Command<void> {
 public:
-    explicit PrevWorkspaceCmd(int option):m_option(option) { }
-    void execute();
-private:
-    const int m_option;
+  void execute();
 };
 
-class LeftWorkspaceCmd: public FbTk::Command<void> {
+class RemoveLastWorkspaceCmd : public FbTk::Command<void> {
 public:
-    explicit LeftWorkspaceCmd(int num=1):m_param(num == 0 ? 1 : num) { }
-    void execute();
-private:
-    const int m_param;
+  void execute();
 };
 
-class RightWorkspaceCmd: public FbTk::Command<void> {
+class NextWorkspaceCmd : public FbTk::Command<void> {
 public:
-    explicit RightWorkspaceCmd(int num=1):m_param(num == 0 ? 1 : num) { }
-    void execute();
+  explicit NextWorkspaceCmd(int option) : m_option(option) {}
+  void execute();
+
 private:
-    const int m_param;
+  const int m_option;
 };
 
-class JumpToWorkspaceCmd: public FbTk::Command<void> {
+class PrevWorkspaceCmd : public FbTk::Command<void> {
 public:
-    explicit JumpToWorkspaceCmd(int workspace_num);
-    void execute();
+  explicit PrevWorkspaceCmd(int option) : m_option(option) {}
+  void execute();
+
 private:
-    const int m_workspace_num;
+  const int m_option;
+};
+
+class LeftWorkspaceCmd : public FbTk::Command<void> {
+public:
+  explicit LeftWorkspaceCmd(int num = 1) : m_param(num == 0 ? 1 : num) {}
+  void execute();
+
+private:
+  const int m_param;
+};
+
+class RightWorkspaceCmd : public FbTk::Command<void> {
+public:
+  explicit RightWorkspaceCmd(int num = 1) : m_param(num == 0 ? 1 : num) {}
+  void execute();
+
+private:
+  const int m_param;
+};
+
+class JumpToWorkspaceCmd : public FbTk::Command<void> {
+public:
+  explicit JumpToWorkspaceCmd(int workspace_num);
+  void execute();
+
+private:
+  const int m_workspace_num;
 };
 
 /// arranges windows in current workspace to rows and columns
-class ArrangeWindowsCmd: public FbTk::Command<void> {
+class ArrangeWindowsCmd : public FbTk::Command<void> {
 public:
-    enum {
-      UNSPECIFIED,
-      VERTICAL,
-      HORIZONTAL,
-      STACKLEFT,
-      STACKRIGHT,
-      STACKTOP,
-      STACKBOTTOM
-    };
-    explicit ArrangeWindowsCmd(int tile_method, std::string &pat):
-            m_tile_method( tile_method ), m_pat(pat.c_str()) { }
-    void execute();
+  enum {
+    UNSPECIFIED,
+    VERTICAL,
+    HORIZONTAL,
+    STACKLEFT,
+    STACKRIGHT,
+    STACKTOP,
+    STACKBOTTOM
+  };
+  explicit ArrangeWindowsCmd(int tile_method, std::string &pat)
+      : m_tile_method(tile_method), m_pat(pat.c_str()) {}
+  void execute();
+
 private:
-    const int m_tile_method;
-    const ClientPattern m_pat;
+  const int m_tile_method;
+  const ClientPattern m_pat;
 };
 
-class UnclutterCmd: public FbTk::Command<void> {
+class UnclutterCmd : public FbTk::Command<void> {
 public:
-    explicit UnclutterCmd(std::string &pat): m_pat(pat.c_str()) { }
-    void execute();
+  explicit UnclutterCmd(std::string &pat) : m_pat(pat.c_str()) {}
+  void execute();
+
 private:
-    const ClientPattern m_pat;
+  const ClientPattern m_pat;
 };
 
-class ShowDesktopCmd: public FbTk::Command<void> {
+class ShowDesktopCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-class ToggleSlitAboveCmd: public FbTk::Command<void> {
+class ToggleSlitAboveCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-class ToggleSlitHiddenCmd: public FbTk::Command<void> {
+class ToggleSlitHiddenCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-class ToggleToolbarAboveCmd: public FbTk::Command<void> {
+class ToggleToolbarAboveCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-class ToggleToolbarHiddenCmd: public FbTk::Command<void> {
+class ToggleToolbarHiddenCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-class CloseAllWindowsCmd: public FbTk::Command<void> {
+class CloseAllWindowsCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-class RelabelButtonCmd: public FbTk::Command<void> {
+class RelabelButtonCmd : public FbTk::Command<void> {
 public:
-    explicit RelabelButtonCmd(std::string button, std::string label):
-            m_button(button), m_label(label) {}
-    void execute();
-    static FbTk::Command<void> *parse(const std::string &command,
-                                const std::string &args, bool trusted);
+  explicit RelabelButtonCmd(std::string button, std::string label)
+      : m_button(button), m_label(label) {}
+  void execute();
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
+
 private:
-    std::string m_button, m_label;
+  std::string m_button, m_label;
 };
 
 #endif // WORKSPACECMD_HH

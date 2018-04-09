@@ -25,28 +25,27 @@
 #include "FbTk/Button.hh"
 
 /// Displays a arrow on a button
-class ArrowButton: public FbTk::Button {
+class ArrowButton : public FbTk::Button {
 public:
+  ArrowButton(FbTk::FbDrawable::TriangleType arrow_type,
+              const FbTk::FbWindow &parent, int x, int y, unsigned int width,
+              unsigned int height);
+  ArrowButton(FbTk::FbDrawable::TriangleType arrow_type, int screen_num, int x,
+              int y, unsigned int width, unsigned int height);
+  void clear();
+  void buttonReleaseEvent(XButtonEvent &event);
+  void buttonPressEvent(XButtonEvent &event);
+  void exposeEvent(XExposeEvent &event);
+  void enterNotifyEvent(XCrossingEvent &ce);
+  void leaveNotifyEvent(XCrossingEvent &ce);
 
-    ArrowButton(FbTk::FbDrawable::TriangleType arrow_type, const FbTk::FbWindow &parent,
-                int x, int y, 
-                unsigned int width, unsigned int height);
-    ArrowButton(FbTk::FbDrawable::TriangleType arrow_type, int screen_num,
-                int x, int y,
-                unsigned int width, unsigned int height);
-    void clear();
-    void buttonReleaseEvent(XButtonEvent &event);
-    void buttonPressEvent(XButtonEvent &event);
-    void exposeEvent(XExposeEvent &event);
-    void enterNotifyEvent(XCrossingEvent &ce);
-    void leaveNotifyEvent(XCrossingEvent &ce);
+  void updateTheme(const FbTk::Theme &theme);
 
-    void updateTheme(const FbTk::Theme &theme);
 private:
-    void drawArrow();
-    FbTk::FbDrawable::TriangleType m_arrow_type;
-    FbTk::EventHandler *m_mouse_handler;
-    int m_arrowscale;
+  void drawArrow();
+  FbTk::FbDrawable::TriangleType m_arrow_type;
+  FbTk::EventHandler *m_mouse_handler;
+  int m_arrowscale;
 };
 
 #endif // ARROWBUTTON_HH

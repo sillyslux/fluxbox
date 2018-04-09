@@ -23,7 +23,6 @@
 #ifndef FOCUSMODELMENUITEM_HH
 #define FOCUSMODELMENUITEM_HH
 
-
 #include "FbTk/RadioMenuItem.hh"
 #include "FbTk/RefCount.hh"
 
@@ -35,50 +34,51 @@ template <class T> class Command;
 
 class FocusModelMenuItem : public FbTk::RadioMenuItem {
 public:
-    FocusModelMenuItem(const FbTk::FbString &label, FocusControl &focus_control, 
-                       FocusControl::FocusModel model,
-                       FbTk::RefCount<FbTk::Command<void> > &cmd):
-        FbTk::RadioMenuItem(label, cmd),
-        m_focus_control(focus_control), 
+  FocusModelMenuItem(const FbTk::FbString &label, FocusControl &focus_control,
+                     FocusControl::FocusModel model,
+                     FbTk::RefCount<FbTk::Command<void>> &cmd)
+      : FbTk::RadioMenuItem(label, cmd), m_focus_control(focus_control),
         m_focusmodel(model) {
-        setCloseOnClick(false);
-    }
+    setCloseOnClick(false);
+  }
 
-    bool isSelected() const { return m_focus_control.focusModel() == m_focusmodel; }
+  bool isSelected() const {
+    return m_focus_control.focusModel() == m_focusmodel;
+  }
 
-    void click(int button, int time, unsigned int mods) {
-        m_focus_control.setFocusModel(m_focusmodel);
-        FbTk::RadioMenuItem::click(button, time, mods);
-    }
+  void click(int button, int time, unsigned int mods) {
+    m_focus_control.setFocusModel(m_focusmodel);
+    FbTk::RadioMenuItem::click(button, time, mods);
+  }
 
 private:
-    FocusControl &m_focus_control;
-    FocusControl::FocusModel m_focusmodel;
+  FocusControl &m_focus_control;
+  FocusControl::FocusModel m_focusmodel;
 };
 
 class TabFocusModelMenuItem : public FbTk::RadioMenuItem {
 public:
-    TabFocusModelMenuItem(const FbTk::FbString &label, 
-                          FocusControl &focus_control,
-                          FocusControl::TabFocusModel model, 
-                          FbTk::RefCount<FbTk::Command<void> > &cmd):
-        FbTk::RadioMenuItem(label, cmd),
-        m_focus_control(focus_control), 
+  TabFocusModelMenuItem(const FbTk::FbString &label,
+                        FocusControl &focus_control,
+                        FocusControl::TabFocusModel model,
+                        FbTk::RefCount<FbTk::Command<void>> &cmd)
+      : FbTk::RadioMenuItem(label, cmd), m_focus_control(focus_control),
         m_tabfocusmodel(model) {
-        setCloseOnClick(false);
-    }
+    setCloseOnClick(false);
+  }
 
-    bool isSelected() const { return m_focus_control.tabFocusModel() == m_tabfocusmodel; }
+  bool isSelected() const {
+    return m_focus_control.tabFocusModel() == m_tabfocusmodel;
+  }
 
-    void click(int button, int time, unsigned int mods) {
-        m_focus_control.setTabFocusModel(m_tabfocusmodel);
-        FbTk::RadioMenuItem::click(button, time, mods);
-    }
+  void click(int button, int time, unsigned int mods) {
+    m_focus_control.setTabFocusModel(m_tabfocusmodel);
+    FbTk::RadioMenuItem::click(button, time, mods);
+  }
 
 private:
-    FocusControl &m_focus_control;
-    FocusControl::TabFocusModel m_tabfocusmodel;
+  FocusControl &m_focus_control;
+  FocusControl::TabFocusModel m_tabfocusmodel;
 };
-
 
 #endif // FOCUSMODELMENUITEM_HH

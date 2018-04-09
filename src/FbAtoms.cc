@@ -24,35 +24,32 @@
 
 namespace {
 
-FbAtoms* s_singleton = 0;
+FbAtoms *s_singleton = 0;
 
 } // end of anonymous namespace
 
 FbAtoms::FbAtoms() {
 
-    Display* dpy = FbTk::App::instance()->display();
+  Display *dpy = FbTk::App::instance()->display();
 
-    xa_wm_protocols = XInternAtom(dpy, "WM_PROTOCOLS", False);
-    xa_wm_state = XInternAtom(dpy, "WM_STATE", False);
-    xa_wm_change_state = XInternAtom(dpy, "WM_CHANGE_STATE", False);
-    xa_wm_delete_window = XInternAtom(dpy, "WM_DELETE_WINDOW", False);
-    xa_wm_take_focus = XInternAtom(dpy, "WM_TAKE_FOCUS", False);
-    motif_wm_info = XInternAtom(dpy, "_MOTIF_WM_INFO", False);
-    motif_wm_hints = XInternAtom(dpy, "_MOTIF_WM_HINTS", False);
+  xa_wm_protocols = XInternAtom(dpy, "WM_PROTOCOLS", False);
+  xa_wm_state = XInternAtom(dpy, "WM_STATE", False);
+  xa_wm_change_state = XInternAtom(dpy, "WM_CHANGE_STATE", False);
+  xa_wm_delete_window = XInternAtom(dpy, "WM_DELETE_WINDOW", False);
+  xa_wm_take_focus = XInternAtom(dpy, "WM_TAKE_FOCUS", False);
+  motif_wm_info = XInternAtom(dpy, "_MOTIF_WM_INFO", False);
+  motif_wm_hints = XInternAtom(dpy, "_MOTIF_WM_HINTS", False);
 
-    blackbox_attributes = XInternAtom(dpy, "_BLACKBOX_ATTRIBUTES", False);
+  blackbox_attributes = XInternAtom(dpy, "_BLACKBOX_ATTRIBUTES", False);
 
-    s_singleton = this;
+  s_singleton = this;
 }
 
-FbAtoms::~FbAtoms() {
-    s_singleton = 0;
-}
+FbAtoms::~FbAtoms() { s_singleton = 0; }
 
 FbAtoms *FbAtoms::instance() {
-    if (s_singleton == 0) {
-        s_singleton = new FbAtoms();
-    }
-    return s_singleton;
+  if (s_singleton == 0) {
+    s_singleton = new FbAtoms();
+  }
+  return s_singleton;
 }
-

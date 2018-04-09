@@ -24,10 +24,10 @@
 
 #include "PlacementStrategy.hh"
 
-class UnderMousePlacement: public PlacementStrategy {
+class UnderMousePlacement : public PlacementStrategy {
 public:
-    bool placeWindow(const FluxboxWindow &win, int head,
-                     int &place_x, int &place_y);
+  bool placeWindow(const FluxboxWindow &win, int head, int &place_x,
+                   int &place_y);
 };
 
 #endif // UNDERMOUSEPLACEMENT_HH

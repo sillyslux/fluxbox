@@ -27,11 +27,9 @@
 namespace FbTk {
 
 template <class A>
-class Select2nd:public std::unary_function<A, typename A::second_type> {
+class Select2nd : public std::unary_function<A, typename A::second_type> {
 public:
-    typename A::second_type operator () (const A &arg) const {
-        return arg.second;
-    }
+  typename A::second_type operator()(const A &arg) const { return arg.second; }
 };
 
 } // namespace FbTk

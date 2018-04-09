@@ -19,19 +19,19 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-#ifndef ROOTCMDMENUITEM_HH 
-#define ROOTCMDMENUITEM_HH 
+#ifndef ROOTCMDMENUITEM_HH
+#define ROOTCMDMENUITEM_HH
 
 #include "FbTk/MenuItem.hh"
 
-class RootCmdMenuItem: public FbTk::MenuItem {
+class RootCmdMenuItem : public FbTk::MenuItem {
 public:
-    RootCmdMenuItem(const FbTk::FbString &label, 
-                  const std::string &filename,
+  RootCmdMenuItem(const FbTk::FbString &label, const std::string &filename,
                   const std::string &cmd = "");
-    bool isSelected() const;
+  bool isSelected() const;
+
 private:
-    const std::string m_filename;
+  const std::string m_filename;
 };
 
 #endif // ROOTCMDMENUITEM_HH

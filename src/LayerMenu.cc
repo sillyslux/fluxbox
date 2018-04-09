@@ -24,50 +24,54 @@
 #include "FbCommands.hh"
 #include "Layer.hh"
 
+#include "FbTk/I18n.hh"
 #include "FbTk/RefCount.hh"
 #include "FbTk/SimpleCommand.hh"
-#include "FbTk/I18n.hh"
 
 LayerMenu::LayerMenu(FbTk::ThemeProxy<FbTk::MenuTheme> &tm,
-                     FbTk::ImageControl &imgctrl,
-                     FbTk::Layer &layer, LayerObject *object, bool save_rc):
-    ToggleMenu(tm, imgctrl, layer) {
-    _FB_USES_NLS;
+                     FbTk::ImageControl &imgctrl, FbTk::Layer &layer,
+                     LayerObject *object, bool save_rc)
+    : ToggleMenu(tm, imgctrl, layer) {
+  _FB_USES_NLS;
 
+  struct {
+    int set;
+    int base;
+    FbTk::FbString default_str;
+    int layernum;
+  } layer_menuitems[] = {
+      // TODO: nls
+      {0, 0, _FB_XTEXT(Layer, AboveDock, "Above Dock", "Layer above dock"),
+       ResourceLayer::ABOVE_DOCK},
+      {0, 0, _FB_XTEXT(Layer, Dock, "Dock", "Layer dock"), ResourceLayer::DOCK},
+      {0, 0, _FB_XTEXT(Layer, Top, "Top", "Layer top"), ResourceLayer::TOP},
+      {0, 0, _FB_XTEXT(Layer, Normal, "Normal", "Layer normal"),
+       ResourceLayer::NORMAL},
+      {0, 0, _FB_XTEXT(Layer, Bottom, "Bottom", "Layer bottom"),
+       ResourceLayer::BOTTOM},
+      {0, 0, _FB_XTEXT(Layer, Desktop, "Desktop", "Layer desktop"),
+       ResourceLayer::DESKTOP},
+  };
 
-    struct {
-        int set;
-        int base;
-        FbTk::FbString default_str;
-        int layernum;
-    } layer_menuitems[]  = {
-        //TODO: nls
-        {0, 0, _FB_XTEXT(Layer, AboveDock, "Above Dock", "Layer above dock"), ResourceLayer::ABOVE_DOCK},
-        {0, 0, _FB_XTEXT(Layer, Dock, "Dock", "Layer dock"), ResourceLayer::DOCK},
-        {0, 0, _FB_XTEXT(Layer, Top, "Top", "Layer top"), ResourceLayer::TOP},
-        {0, 0, _FB_XTEXT(Layer, Normal, "Normal", "Layer normal"), ResourceLayer::NORMAL},
-        {0, 0, _FB_XTEXT(Layer, Bottom, "Bottom", "Layer bottom"), ResourceLayer::BOTTOM},
-        {0, 0, _FB_XTEXT(Layer, Desktop, "Desktop", "Layer desktop"), ResourceLayer::DESKTOP},
-    };
+  FbTk::RefCount<FbTk::Command<void>> saverc_cmd(
+      new FbCommands::SaveResources());
 
-    FbTk::RefCount<FbTk::Command<void> > saverc_cmd(new FbCommands::SaveResources());
-
-    for (size_t i=0; i < 6; ++i) {
-        // TODO: fetch nls string
-        if (save_rc) {
-            insertItem(new LayerMenuItem(layer_menuitems[i].default_str,
-                                     object, layer_menuitems[i].layernum, saverc_cmd));
-        } else {
-            insertItem(new LayerMenuItem(layer_menuitems[i].default_str,
-                                     object, layer_menuitems[i].layernum));
-        }
+  for (size_t i = 0; i < 6; ++i) {
+    // TODO: fetch nls string
+    if (save_rc) {
+      insertItem(new LayerMenuItem(layer_menuitems[i].default_str, object,
+                                   layer_menuitems[i].layernum, saverc_cmd));
+    } else {
+      insertItem(new LayerMenuItem(layer_menuitems[i].default_str, object,
+                                   layer_menuitems[i].layernum));
     }
-    updateMenu();
+  }
+  updateMenu();
 }
 
 // update which items appear disabled whenever we show the menu
 void LayerMenu::show() {
-    frameWindow().updateBackground(false);
-    clearWindow();
-    FbTk::Menu::show();
+  frameWindow().updateBackground(false);
+  clearWindow();
+  FbTk::Menu::show();
 }

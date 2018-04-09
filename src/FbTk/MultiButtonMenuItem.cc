@@ -1,7 +1,7 @@
 // MultiButtonMenuItem.cc for FbTk
 // Copyright (c) 2003 - 2006 Henrik Kinnunen (fluxgen at fluxbox dot org)
 //                and Simon Bowden    (rathnor at users.sourceforge.net)
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
@@ -21,53 +21,51 @@
 // DEALINGS IN THE SOFTWARE.
 
 #include "MultiButtonMenuItem.hh"
-#include "PixmapWithMask.hh"
 #include "Command.hh"
+#include "PixmapWithMask.hh"
 
 namespace FbTk {
 
-MultiButtonMenuItem::MultiButtonMenuItem(int buttons, const FbTk::BiDiString &label):
-    MenuItem(label),
-    m_button_exe(0),
-    m_buttons(buttons) {
-    init(buttons);
+MultiButtonMenuItem::MultiButtonMenuItem(int buttons,
+                                         const FbTk::BiDiString &label)
+    : MenuItem(label), m_button_exe(0), m_buttons(buttons) {
+  init(buttons);
 }
 
-MultiButtonMenuItem::MultiButtonMenuItem(int buttons, const FbTk::BiDiString &label, Menu *submenu):
-    MenuItem(label, submenu),
-    m_button_exe(0),
-    m_buttons(buttons) {
-    init(buttons);
+MultiButtonMenuItem::MultiButtonMenuItem(int buttons,
+                                         const FbTk::BiDiString &label,
+                                         Menu *submenu)
+    : MenuItem(label, submenu), m_button_exe(0), m_buttons(buttons) {
+  init(buttons);
 }
 
-MultiButtonMenuItem::~MultiButtonMenuItem() {
-    delete [] m_button_exe;
-}
+MultiButtonMenuItem::~MultiButtonMenuItem() { delete[] m_button_exe; }
 
-void MultiButtonMenuItem::setCommand(int button, FbTk::RefCount<FbTk::Command<void> > &cmd) {
-    if (button <= 0 || button > static_cast<signed>(buttons()) || buttons() == 0)
-        return;
-    m_button_exe[button - 1] = cmd;
+void MultiButtonMenuItem::setCommand(int button,
+                                     FbTk::RefCount<FbTk::Command<void>> &cmd) {
+  if (button <= 0 || button > static_cast<signed>(buttons()) || buttons() == 0)
+    return;
+  m_button_exe[button - 1] = cmd;
 }
 
 void MultiButtonMenuItem::click(int button, int time, unsigned int mods) {
-    if (button <= 0 || button > static_cast<signed>(buttons()) || buttons() == 0)
-        return;
+  if (button <= 0 || button > static_cast<signed>(buttons()) || buttons() == 0)
+    return;
 
-    if (m_button_exe[button - 1] != 0)
-        m_button_exe[button - 1]->execute();
+  if (m_button_exe[button - 1] != 0)
+    m_button_exe[button - 1]->execute();
 }
 
 void MultiButtonMenuItem::init(int buttons) {
-    if (buttons < 0)
-        m_buttons = 0;
-    else
-        m_buttons = buttons;
+  if (buttons < 0)
+    m_buttons = 0;
+  else
+    m_buttons = buttons;
 
-    if (m_buttons != 0)
-        m_button_exe = new FbTk::RefCount<FbTk::Command<void> >[m_buttons];
-    else
-        m_button_exe = 0;
+  if (m_buttons != 0)
+    m_button_exe = new FbTk::RefCount<FbTk::Command<void>>[m_buttons];
+  else
+    m_button_exe = 0;
 }
 
 } // end namespace FbTk

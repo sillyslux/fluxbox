@@ -19,7 +19,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-// \file contains basic commands to restart, reconfigure, execute command and exit fluxbox
+// \file contains basic commands to restart, reconfigure, execute command and
+// exit fluxbox
 
 #ifndef FBCOMMANDS_HH
 #define FBCOMMANDS_HH
@@ -35,197 +36,202 @@
 namespace FbCommands {
 
 /// executes a system command
-class ExecuteCmd: public FbTk::Command<void> {
+class ExecuteCmd : public FbTk::Command<void> {
 public:
-    ExecuteCmd(const std::string &cmd, int screen_num = -1);
-    void execute();
-    /**
-     * same as execute but returns pid
-     */
-    int run();
+  ExecuteCmd(const std::string &cmd, int screen_num = -1);
+  void execute();
+  /**
+   * same as execute but returns pid
+   */
+  int run();
+
 private:
-    std::string m_cmd;
-    const int m_screen_num;
+  std::string m_cmd;
+  const int m_screen_num;
 };
 
 /// sets environment
 class ExportCmd : public FbTk::Command<void> {
 public:
-    ExportCmd(const std::string& name, const std::string& value);
-    void execute();
-    static FbTk::Command<void> *parse(const std::string &command,
-                                const std::string &args, bool trusted);
+  ExportCmd(const std::string &name, const std::string &value);
+  void execute();
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
+
 private:
-    std::string m_name;
-    std::string m_value;
+  std::string m_name;
+  std::string m_value;
 };
 
 /// exit fluxbox
-class ExitFluxboxCmd: public FbTk::Command<void> {
+class ExitFluxboxCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
 /// saves resources
-class SaveResources: public FbTk::Command<void> {
+class SaveResources : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
 /// restarts fluxbox
-class RestartFluxboxCmd: public FbTk::Command<void> {
+class RestartFluxboxCmd : public FbTk::Command<void> {
 public:
-    RestartFluxboxCmd(const std::string &cmd);
-    void execute();
-    static FbTk::Command<void> *parse(const std::string &command,
-                                      const std::string &args, bool trusted);
+  RestartFluxboxCmd(const std::string &cmd);
+  void execute();
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
+
 private:
-    std::string m_cmd;
+  std::string m_cmd;
 };
 
 /// reconfigures fluxbox
-class ReconfigureFluxboxCmd: public FbTk::Command<void> {
+class ReconfigureFluxboxCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-class ReloadStyleCmd: public FbTk::Command<void> {
+class ReloadStyleCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-class SetStyleCmd: public FbTk::Command<void> {
+class SetStyleCmd : public FbTk::Command<void> {
 public:
-    explicit SetStyleCmd(const std::string &filename);
-    void execute();
+  explicit SetStyleCmd(const std::string &filename);
+  void execute();
+
 private:
-    std::string m_filename;
+  std::string m_filename;
 };
 
-class KeyModeCmd: public FbTk::Command<void> {
+class KeyModeCmd : public FbTk::Command<void> {
 public:
-    explicit KeyModeCmd(const std::string &arguments);
-    void execute();
+  explicit KeyModeCmd(const std::string &arguments);
+  void execute();
+
 private:
-    std::string m_keymode;
-    std::string m_end_args;
+  std::string m_keymode;
+  std::string m_end_args;
 };
 
-class HideMenuCmd: public FbTk::Command<void> {
+class HideMenuCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-class ShowClientMenuCmd: public FbTk::Command<void> {
+class ShowClientMenuCmd : public FbTk::Command<void> {
 public:
-    ShowClientMenuCmd(int option, std::string &pat):
-            m_option(option|FocusableList::LIST_GROUPS), m_pat(pat.c_str()) { }
-    void execute();
-    static FbTk::Command<void> *parse(const std::string &command,
-                                const std::string &args, bool trusted);
+  ShowClientMenuCmd(int option, std::string &pat)
+      : m_option(option | FocusableList::LIST_GROUPS), m_pat(pat.c_str()) {}
+  void execute();
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
+
 private:
-    const int m_option;
-    const ClientPattern m_pat;
-    std::list<FluxboxWindow *> m_list;
-    std::unique_ptr<ClientMenu> m_menu;
+  const int m_option;
+  const ClientPattern m_pat;
+  std::list<FluxboxWindow *> m_list;
+  std::unique_ptr<ClientMenu> m_menu;
 };
 
-class ShowCustomMenuCmd: public FbTk::Command<void> {
+class ShowCustomMenuCmd : public FbTk::Command<void> {
 public:
-    explicit ShowCustomMenuCmd(const std::string &arguments);
-    void execute();
-    void reload();
+  explicit ShowCustomMenuCmd(const std::string &arguments);
+  void execute();
+  void reload();
+
 private:
-   std::string custom_menu_file;
-   std::unique_ptr<FbMenu> m_menu;    
+  std::string custom_menu_file;
+  std::unique_ptr<FbMenu> m_menu;
 };
 
-class ShowRootMenuCmd: public FbTk::Command<void> {
+class ShowRootMenuCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-class ShowWorkspaceMenuCmd: public FbTk::Command<void> {
+class ShowWorkspaceMenuCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-class SetWorkspaceNameCmd: public FbTk::Command<void> {
+class SetWorkspaceNameCmd : public FbTk::Command<void> {
 public:
-    SetWorkspaceNameCmd(const std::string &name, int spaceid = -1);
-    void execute();
+  SetWorkspaceNameCmd(const std::string &name, int spaceid = -1);
+  void execute();
+
 private:
-    std::string m_name;
-    int m_workspace;
+  std::string m_name;
+  int m_workspace;
 };
 
-class WorkspaceNameDialogCmd: public FbTk::Command<void> {
+class WorkspaceNameDialogCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-class CommandDialogCmd: public FbTk::Command<void> {
+class CommandDialogCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-
-class SetResourceValueCmd: public FbTk::Command<void> {
+class SetResourceValueCmd : public FbTk::Command<void> {
 public:
-    SetResourceValueCmd(const std::string &resourcename, const std::string &value);
-    void execute();
+  SetResourceValueCmd(const std::string &resourcename,
+                      const std::string &value);
+  void execute();
+
 private:
-    const std::string m_resname;
-    const std::string m_value;
+  const std::string m_resname;
+  const std::string m_value;
 };
 
-class SetResourceValueDialogCmd: public FbTk::Command<void> {
+class SetResourceValueDialogCmd : public FbTk::Command<void> {
 public:
-    void execute();
+  void execute();
 };
 
-class BindKeyCmd: public FbTk::Command<void> {
+class BindKeyCmd : public FbTk::Command<void> {
 public:
-    BindKeyCmd(const std::string &keybind);
-    void execute();
+  BindKeyCmd(const std::string &keybind);
+  void execute();
+
 private:
-    const std::string m_keybind;
+  const std::string m_keybind;
 };
 
 /// deiconifies iconified windows
-class DeiconifyCmd: public FbTk::Command<void> {
+class DeiconifyCmd : public FbTk::Command<void> {
 public:
-    enum Mode { 
-        LAST,
-        LASTWORKSPACE,
-        ALL,
-        ALLWORKSPACE
-    };
+  enum Mode { LAST, LASTWORKSPACE, ALL, ALLWORKSPACE };
 
-    enum Destination {
-        CURRENT, /// deiconification on current workspace
-        ORIGIN,  /// deiconification on origin workspace, change to that ws
-        ORIGINQUIET /// deiconification on origin workspace, dont change ws
-    };
-    
-    DeiconifyCmd(Mode mode= LASTWORKSPACE,
-                 Destination dest= CURRENT);
-    void execute();
-    static FbTk::Command<void> *parse(const std::string &command,
-                                const std::string &args, bool trusted);
+  enum Destination {
+    CURRENT,    /// deiconification on current workspace
+    ORIGIN,     /// deiconification on origin workspace, change to that ws
+    ORIGINQUIET /// deiconification on origin workspace, dont change ws
+  };
+
+  DeiconifyCmd(Mode mode = LASTWORKSPACE, Destination dest = CURRENT);
+  void execute();
+  static FbTk::Command<void> *parse(const std::string &command,
+                                    const std::string &args, bool trusted);
+
 private:
-    Mode m_mode;
-    Destination m_dest;
+  Mode m_mode;
+  Destination m_dest;
 };
 
-
 /// test client pattern
-class ClientPatternTestCmd: public FbTk::Command<void> {
+class ClientPatternTestCmd : public FbTk::Command<void> {
 public:
-    ClientPatternTestCmd(const std::string& args) : m_args(args) { };
-    void execute();
+  ClientPatternTestCmd(const std::string &args) : m_args(args){};
+  void execute();
+
 private:
-    std::string m_args;
+  std::string m_args;
 };
 
 } // end namespace FbCommands

@@ -25,10 +25,10 @@
 #include "Image.hh"
 namespace FbTk {
 
-class ImageXPM: public ImageBase {
+class ImageXPM : public ImageBase {
 public:
-    ImageXPM();
-    PixmapWithMask *load(const std::string &filename, int screen_num) const;
+  ImageXPM();
+  PixmapWithMask *load(const std::string &filename, int screen_num) const;
 };
 
 } // end namespace FbTk

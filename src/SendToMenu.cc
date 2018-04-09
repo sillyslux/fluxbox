@@ -1,7 +1,7 @@
 // SendToMenu.cc for Fluxbox
 // Copyright (c) 2003 - 2008 Henrik Kinnunen (fluxgen at fluxbox dot org)
 //                and Simon Bowden    (rathnor at users.sourceforge.net)
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
@@ -22,87 +22,86 @@
 
 #include "SendToMenu.hh"
 
-#include "Window.hh"
+#include "Layer.hh"
 #include "Screen.hh"
+#include "Window.hh"
 #include "Workspace.hh"
 #include "fluxbox.hh"
-#include "Layer.hh"
 
-#include "FbTk/MultiButtonMenuItem.hh"
 #include "FbTk/Command.hh"
 #include "FbTk/MemFun.hh"
+#include "FbTk/MultiButtonMenuItem.hh"
 
-class SendToCmd: public FbTk::Command<void> {
+class SendToCmd : public FbTk::Command<void> {
 public:
-    SendToCmd(int workspace, bool follow):
-        m_workspace(workspace),
-        m_follow(follow) { }
-    void execute() {
-        if (FbMenu::window() != 0)
-            FbMenu::window()->screen().sendToWorkspace(m_workspace, FbMenu::window(), m_follow);
-    }
+  SendToCmd(int workspace, bool follow)
+      : m_workspace(workspace), m_follow(follow) {}
+  void execute() {
+    if (FbMenu::window() != 0)
+      FbMenu::window()->screen().sendToWorkspace(m_workspace, FbMenu::window(),
+                                                 m_follow);
+  }
+
 private:
-    const int m_workspace;
-    const bool m_follow;
+  const int m_workspace;
+  const bool m_follow;
 };
 
-SendToMenu::SendToMenu(BScreen &screen):
-    FbMenu(screen.menuTheme(),
-           screen.imageControl(), 
-           *screen.layerManager().getLayer(ResourceLayer::MENU)) {
-    // listen to:
-    // workspace count signal
-    // workspace names signal
-    // current workspace signal
+SendToMenu::SendToMenu(BScreen &screen)
+    : FbMenu(screen.menuTheme(), screen.imageControl(),
+             *screen.layerManager().getLayer(ResourceLayer::MENU)) {
+  // listen to:
+  // workspace count signal
+  // workspace names signal
+  // current workspace signal
 
-    join(screen.workspaceNamesSig(),
-         FbTk::MemFun(*this, &SendToMenu::rebuildMenuForScreen));
+  join(screen.workspaceNamesSig(),
+       FbTk::MemFun(*this, &SendToMenu::rebuildMenuForScreen));
 
-    join(screen.currentWorkspaceSig(),
-         FbTk::MemFun(*this, &SendToMenu::rebuildMenuForScreen));
+  join(screen.currentWorkspaceSig(),
+       FbTk::MemFun(*this, &SendToMenu::rebuildMenuForScreen));
 
-    // setup new signal system
-    join(screen.workspaceCountSig(),
-         FbTk::MemFun(*this, &SendToMenu::rebuildMenuForScreen));
+  // setup new signal system
+  join(screen.workspaceCountSig(),
+       FbTk::MemFun(*this, &SendToMenu::rebuildMenuForScreen));
 
-    // no title for this menu, it should be a submenu in the window menu.
-    disableTitle();
-    // setup menu items
-    rebuildMenu();
+  // no title for this menu, it should be a submenu in the window menu.
+  disableTitle();
+  // setup menu items
+  rebuildMenu();
 }
 
-SendToMenu::~SendToMenu() {
-
-}
+SendToMenu::~SendToMenu() {}
 
 void SendToMenu::rebuildMenu() {
-    // rebuild menu
+  // rebuild menu
 
-    removeAll();
-    BScreen *screen = Fluxbox::instance()->findScreen(screenNumber());
-    const BScreen::Workspaces &wlist = screen->getWorkspacesList();
-    for (size_t i = 0; i < wlist.size(); ++i) {
-        FbTk::RefCount<FbTk::Command<void> > sendto_cmd(new SendToCmd(i, false));
-        FbTk::RefCount<FbTk::Command<void> > sendto_follow_cmd(new SendToCmd(i, true));
+  removeAll();
+  BScreen *screen = Fluxbox::instance()->findScreen(screenNumber());
+  const BScreen::Workspaces &wlist = screen->getWorkspacesList();
+  for (size_t i = 0; i < wlist.size(); ++i) {
+    FbTk::RefCount<FbTk::Command<void>> sendto_cmd(new SendToCmd(i, false));
+    FbTk::RefCount<FbTk::Command<void>> sendto_follow_cmd(
+        new SendToCmd(i, true));
 
-        FbTk::MultiButtonMenuItem* item = new FbTk::MultiButtonMenuItem(3, wlist[i]->name());
-        item->setCommand(1, sendto_cmd);
-        item->setCommand(2, sendto_follow_cmd);
-        item->setCommand(3, sendto_cmd);
-        insertItem(item);
-    }
+    FbTk::MultiButtonMenuItem *item =
+        new FbTk::MultiButtonMenuItem(3, wlist[i]->name());
+    item->setCommand(1, sendto_cmd);
+    item->setCommand(2, sendto_follow_cmd);
+    item->setCommand(3, sendto_cmd);
+    insertItem(item);
+  }
 
-    updateMenu();
+  updateMenu();
 }
 
 void SendToMenu::show() {
-    if (FbMenu::window() != 0) {
-        for (unsigned int i=0; i < numberOfItems(); ++i)
-            setItemEnabled(i, true);
-        // update the workspace for the current window
-        setItemEnabled(FbMenu::window()->workspaceNumber(), false);
-        updateMenu();
-    }
-    FbTk::Menu::show();
+  if (FbMenu::window() != 0) {
+    for (unsigned int i = 0; i < numberOfItems(); ++i)
+      setItemEnabled(i, true);
+    // update the workspace for the current window
+    setItemEnabled(FbMenu::window()->workspaceNumber(), false);
+    updateMenu();
+  }
+  FbTk::Menu::show();
 }
-

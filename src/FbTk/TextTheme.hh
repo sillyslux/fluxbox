@@ -23,31 +23,32 @@
 #ifndef FBTK_TEXTTHEME_HH
 #define FBTK_TEXTTHEME_HH
 
-#include "Theme.hh"
-#include "Font.hh"
 #include "Color.hh"
-#include "Orientation.hh"
+#include "Font.hh"
 #include "GContext.hh"
+#include "Orientation.hh"
+#include "Theme.hh"
 
 namespace FbTk {
 
 class TextTheme {
 public:
-    TextTheme(Theme &theme, const std::string &name, const std::string &altname);
-    virtual ~TextTheme() { }
+  TextTheme(Theme &theme, const std::string &name, const std::string &altname);
+  virtual ~TextTheme() {}
 
-    void updateTextColor();
+  void updateTextColor();
 
-    Font &font() { return *m_font; }
-    const Font &font() const { return *m_font; }
-    const Color &textColor() const { return *m_text_color; }
-    Justify justify() const { return *m_justify; }
-    GC textGC() const { return m_text_gc.gc(); }
+  Font &font() { return *m_font; }
+  const Font &font() const { return *m_font; }
+  const Color &textColor() const { return *m_text_color; }
+  Justify justify() const { return *m_justify; }
+  GC textGC() const { return m_text_gc.gc(); }
+
 private:
-    ThemeItem<Font> m_font;
-    ThemeItem<Color> m_text_color;
-    ThemeItem<Justify> m_justify;
-    GContext m_text_gc;
+  ThemeItem<Font> m_font;
+  ThemeItem<Color> m_text_color;
+  ThemeItem<Justify> m_justify;
+  GContext m_text_gc;
 };
 
 } // end namespace FbTk

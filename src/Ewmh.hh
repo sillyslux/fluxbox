@@ -22,56 +22,55 @@
 #include "AtomHandler.hh"
 #include "FbTk/FbString.hh"
 
-/// Implementes Extended Window Manager Hints ( http://www.freedesktop.org/Standards/wm-spec )
-class Ewmh:public AtomHandler {
+/// Implementes Extended Window Manager Hints (
+/// http://www.freedesktop.org/Standards/wm-spec )
+class Ewmh : public AtomHandler {
 public:
+  Ewmh();
+  ~Ewmh();
 
-    Ewmh();
-    ~Ewmh();
+  void initForScreen(BScreen &screen);
+  void setupFrame(FluxboxWindow &win);
+  void setupClient(WinClient &winclient);
 
-    void initForScreen(BScreen &screen);
-    void setupFrame(FluxboxWindow &win);
-    void setupClient(WinClient &winclient);
+  void updateFocusedWindow(BScreen &screen, Window win);
+  void updateClientList(BScreen &screen);
+  void updateWorkspaceNames(BScreen &screen);
+  void updateCurrentWorkspace(BScreen &screen);
+  void updateWorkspaceCount(BScreen &screen);
+  void updateViewPort(BScreen &screen);
+  void updateGeometry(BScreen &screen);
+  void updateWorkarea(BScreen &screen);
 
-    void updateFocusedWindow(BScreen &screen, Window win);
-    void updateClientList(BScreen &screen);
-    void updateWorkspaceNames(BScreen &screen);
-    void updateCurrentWorkspace(BScreen &screen);
-    void updateWorkspaceCount(BScreen &screen);
-    void updateViewPort(BScreen &screen);
-    void updateGeometry(BScreen &screen);
-    void updateWorkarea(BScreen &screen);
+  void updateState(FluxboxWindow &win);
+  void updateLayer(FluxboxWindow &win);
+  void updateHints(FluxboxWindow &win);
+  void updateWorkspace(FluxboxWindow &win);
 
-    void updateState(FluxboxWindow &win);
-    void updateLayer(FluxboxWindow &win);
-    void updateHints(FluxboxWindow &win);
-    void updateWorkspace(FluxboxWindow &win);
+  bool checkClientMessage(const XClientMessageEvent &ce, BScreen *screen,
+                          WinClient *const winclient);
 
-    bool checkClientMessage(const XClientMessageEvent &ce,
-                            BScreen * screen, WinClient * const winclient);
+  bool propertyNotify(WinClient &winclient, Atom the_property);
+  void updateFrameClose(FluxboxWindow &win);
 
-    bool propertyNotify(WinClient &winclient, Atom the_property);
-    void updateFrameClose(FluxboxWindow &win);
+  void updateClientClose(WinClient &winclient);
 
-    void updateClientClose(WinClient &winclient);
+  void updateFrameExtents(FluxboxWindow &win);
 
-    void updateFrameExtents(FluxboxWindow &win);
 private:
+  enum { STATE_REMOVE = 0, STATE_ADD = 1, STATE_TOGGLE = 2 };
 
-    enum { STATE_REMOVE = 0, STATE_ADD = 1, STATE_TOGGLE = 2};
+  void setState(FluxboxWindow &win, Atom state, bool value);
+  void setState(FluxboxWindow &win, Atom state, bool value, WinClient &client);
+  void toggleState(FluxboxWindow &win, Atom state);
+  void toggleState(FluxboxWindow &win, Atom state, WinClient &client);
+  void updateStrut(WinClient &winclient);
+  void updateActions(FluxboxWindow &win);
 
-    void setState(FluxboxWindow &win, Atom state, bool value);
-    void setState(FluxboxWindow &win, Atom state, bool value,
-                  WinClient &client);
-    void toggleState(FluxboxWindow &win, Atom state);
-    void toggleState(FluxboxWindow &win, Atom state, WinClient &client);
-    void updateStrut(WinClient &winclient);
-    void updateActions(FluxboxWindow &win);
+  void setupState(FluxboxWindow &win);
 
-    void setupState(FluxboxWindow &win);
+  FbTk::FbString getUTF8Property(Atom property);
 
-    FbTk::FbString getUTF8Property(Atom property);
-
-    class EwmhAtoms;
-    EwmhAtoms* m_net;
+  class EwmhAtoms;
+  EwmhAtoms *m_net;
 };

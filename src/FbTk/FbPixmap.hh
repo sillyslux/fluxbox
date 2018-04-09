@@ -28,67 +28,62 @@
 namespace FbTk {
 
 /// a wrapper for X Pixmap
-class FbPixmap:public FbDrawable {
+class FbPixmap : public FbDrawable {
 public:
-    FbPixmap();
-    /// copy pixmap
-    FbPixmap(const FbPixmap &copy);
-    /// creates a FbPixmap from X pixmap
-    explicit FbPixmap(Pixmap pm);
-    FbPixmap(const FbDrawable &src,
-             unsigned int width, unsigned int height,
-             unsigned int depth);
-    FbPixmap(Drawable src,
-             unsigned int width, unsigned int height,
-             unsigned int depth);
+  FbPixmap();
+  /// copy pixmap
+  FbPixmap(const FbPixmap &copy);
+  /// creates a FbPixmap from X pixmap
+  explicit FbPixmap(Pixmap pm);
+  FbPixmap(const FbDrawable &src, unsigned int width, unsigned int height,
+           unsigned int depth);
+  FbPixmap(Drawable src, unsigned int width, unsigned int height,
+           unsigned int depth);
 
-    virtual ~FbPixmap();
+  virtual ~FbPixmap();
 
-    void copy(const FbPixmap &the_copy);
-    void copy(Pixmap pixmap, unsigned int depth_convert, int screen_num);
-    /// rotates the pixmap to specified orientation (assumes ROT0 now)
-    void rotate(FbTk::Orientation orient);
-    /// scales the pixmap to specified size
-    void scale(unsigned int width, unsigned int height);
-    void resize(unsigned int width, unsigned int height);
-    /// tiles the pixmap to specified size
-    void tile(unsigned int width, unsigned int height);
-    /// drops pixmap and returns it
-    Pixmap release();
+  void copy(const FbPixmap &the_copy);
+  void copy(Pixmap pixmap, unsigned int depth_convert, int screen_num);
+  /// rotates the pixmap to specified orientation (assumes ROT0 now)
+  void rotate(FbTk::Orientation orient);
+  /// scales the pixmap to specified size
+  void scale(unsigned int width, unsigned int height);
+  void resize(unsigned int width, unsigned int height);
+  /// tiles the pixmap to specified size
+  void tile(unsigned int width, unsigned int height);
+  /// drops pixmap and returns it
+  Pixmap release();
 
-    FbPixmap &operator = (const FbPixmap &copy);
-    /// sets new pixmap
-    FbPixmap &operator = (Pixmap pm);
+  FbPixmap &operator=(const FbPixmap &copy);
+  /// sets new pixmap
+  FbPixmap &operator=(Pixmap pm);
 
-    Drawable drawable() const { return m_pm; }
-    unsigned int width() const { return m_width; }
-    unsigned int height() const { return m_height; }
-    unsigned int depth() const { return m_depth; }
+  Drawable drawable() const { return m_pm; }
+  unsigned int width() const { return m_width; }
+  unsigned int height() const { return m_height; }
+  unsigned int depth() const { return m_depth; }
 
-    static Pixmap getRootPixmap(int screen_num, bool force_update=false);
-    static bool setRootPixmap(int screen_num, Pixmap pm);
-    static bool rootwinPropertyNotify(int screen_num, Atom atom);
+  static Pixmap getRootPixmap(int screen_num, bool force_update = false);
+  static bool setRootPixmap(int screen_num, Pixmap pm);
+  static bool rootwinPropertyNotify(int screen_num, Atom atom);
 
-    void create(Drawable src,
-                unsigned int width, unsigned int height,
-                unsigned int depth);
+  void create(Drawable src, unsigned int width, unsigned int height,
+              unsigned int depth);
 
-    /* Will be reset to false whenever this pixmap is reassigned */
-    void dontFree() { m_dont_free = true; }
+  /* Will be reset to false whenever this pixmap is reassigned */
+  void dontFree() { m_dont_free = true; }
 
 private:
-    void free();
+  void free();
 
-    Pixmap m_pm;
-    unsigned int m_width, m_height;
-    unsigned int m_depth;
+  Pixmap m_pm;
+  unsigned int m_width, m_height;
+  unsigned int m_depth;
 
-    // if pixmap not *owned* by this object (eg assigned from cache object)
-    bool m_dont_free;
-
+  // if pixmap not *owned* by this object (eg assigned from cache object)
+  bool m_dont_free;
 };
 
 } // end namespace FbTk
 
 #endif // FBTK_FBPIXMAP_HH
-

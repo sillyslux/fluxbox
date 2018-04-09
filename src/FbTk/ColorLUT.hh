@@ -1,4 +1,4 @@
-// ColorLUT.hh for Fluxbox Window Manager 
+// ColorLUT.hh for Fluxbox Window Manager
 // Copyright (c) 2013 - Mathias Gumz <akira at fluxbox dot org>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -19,7 +19,6 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-
 namespace FbTk {
 
 namespace ColorLUT {
@@ -35,8 +34,5 @@ extern const unsigned char BRIGHTER_8[256];
 #if 0 // unused
 extern const unsigned char BRIGHTER_16[256];
 #endif
-
 }
-
 }
-

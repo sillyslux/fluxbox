@@ -25,19 +25,19 @@
 namespace FbTk {
 
 /** Makes the inherited class not copyable.
-    inherit this class to 
+    inherit this class to
     disable assignment and copy
 */
-class NotCopyable
-{
+class NotCopyable {
 protected:
-    NotCopyable() {}
-    virtual ~NotCopyable() { }
+  NotCopyable() {}
+  virtual ~NotCopyable() {}
+
 private:
-    NotCopyable(const NotCopyable &rhs); // copy constructor
-    NotCopyable &operator=(const NotCopyable &rhs); // assignment operator
+  NotCopyable(const NotCopyable &rhs);            // copy constructor
+  NotCopyable &operator=(const NotCopyable &rhs); // assignment operator
 };
 
 } // end namespace FbTk
 
-#endif //FBTK_NOTCOPYABLE_HH
+#endif // FBTK_NOTCOPYABLE_HH

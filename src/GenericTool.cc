@@ -27,65 +27,47 @@
 #include <string>
 
 GenericTool::GenericTool(FbTk::FbWindow *new_window, ToolbarItem::Type type,
-                         FbTk::ThemeProxy<ToolTheme> &theme):
-    ToolbarItem(type),
-    m_window(new_window),
-    m_theme(theme) {
+                         FbTk::ThemeProxy<ToolTheme> &theme)
+    : ToolbarItem(type), m_window(new_window), m_theme(theme) {
 
-    m_tracker.join(theme.reconfigSig(), FbTk::MemFun(*this, &GenericTool::themeReconfigured));
+  m_tracker.join(theme.reconfigSig(),
+                 FbTk::MemFun(*this, &GenericTool::themeReconfigured));
 
-    if (new_window == 0)
-        throw std::string("GenericTool: Error! Tried to create a tool with window = 0");
+  if (new_window == 0)
+    throw std::string(
+        "GenericTool: Error! Tried to create a tool with window = 0");
 }
 
-GenericTool::~GenericTool() {
+GenericTool::~GenericTool() {}
 
-}
-
-void GenericTool::move(int x, int y) {
-    m_window->move(x, y);
-}
+void GenericTool::move(int x, int y) { m_window->move(x, y); }
 
 void GenericTool::resize(unsigned int width, unsigned int height) {
-    m_window->resize(width, height);
+  m_window->resize(width, height);
 }
 
-void GenericTool::moveResize(int x, int y,
-                             unsigned int width, unsigned int height) {
-    m_window->moveResize(x, y, width, height);
+void GenericTool::moveResize(int x, int y, unsigned int width,
+                             unsigned int height) {
+  m_window->moveResize(x, y, width, height);
 }
 
-void GenericTool::show() {
-    m_window->show();
-}
+void GenericTool::show() { m_window->show(); }
 
-void GenericTool::hide() {
-    m_window->hide();
-}
+void GenericTool::hide() { m_window->hide(); }
 
-unsigned int GenericTool::width() const {
-    return m_window->width();
-}
+unsigned int GenericTool::width() const { return m_window->width(); }
 
-unsigned int GenericTool::height() const {
-    return m_window->height();
-
-}
+unsigned int GenericTool::height() const { return m_window->height(); }
 
 unsigned int GenericTool::borderWidth() const {
-    return m_window->borderWidth();
+  return m_window->borderWidth();
 }
 
 void GenericTool::renderTheme(int alpha) {
-    m_window->setAlpha(alpha);
-    m_window->clear();
+  m_window->setAlpha(alpha);
+  m_window->clear();
 }
 
-void GenericTool::themeReconfigured() {
-    m_window->clear();
-}
+void GenericTool::themeReconfigured() { m_window->clear(); }
 
-void GenericTool::parentMoved() {
-    m_window->parentMoved();
-}
-
+void GenericTool::parentMoved() { m_window->parentMoved(); }

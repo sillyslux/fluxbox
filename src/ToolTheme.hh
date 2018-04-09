@@ -23,38 +23,40 @@
 #ifndef TOOLTHEME_HH
 #define TOOLTHEME_HH
 
-#include "FbTk/TextTheme.hh"
 #include "FbTk/BorderTheme.hh"
+#include "FbTk/TextTheme.hh"
 #include "FbTk/Texture.hh"
 
 /// Handles toolbar item theme for text and texture
-class ToolTheme: public FbTk::Theme, public FbTk::TextTheme,
-                 public FbTk::ThemeProxy<ToolTheme> {
+class ToolTheme : public FbTk::Theme,
+                  public FbTk::TextTheme,
+                  public FbTk::ThemeProxy<ToolTheme> {
 public:
-    ToolTheme(int screen_num, const std::string &name, const std::string &altname);
-    virtual ~ToolTheme();
+  ToolTheme(int screen_num, const std::string &name,
+            const std::string &altname);
+  virtual ~ToolTheme();
 
-    bool fallback(FbTk::ThemeItem_base &item);
+  bool fallback(FbTk::ThemeItem_base &item);
 
-    void reconfigTheme();
-    // textures
-    const FbTk::Texture &texture() const { return *m_texture; }
-    const FbTk::BorderTheme &border() const { return m_border; }
-    int alpha() const { return m_alpha; }
-    void setAlpha(int alpha) { m_alpha = alpha; }
+  void reconfigTheme();
+  // textures
+  const FbTk::Texture &texture() const { return *m_texture; }
+  const FbTk::BorderTheme &border() const { return m_border; }
+  int alpha() const { return m_alpha; }
+  void setAlpha(int alpha) { m_alpha = alpha; }
 
-    virtual FbTk::Signal<> &reconfigSig() { return FbTk::Theme::reconfigSig(); }
+  virtual FbTk::Signal<> &reconfigSig() { return FbTk::Theme::reconfigSig(); }
 
-    virtual ToolTheme &operator *() { return *this; }
-    virtual const ToolTheme &operator *() const { return *this; }
+  virtual ToolTheme &operator*() { return *this; }
+  virtual const ToolTheme &operator*() const { return *this; }
 
 protected:
-    FbTk::ThemeItem<FbTk::Texture> &textureTheme() { return m_texture; }
+  FbTk::ThemeItem<FbTk::Texture> &textureTheme() { return m_texture; }
 
 private:
-    FbTk::ThemeItem<FbTk::Texture> m_texture;
-    FbTk::BorderTheme m_border;
-    int m_alpha;
+  FbTk::ThemeItem<FbTk::Texture> m_texture;
+  FbTk::BorderTheme m_border;
+  int m_alpha;
 };
 
 #endif // TOOLTHEME_HH

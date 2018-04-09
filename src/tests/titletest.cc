@@ -20,96 +20,91 @@
 // DEALINGS IN THE SOFTWARE.
 
 #include "App.hh"
-#include "FbWindow.hh"
-#include "Font.hh"
+#include "Color.hh"
 #include "EventHandler.hh"
 #include "EventManager.hh"
-#include "Timer.hh"
-#include "SimpleCommand.hh"
-#include "stringstream.hh"
+#include "FbWindow.hh"
+#include "Font.hh"
 #include "GContext.hh"
-#include "Color.hh"
+#include "SimpleCommand.hh"
+#include "Timer.hh"
+#include "stringstream.hh"
 
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
 
-#include <string>
 #include <iostream>
+#include <string>
 using namespace std;
 
-class App:public FbTk::App, public FbTk::EventHandler {
+class App : public FbTk::App, public FbTk::EventHandler {
 public:
-    App(const char *displayname):
-        FbTk::App(displayname),
-        m_win(DefaultScreen(display()),
-              0, 0, 640, 100, KeyPressMask | ExposureMask | 
-              ButtonPressMask | ButtonReleaseMask | ButtonMotionMask),
-        m_tick( 0 ) { 
+  App(const char *displayname)
+      : FbTk::App(displayname),
+        m_win(DefaultScreen(display()), 0, 0, 640, 100,
+              KeyPressMask | ExposureMask | ButtonPressMask |
+                  ButtonReleaseMask | ButtonMotionMask),
+        m_tick(0) {
 
-        m_win.show();
-        m_win.setBackgroundColor(FbTk::Color("white", m_win.screenNumber()));
-        FbTk::EventManager::instance()->add(*this, m_win);
-        FbTk::RefCount<FbTk::Command> cmd(new FbTk::SimpleCommand<App>
-                                          (*this,
-                                           &App::updateTitle));
-        m_timer.setTimeout(150 * FbTk::FbTime::IN_MILLISECONDS);
-        m_timer.setCommand(cmd);
-        m_timer.fireOnce(false);
-        m_timer.start();
+    m_win.show();
+    m_win.setBackgroundColor(FbTk::Color("white", m_win.screenNumber()));
+    FbTk::EventManager::instance()->add(*this, m_win);
+    FbTk::RefCount<FbTk::Command> cmd(
+        new FbTk::SimpleCommand<App>(*this, &App::updateTitle));
+    m_timer.setTimeout(150 * FbTk::FbTime::IN_MILLISECONDS);
+    m_timer.setCommand(cmd);
+    m_timer.fireOnce(false);
+    m_timer.start();
 
-        updateTitle();
-        m_win.clear();
-        srand( time( 0 ) );
+    updateTitle();
+    m_win.clear();
+    srand(time(0));
+  }
+
+  ~App() {}
+  void eventLoop() {
+    XEvent ev;
+    while (!done()) {
+      if (XPending(display())) {
+        XNextEvent(display(), &ev);
+        FbTk::EventManager::instance()->handleEvent(ev);
+      } else {
+        FbTk::Timer::updateTimers(ConnectionNumber(display()));
+      }
+    }
+  }
+
+  void updateTitle() {
+    FbTk_ostringstream str;
+    ++m_tick;
+    for (int i = 0, n = rand() % 10; i < max(1, n); ++i) {
+      str << " Tick #" << m_tick;
     }
 
-    ~App() {
-    }
-    void eventLoop() {
-        XEvent ev;
-        while (!done()) {
-            if (XPending(display())) {
-                XNextEvent(display(), &ev);
-                FbTk::EventManager::instance()->handleEvent(ev);
-            } else {
-                FbTk::Timer::updateTimers(ConnectionNumber(display()));
-            }
-        }
-    }
-
-    void updateTitle() {
-        FbTk_ostringstream str;
-        ++m_tick;
-        for (int i = 0, n = rand( ) % 10; i < max( 1, n ); ++i) {
-            str << " Tick #" << m_tick;            
-        }
-
-        m_win.setName( str.str().c_str() );
-        // set _NET_WM_NAME
-        Atom net_wm_name = XInternAtom(display(), "_NET_WM_NAME", False);
-        Atom utf8_string = XInternAtom(display(), "UTF8_STRING", False);
-        XChangeProperty(display(), m_win.window(), 
-                        net_wm_name, utf8_string, 8,
-                        PropModeReplace, 
-                        (unsigned char*)str.str().c_str(), str.str().size() );
-    }
-
+    m_win.setName(str.str().c_str());
+    // set _NET_WM_NAME
+    Atom net_wm_name = XInternAtom(display(), "_NET_WM_NAME", False);
+    Atom utf8_string = XInternAtom(display(), "UTF8_STRING", False);
+    XChangeProperty(display(), m_win.window(), net_wm_name, utf8_string, 8,
+                    PropModeReplace, (unsigned char *)str.str().c_str(),
+                    str.str().size());
+  }
 
 private:
-    FbTk::FbWindow m_win;
-    FbTk::Timer m_timer;
-    unsigned int m_tick;
+  FbTk::FbWindow m_win;
+  FbTk::Timer m_timer;
+  unsigned int m_tick;
 };
 
 int main(int argc, char **argv) {
-    string displayname("");
-    for (int a=1; a<argc; ++a) {
-        if (strcmp("-display", argv[a]) == 0 && a + 1 < argc) {
-            displayname = argv[++a];
-        }
+  string displayname("");
+  for (int a = 1; a < argc; ++a) {
+    if (strcmp("-display", argv[a]) == 0 && a + 1 < argc) {
+      displayname = argv[++a];
     }
+  }
 
-    App app(displayname.c_str());
+  App app(displayname.c_str());
 
-    app.eventLoop();
-	
+  app.eventLoop();
 }

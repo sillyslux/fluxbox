@@ -22,149 +22,149 @@
 #include "RowSmartPlacement.hh"
 
 #include "FocusControl.hh"
-#include "Window.hh"
 #include "Screen.hh"
 #include "ScreenPlacement.hh"
+#include "Window.hh"
 
 bool RowSmartPlacement::placeWindow(const FluxboxWindow &win, int head,
                                     int &place_x, int &place_y) {
 
-    std::list<FluxboxWindow *> windowlist;
-    const std::list<Focusable *> focusables =
-            win.screen().focusControl().focusedOrderWinList().clientList();
-    std::list<Focusable *>::const_iterator foc_it = focusables.begin(),
-                                           foc_it_end = focusables.end();
-    unsigned int workspace = win.workspaceNumber();
-    for (; foc_it != foc_it_end; ++foc_it) {
-        // make sure it's a FluxboxWindow
-        if (*foc_it == (*foc_it)->fbwindow() &&
-            (workspace == (*foc_it)->fbwindow()->workspaceNumber() ||
-             (*foc_it)->fbwindow()->isStuck()))
-            windowlist.push_back((*foc_it)->fbwindow());
-    }
+  std::list<FluxboxWindow *> windowlist;
+  const std::list<Focusable *> focusables =
+      win.screen().focusControl().focusedOrderWinList().clientList();
+  std::list<Focusable *>::const_iterator foc_it = focusables.begin(),
+                                         foc_it_end = focusables.end();
+  unsigned int workspace = win.workspaceNumber();
+  for (; foc_it != foc_it_end; ++foc_it) {
+    // make sure it's a FluxboxWindow
+    if (*foc_it == (*foc_it)->fbwindow() &&
+        (workspace == (*foc_it)->fbwindow()->workspaceNumber() ||
+         (*foc_it)->fbwindow()->isStuck()))
+      windowlist.push_back((*foc_it)->fbwindow());
+  }
 
-    bool placed = false;
-    int next_x, next_y;
-    
-    // view (screen + head) constraints
-    int head_left = (signed) win.screen().maxLeft(head);
-    int head_right = (signed) win.screen().maxRight(head);
-    int head_top = (signed) win.screen().maxTop(head);
-    int head_bot = (signed) win.screen().maxBottom(head);
+  bool placed = false;
+  int next_x, next_y;
 
-    const ScreenPlacement &screen_placement = win.screen().placementStrategy();
+  // view (screen + head) constraints
+  int head_left = (signed)win.screen().maxLeft(head);
+  int head_right = (signed)win.screen().maxRight(head);
+  int head_top = (signed)win.screen().maxTop(head);
+  int head_bot = (signed)win.screen().maxBottom(head);
 
-    bool top_bot = 
-        screen_placement.colDirection() == ScreenPlacement::TOPBOTTOM;
-    bool left_right = 
-        screen_placement.rowDirection() == ScreenPlacement::LEFTRIGHT;
+  const ScreenPlacement &screen_placement = win.screen().placementStrategy();
 
-    int change_x = 1;
+  bool top_bot = screen_placement.colDirection() == ScreenPlacement::TOPBOTTOM;
+  bool left_right =
+      screen_placement.rowDirection() == ScreenPlacement::LEFTRIGHT;
 
-// unused code:
-//  int  change_y = 1;
-//  if (screen_placement.colDirection() == ScreenPlacement::BOTTOMTOP)
-//      change_y = -1;
+  int change_x = 1;
 
-    if (screen_placement.rowDirection() == ScreenPlacement::RIGHTLEFT)
-        change_x = -1;
+  // unused code:
+  //  int  change_y = 1;
+  //  if (screen_placement.colDirection() == ScreenPlacement::BOTTOMTOP)
+  //      change_y = -1;
 
-    int win_w = win.width() + win.fbWindow().borderWidth()*2 + win.widthOffset();
-    int win_h = win.height() + win.fbWindow().borderWidth()*2 + win.heightOffset();
+  if (screen_placement.rowDirection() == ScreenPlacement::RIGHTLEFT)
+    change_x = -1;
 
-    int x_off = win.xOffset();
-    int y_off = win.yOffset();
+  int win_w =
+      win.width() + win.fbWindow().borderWidth() * 2 + win.widthOffset();
+  int win_h =
+      win.height() + win.fbWindow().borderWidth() * 2 + win.heightOffset();
 
-    int test_y;
-    if (top_bot)
-        test_y = head_top;
+  int x_off = win.xOffset();
+  int y_off = win.yOffset();
+
+  int test_y;
+  if (top_bot)
+    test_y = head_top;
+  else
+    test_y = head_bot - win_h;
+
+  while (!placed &&
+         (top_bot ? test_y + win_h <= head_bot : test_y >= head_top)) {
+
+    int test_x;
+    if (left_right)
+      test_x = head_left;
     else
-        test_y = head_bot - win_h;
+      test_x = head_right - win_w;
 
-    while (!placed && 
-           (top_bot ? test_y + win_h <= head_bot
-            : test_y >= head_top)) {
+    // The trick here is that we set it to the furthest away one,
+    // then the code brings it back down to the safest one that
+    // we can go to (i.e. the next untested area)
+    if (top_bot)
+      next_y = head_bot; // will be shrunk
+    else
+      next_y = head_top - 1;
 
-        int test_x;
-        if (left_right)
-            test_x = head_left;
-        else
-            test_x = head_right - win_w;
+    while (!placed &&
+           (left_right ? test_x + win_w <= head_right : test_x >= head_left)) {
 
-        // The trick here is that we set it to the furthest away one,
-        // then the code brings it back down to the safest one that
-        // we can go to (i.e. the next untested area)
-        if (top_bot)
-            next_y = head_bot;  // will be shrunk
-        else
-            next_y = head_top-1;
+      placed = true;
 
-        while (!placed &&
-               (left_right ? test_x + win_w <= head_right
-                : test_x >= head_left)) {
+      next_x = test_x + change_x;
 
-            placed = true;
+      std::list<FluxboxWindow *>::const_iterator win_it = windowlist.begin();
+      std::list<FluxboxWindow *>::const_iterator win_it_end = windowlist.end();
 
-            next_x = test_x + change_x;
+      for (; win_it != win_it_end && placed; ++win_it) {
+        FluxboxWindow &window = **win_it;
+        if (&window == &win)
+          continue;
+        if (window.layerNum() != win.layerNum()) {
+          continue;
+        } // windows are in different layers - skip it
 
-            std::list<FluxboxWindow *>::const_iterator win_it = 
-                windowlist.begin();
-            std::list<FluxboxWindow *>::const_iterator win_it_end = 
-                windowlist.end();
+        int curr_x =
+            window.x() -
+            window.xOffset(); // minus offset to get back up to fake place
+        int curr_y = window.y() - window.yOffset();
+        int curr_w = window.width() + window.fbWindow().borderWidth() * 2 +
+                     window.widthOffset();
+        int curr_h = window.height() + window.fbWindow().borderWidth() * 2 +
+                     window.heightOffset();
 
-            for (; win_it != win_it_end && placed; ++win_it) {
-                FluxboxWindow &window = **win_it;
-                if (&window == &win) continue;
-                if (window.layerNum() != win.layerNum() ){ continue; } //windows are in different layers - skip it
+        if (curr_x < test_x + win_w && curr_x + curr_w > test_x &&
+            curr_y < test_y + win_h && curr_y + curr_h > test_y) {
+          // this window is in the way
+          placed = false;
 
-                int curr_x = window.x() - window.xOffset(); // minus offset to get back up to fake place
-                int curr_y = window.y() - window.yOffset();
-                int curr_w = window.width() + window.fbWindow().borderWidth()*2 + window.widthOffset();
-                int curr_h = window.height() + window.fbWindow().borderWidth()*2 + window.heightOffset();
+          // we find the next x that we can go to (a window will be in the way
+          // all the way to its far side)
+          if (left_right) {
+            if (curr_x + curr_w > next_x)
+              next_x = curr_x + curr_w;
+          } else {
+            if (curr_x - win_w < next_x)
+              next_x = curr_x - win_w;
+          }
 
-                if (curr_x < test_x + win_w &&
-                    curr_x + curr_w > test_x &&
-                    curr_y < test_y + win_h &&
-                    curr_y + curr_h > test_y) {
-                    // this window is in the way
-                    placed = false;
+          // but we can only go to the nearest y, since that is where the
+          // next time current windows in the way will change
+          if (top_bot) {
+            if (curr_y + curr_h < next_y)
+              next_y = curr_y + curr_h;
+          } else {
+            if (curr_y - win_h > next_y)
+              next_y = curr_y - win_h;
+          }
+        }
+      }
 
-                    // we find the next x that we can go to (a window will be in the way
-                    // all the way to its far side)
-                    if (left_right) {
-                        if (curr_x + curr_w > next_x) 
-                            next_x = curr_x + curr_w;
-                    } else {
-                        if (curr_x - win_w < next_x)
-                            next_x = curr_x - win_w;
-                    }
+      if (placed) {
+        place_x = test_x + x_off;
+        place_y = test_y + y_off;
 
-                    // but we can only go to the nearest y, since that is where the 
-                    // next time current windows in the way will change
-                    if (top_bot) {
-                        if (curr_y + curr_h < next_y)
-                            next_y = curr_y + curr_h;
-                    } else {
-                        if (curr_y - win_h > next_y)
-                            next_y = curr_y - win_h;
-                    }
-                }
-            }
+        break;
+      }
 
-
-            if (placed) {
-                place_x = test_x + x_off;
-                place_y = test_y + y_off;
-
-                break;
-            }
-
-            test_x = next_x;
-        } // end while
-
-        test_y = next_y;
+      test_x = next_x;
     } // end while
 
+    test_y = next_y;
+  } // end while
 
-    return placed;
+  return placed;
 }

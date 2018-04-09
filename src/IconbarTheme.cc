@@ -23,65 +23,58 @@
 #include "IconbarTheme.hh"
 #include "FbTk/App.hh"
 
-IconbarTheme::IconbarTheme(int screen_num, 
-                           const std::string &name,
-                           const std::string &altname):
-    FbTk::Theme(screen_num),
-    m_texture(*this, name, altname),
-    m_empty_texture(*this, name + ".empty", altname + ".Empty"),
-    m_border(*this, name, altname),
-    m_text(*this, name, altname),
-    m_name(name), m_altname(altname) {
+IconbarTheme::IconbarTheme(int screen_num, const std::string &name,
+                           const std::string &altname)
+    : FbTk::Theme(screen_num), m_texture(*this, name, altname),
+      m_empty_texture(*this, name + ".empty", altname + ".Empty"),
+      m_border(*this, name, altname), m_text(*this, name, altname),
+      m_name(name), m_altname(altname) {
 
-    FbTk::ThemeManager::instance().loadTheme(*this);
-
+  FbTk::ThemeManager::instance().loadTheme(*this);
 }
-IconbarTheme::~IconbarTheme() {
+IconbarTheme::~IconbarTheme() {}
 
-}
-
-
-void IconbarTheme::reconfigTheme() {
-    m_text.updateTextColor();
-}
+void IconbarTheme::reconfigTheme() { m_text.updateTextColor(); }
 
 // fallback resources
 bool IconbarTheme::fallback(FbTk::ThemeItem_base &item) {
-    using namespace FbTk;
-    ThemeManager &tm = ThemeManager::instance();
-    std::string base = m_name;
-    base.erase(base.find_last_of("."));
-    std::string altbase = m_altname;
-    altbase.erase(altbase.find_last_of("."));
+  using namespace FbTk;
+  ThemeManager &tm = ThemeManager::instance();
+  std::string base = m_name;
+  base.erase(base.find_last_of("."));
+  std::string altbase = m_altname;
+  altbase.erase(altbase.find_last_of("."));
 
-    if (&m_texture == &item) {
-        return tm.loadItem(item, "toolbar.windowLabel", "toolbar.windowLabel");
-    } else if (&m_empty_texture == &item) {
-        return (tm.loadItem(item, "toolbar.iconbar.empty",
-                            "Toolbar.Iconbar.Empty") ||
-                tm.loadItem(item, m_texture.name(), m_texture.altName()) ||
-                tm.loadItem(item, "toolbar.windowLabel", "toolbar.windowLabel")
-                || tm.loadItem(item, "toolbar", "toolbar"));
-    } else if (item.name() == m_name + ".borderWidth")
-        // don't fallback for base border, for theme backwards compatibility
-        return (tm.loadItem(item, base + ".borderWidth", altbase + ".BorderWidth") ||
-                tm.loadItem(item, "window.borderWidth", "Window.BorderWidth") ||
-                tm.loadItem(item, "borderWidth", "BorderWidth"));
+  if (&m_texture == &item) {
+    return tm.loadItem(item, "toolbar.windowLabel", "toolbar.windowLabel");
+  } else if (&m_empty_texture == &item) {
+    return (
+        tm.loadItem(item, "toolbar.iconbar.empty", "Toolbar.Iconbar.Empty") ||
+        tm.loadItem(item, m_texture.name(), m_texture.altName()) ||
+        tm.loadItem(item, "toolbar.windowLabel", "toolbar.windowLabel") ||
+        tm.loadItem(item, "toolbar", "toolbar"));
+  } else if (item.name() == m_name + ".borderWidth")
+    // don't fallback for base border, for theme backwards compatibility
+    return (
+        tm.loadItem(item, base + ".borderWidth", altbase + ".BorderWidth") ||
+        tm.loadItem(item, "window.borderWidth", "Window.BorderWidth") ||
+        tm.loadItem(item, "borderWidth", "BorderWidth"));
 
-    else if (item.name() == m_name + ".borderColor")
+  else if (item.name() == m_name + ".borderColor")
 
-        return (tm.loadItem(item, base + ".borderColor", altbase + ".BorderColor") ||
-                tm.loadItem(item, "window.borderColor", "Window.BorderColor") ||
-                tm.loadItem(item, "borderColor", "BorderColor"));
+    return (
+        tm.loadItem(item, base + ".borderColor", altbase + ".BorderColor") ||
+        tm.loadItem(item, "window.borderColor", "Window.BorderColor") ||
+        tm.loadItem(item, "borderColor", "BorderColor"));
 
-    else if (item.name() == m_name + ".font")
+  else if (item.name() == m_name + ".font")
 
-        return tm.loadItem(item, "window.font", "Window.Font");
+    return tm.loadItem(item, "window.font", "Window.Font");
 
-    else if (item.name() == m_name + ".justify") {
-        return (tm.loadItem(item, base + ".justify", altbase + ".Justify")
-                || tm.loadItem(item, "window.justify", "Window.Justify"));
-    }
+  else if (item.name() == m_name + ".justify") {
+    return (tm.loadItem(item, base + ".justify", altbase + ".Justify") ||
+            tm.loadItem(item, "window.justify", "Window.Justify"));
+  }
 
-    return false;
+  return false;
 }

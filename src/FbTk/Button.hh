@@ -22,79 +22,87 @@
 #ifndef FBTK_BUTTON_HH
 #define FBTK_BUTTON_HH
 
-#include "EventHandler.hh"
-#include "NotCopyable.hh"
-#include "RefCount.hh"
-#include "FbWindow.hh"
-#include "Command.hh"
 #include "Color.hh"
+#include "Command.hh"
+#include "EventHandler.hh"
+#include "FbWindow.hh"
+#include "NotCopyable.hh"
 #include "Orientation.hh"
+#include "RefCount.hh"
 
 namespace FbTk {
 
 class Theme;
 
-class Button:public FbTk::FbWindow, public EventHandler,
-             private NotCopyable {
+class Button : public FbTk::FbWindow, public EventHandler, private NotCopyable {
 public:
-    Button(int screen_num, int x, int y, unsigned int width, unsigned int height);
-    Button(const FbWindow &parent, int x, int y, unsigned int width, unsigned int height);
-    virtual ~Button();
+  Button(int screen_num, int x, int y, unsigned int width, unsigned int height);
+  Button(const FbWindow &parent, int x, int y, unsigned int width,
+         unsigned int height);
+  virtual ~Button();
 
-    /// sets action when the button is clicked with #button mouse btn
-    void setOnClick(RefCount<Command<void> > &com, int button = 1);
+  /// sets action when the button is clicked with #button mouse btn
+  void setOnClick(RefCount<Command<void>> &com, int button = 1);
 
-    /// sets the pixmap to be viewed when the button is pressed
-    virtual void setPressedPixmap(Pixmap pm);
-    virtual void setPressedColor(const FbTk::Color &color);
-    bool isPressed() const { return m_pressed; }
-    /// sets graphic context for drawing
-    void setGC(GC gc) { m_gc = gc; }
-    /// sets background pixmap, this will override background color
-    virtual void setBackgroundPixmap(Pixmap pm);
-    /// sets background color
-    virtual void setBackgroundColor(const Color &color);
-    virtual bool setOrientation(FbTk::Orientation orient) { return orient == FbTk::ROT0; }
+  /// sets the pixmap to be viewed when the button is pressed
+  virtual void setPressedPixmap(Pixmap pm);
+  virtual void setPressedColor(const FbTk::Color &color);
+  bool isPressed() const { return m_pressed; }
+  /// sets graphic context for drawing
+  void setGC(GC gc) { m_gc = gc; }
+  /// sets background pixmap, this will override background color
+  virtual void setBackgroundPixmap(Pixmap pm);
+  /// sets background color
+  virtual void setBackgroundColor(const Color &color);
+  virtual bool setOrientation(FbTk::Orientation orient) {
+    return orient == FbTk::ROT0;
+  }
 
-    virtual unsigned int preferredWidth() const { return width(); }
+  virtual unsigned int preferredWidth() const { return width(); }
 
-    /**
-       @name eventhandlers
-     */
-    //@{
-    virtual void buttonPressEvent(XButtonEvent &event);
-    virtual void buttonReleaseEvent(XButtonEvent &event);
-    virtual void enterNotifyEvent(XCrossingEvent &ce);    
-    virtual void leaveNotifyEvent(XCrossingEvent &ce);    
-    virtual void exposeEvent(XExposeEvent &event);
-    //@}
+  /**
+     @name eventhandlers
+   */
+  //@{
+  virtual void buttonPressEvent(XButtonEvent &event);
+  virtual void buttonReleaseEvent(XButtonEvent &event);
+  virtual void enterNotifyEvent(XCrossingEvent &ce);
+  virtual void leaveNotifyEvent(XCrossingEvent &ce);
+  virtual void exposeEvent(XExposeEvent &event);
+  //@}
 
-    // in case it cares about a theme
-    virtual void updateTheme(const FbTk::Theme &theme) {}
+  // in case it cares about a theme
+  virtual void updateTheme(const FbTk::Theme &theme) {}
 
-    /// @return true if the button is pressed, else false
-    bool pressed() const { return m_pressed; }
+  /// @return true if the button is pressed, else false
+  bool pressed() const { return m_pressed; }
 
-    GC gc() const { return m_gc; }
-    Pixmap backgroundPixmap() const { return m_background_pm; }
-    Pixmap pressedPixmap() const { return m_pressed_pm; }
-    const Color &backgroundColor() const { return m_background_color; }
-    const Color &pressedColor() const { return m_pressed_color; }
+  GC gc() const { return m_gc; }
+  Pixmap backgroundPixmap() const { return m_background_pm; }
+  Pixmap pressedPixmap() const { return m_pressed_pm; }
+  const Color &backgroundColor() const { return m_background_color; }
+  const Color &pressedColor() const { return m_pressed_color; }
+
 protected:
-    RefCount<Command<void> > command(int button) const {
-        if (button < 2) return m_onclick[0];
-        if (button > 4) return m_onclick[4];
-        return m_onclick[button - 1];
-    }
+  RefCount<Command<void>> command(int button) const {
+    if (button < 2)
+      return m_onclick[0];
+    if (button > 4)
+      return m_onclick[4];
+    return m_onclick[button - 1];
+  }
+
 private:
-    Pixmap m_background_pm; ///< background pixmap
-    Color m_background_color; ///< background color
-    Pixmap m_pressed_pm; ///< pressed pixmap
-    Color m_pressed_color;
-    GC m_gc; ///< graphic context for button
-    bool m_pressed; ///< if the button is pressed
-    bool *mark_if_deleted; ///< if the button is deleted and this is set, make it true
-    RefCount<Command<void> > m_onclick[5]; ///< what to do when this button is clicked with button num
+  Pixmap m_background_pm;   ///< background pixmap
+  Color m_background_color; ///< background color
+  Pixmap m_pressed_pm;      ///< pressed pixmap
+  Color m_pressed_color;
+  GC m_gc;               ///< graphic context for button
+  bool m_pressed;        ///< if the button is pressed
+  bool *mark_if_deleted; ///< if the button is deleted and this is set, make it
+                         /// true
+  RefCount<Command<void>>
+      m_onclick[5]; ///< what to do when this button is clicked with button num
 };
 
 } // namespace FbTk

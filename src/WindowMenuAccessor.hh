@@ -27,50 +27,49 @@
 #include "FbMenu.hh"
 
 /// accesses values in current window
-template <typename Ret, typename Def=Ret>
-class WindowMenuAccessor: public FbTk::Accessor<Ret> {
+template <typename Ret, typename Def = Ret>
+class WindowMenuAccessor : public FbTk::Accessor<Ret> {
 public:
-    typedef Ret (FluxboxWindow:: *Getter)() const;
-    typedef void (FluxboxWindow:: *Setter)(Ret);
-    WindowMenuAccessor(Getter g, Setter s, Def def):
-            m_getter(g), m_setter(s), m_def(def) { }
+  typedef Ret (FluxboxWindow::*Getter)() const;
+  typedef void (FluxboxWindow::*Setter)(Ret);
+  WindowMenuAccessor(Getter g, Setter s, Def def)
+      : m_getter(g), m_setter(s), m_def(def) {}
 
-    operator Ret() const {
-        FluxboxWindow *fbwin = FbMenu::window();
-        if (fbwin)
-            return (Ret)(fbwin->*m_getter)();
-        return m_def;
-    }
-    FbTk::Accessor<Ret> &operator =(const Ret &val) {
-        FluxboxWindow *fbwin = FbMenu::window();
-        if (fbwin)
-            (fbwin->*m_setter)(val);
-        return *this;
-    }
+  operator Ret() const {
+    FluxboxWindow *fbwin = FbMenu::window();
+    if (fbwin)
+      return (Ret)(fbwin->*m_getter)();
+    return m_def;
+  }
+  FbTk::Accessor<Ret> &operator=(const Ret &val) {
+    FluxboxWindow *fbwin = FbMenu::window();
+    if (fbwin)
+      (fbwin->*m_setter)(val);
+    return *this;
+  }
 
 private:
-    Getter m_getter;
-    Setter m_setter;
-    Def m_def;
+  Getter m_getter;
+  Setter m_setter;
+  Def m_def;
 };
 
 /// same as above but only reads
-template <typename Ret, typename Def=Ret>
-class ConstWindowMenuAccessor: public FbTk::Accessor<Ret> {
+template <typename Ret, typename Def = Ret>
+class ConstWindowMenuAccessor : public FbTk::Accessor<Ret> {
 public:
-    typedef Ret (FluxboxWindow:: *Getter)() const;
-    ConstWindowMenuAccessor(Getter g, Def def):
-            m_getter(g), m_def(def) { }
+  typedef Ret (FluxboxWindow::*Getter)() const;
+  ConstWindowMenuAccessor(Getter g, Def def) : m_getter(g), m_def(def) {}
 
-    operator Ret() const {
-        FluxboxWindow *fbwin = FbMenu::window();
-        return fbwin ? (fbwin->*m_getter)() : m_def;
-    }
-    FbTk::Accessor<Ret> &operator =(const Ret &val) { return *this; }
+  operator Ret() const {
+    FluxboxWindow *fbwin = FbMenu::window();
+    return fbwin ? (fbwin->*m_getter)() : m_def;
+  }
+  FbTk::Accessor<Ret> &operator=(const Ret &val) { return *this; }
 
 private:
-    Getter m_getter;
-    Def m_def;
+  Getter m_getter;
+  Def m_def;
 };
 
 #endif // WINDOW_MENU_ACCESSOR_HH

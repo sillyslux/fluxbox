@@ -13,36 +13,37 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.	IN NO EVENT SHALL
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.	IN NO EVENT
+// SHALL
 // THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-#include <iostream>
 #include "../FbTk/App.hh"
 #include "../FbTk/KeyUtil.hh"
+#include <iostream>
 
 using namespace std;
 
 void testKeys(int argc, char **argv) {
-    FbTk::App app(0);
-    if (app.display() == 0) {
-        cerr<<"Cant open display."<<endl;
-        return;
-    }
-    std::string theline;
-    cout<<"Type key: ";
-    getline(cin, theline);
-    unsigned int key = FbTk::KeyUtil::getKey(theline.c_str());
-    cerr<<"key = "<<key<<endl;
-    if (key == NoSymbol)
-        cerr<<"NoSymbol"<<endl;
+  FbTk::App app(0);
+  if (app.display() == 0) {
+    cerr << "Cant open display." << endl;
+    return;
+  }
+  std::string theline;
+  cout << "Type key: ";
+  getline(cin, theline);
+  unsigned int key = FbTk::KeyUtil::getKey(theline.c_str());
+  cerr << "key = " << key << endl;
+  if (key == NoSymbol)
+    cerr << "NoSymbol" << endl;
 }
 
 int main(int argc, char **argv) {
 #ifdef UDS
-    uds::Init uds_init;
+  uds::Init uds_init;
 #endif
-    testKeys(argc, argv);	
+  testKeys(argc, argv);
 }

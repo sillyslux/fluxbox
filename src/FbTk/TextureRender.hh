@@ -42,40 +42,41 @@ class Texture;
 struct RGBA;
 class TextureRender {
 public:
-    TextureRender(ImageControl &ic, unsigned int width, unsigned int height, 
-                  Orientation orient = ROT0);
-    ~TextureRender();
-    /// render to pixmap
-    Pixmap render(const FbTk::Texture &src_texture);
-    /// render solid texture to pixmap
-    Pixmap renderSolid(const FbTk::Texture &src_texture);
-    /// render gradient texture to pixmap
-    Pixmap renderGradient(const FbTk::Texture &src_texture);
-    /// scales and renders a pixmap
-    Pixmap renderPixmap(const FbTk::Texture &src_texture);
+  TextureRender(ImageControl &ic, unsigned int width, unsigned int height,
+                Orientation orient = ROT0);
+  ~TextureRender();
+  /// render to pixmap
+  Pixmap render(const FbTk::Texture &src_texture);
+  /// render solid texture to pixmap
+  Pixmap renderSolid(const FbTk::Texture &src_texture);
+  /// render gradient texture to pixmap
+  Pixmap renderGradient(const FbTk::Texture &src_texture);
+  /// scales and renders a pixmap
+  Pixmap renderPixmap(const FbTk::Texture &src_texture);
+
 private:
-    /// allocates red, green and blue for gradient rendering
-    void allocateColorTables();
-    /**
-       Render to pixmap
-       @return rendered pixmap
-    */
-    Pixmap renderPixmap();
-    /**
-       Render to XImage
-       @returns allocated and rendered XImage, user is responsible to deallocate
-    */
-    XImage *renderXImage();
+  /// allocates red, green and blue for gradient rendering
+  void allocateColorTables();
+  /**
+     Render to pixmap
+     @return rendered pixmap
+  */
+  Pixmap renderPixmap();
+  /**
+     Render to XImage
+     @returns allocated and rendered XImage, user is responsible to deallocate
+  */
+  XImage *renderXImage();
 
-    ImageControl &control;
+  ImageControl &control;
 
-    int cpc, cpccpc;
+  int cpc, cpccpc;
 
-    RGBA* rgba;
-    //unsigned char *red, *green, *blue;
-    Orientation orientation;
-    unsigned int width, height;
+  RGBA *rgba;
+  // unsigned char *red, *green, *blue;
+  Orientation orientation;
+  unsigned int width, height;
 };
 
-} // end namespace FbTk 
+} // end namespace FbTk
 #endif // FBTK_TEXTURERENDER_HH

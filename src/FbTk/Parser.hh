@@ -31,20 +31,19 @@ namespace FbTk {
 // interface class for a generic Parser
 class Parser {
 public:
-    typedef std::pair<std::string, std::string> Item;
-    static const Item s_empty_item;
+  typedef std::pair<std::string, std::string> Item;
+  static const Item s_empty_item;
 
-    virtual ~Parser() { }
+  virtual ~Parser() {}
 
-    virtual bool open(const std::string &filename) = 0;
-    virtual void close() = 0;
-    virtual bool eof() const = 0;
-    virtual bool isLoaded() const = 0;
-    virtual int row() const = 0;
-    virtual std::string line() const = 0;
-    virtual Parser &operator >> (Item &out) = 0;
-    virtual Item nextItem() = 0;
-
+  virtual bool open(const std::string &filename) = 0;
+  virtual void close() = 0;
+  virtual bool eof() const = 0;
+  virtual bool isLoaded() const = 0;
+  virtual int row() const = 0;
+  virtual std::string line() const = 0;
+  virtual Parser &operator>>(Item &out) = 0;
+  virtual Item nextItem() = 0;
 };
 
 } // end namespace FbTk

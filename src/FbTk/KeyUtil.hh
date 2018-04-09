@@ -30,73 +30,72 @@ namespace FbTk {
 
 class KeyUtil {
 public:
+  KeyUtil();
+  ~KeyUtil();
 
-    KeyUtil();
-    ~KeyUtil();
+  void init();
+  static KeyUtil &instance();
 
-    void init();
-    static KeyUtil &instance();
+  /**
+     Grab the specified key
+  */
+  static void grabKey(unsigned int key, unsigned int mod, Window win);
+  static void grabButton(unsigned int button, unsigned int mod, Window win,
+                         unsigned int event_mask, Cursor cursor = None);
 
-    /**
-       Grab the specified key
-    */
-    static void grabKey(unsigned int key, unsigned int mod, Window win);
-    static void grabButton(unsigned int button, unsigned int mod, Window win,
-                           unsigned int event_mask, Cursor cursor = None);
+  /**
+     convert the string to the keysym
+     @return the keysym corresponding to the string, or zero
+  */
+  static unsigned int getKey(const char *keystr);
 
-    /**
-       convert the string to the keysym
-       @return the keysym corresponding to the string, or zero
-    */
-    static unsigned int getKey(const char *keystr);
+  /**
+     @return the modifier for the modstr else zero on failure.
+  */
+  static unsigned int getModifier(const char *modstr);
 
-    /**
-       @return the modifier for the modstr else zero on failure.
-    */
-    static unsigned int getModifier(const char *modstr);
+  /**
+     ungrabs all keys
+   */
+  static void ungrabKeys(Window win);
+  static void ungrabButtons(Window win);
 
-    /**
-       ungrabs all keys
-     */
-    static void ungrabKeys(Window win);
-    static void ungrabButtons(Window win);
+  /**
+      Strip out modifiers we want to ignore
+      @return the cleaned state number
+  */
+  unsigned int cleanMods(unsigned int mods) {
+    // remove numlock, capslock, and scrolllock
+    // and anything beyond Button5Mask
+    return mods & ~(capslock() | numlock() | scrolllock()) & ((1 << 13) - 1);
+  }
 
-    /** 
-        Strip out modifiers we want to ignore
-        @return the cleaned state number
-    */
-    unsigned int cleanMods(unsigned int mods) {
-        // remove numlock, capslock, and scrolllock
-        // and anything beyond Button5Mask
-        return mods & ~(capslock() | numlock() | scrolllock()) & ((1<<13) - 1);
-    }
+  /**
+     strip away everything which is actually not a modifier
+     eg, xkb-keyboardgroups are encoded as bit 13 and 14
+  */
+  unsigned int isolateModifierMask(unsigned int mods) {
+    return mods & (ShiftMask | LockMask | ControlMask | Mod1Mask | Mod2Mask |
+                   Mod3Mask | Mod4Mask | Mod5Mask);
+  }
 
-    /** 
-       strip away everything which is actually not a modifier
-       eg, xkb-keyboardgroups are encoded as bit 13 and 14
-    */
-    unsigned int isolateModifierMask(unsigned int mods) {
-        return mods & (ShiftMask|LockMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask); 
-    }
-
-    /**
-       Convert the specified key into appropriate modifier mask
-       @return corresponding modifier mask
-    */
-    static unsigned int keycodeToModmask(unsigned int keycode);
-    int numlock() const { return m_numlock; }
-    int capslock() const { return LockMask; }
-    int scrolllock() const { return m_scrolllock; }
+  /**
+     Convert the specified key into appropriate modifier mask
+     @return corresponding modifier mask
+  */
+  static unsigned int keycodeToModmask(unsigned int keycode);
+  int numlock() const { return m_numlock; }
+  int capslock() const { return LockMask; }
+  int scrolllock() const { return m_scrolllock; }
 
 private:
-    void loadModmap();
+  void loadModmap();
 
-    XModifierKeymap *m_modmap;
-    int m_numlock, m_scrolllock;
-    static std::unique_ptr<KeyUtil> s_keyutil;
+  XModifierKeymap *m_modmap;
+  int m_numlock, m_scrolllock;
+  static std::unique_ptr<KeyUtil> s_keyutil;
 };
 
 } // end namespace FbTk
-
 
 #endif // FBTK_KEYUTIL_HH

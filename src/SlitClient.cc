@@ -26,56 +26,53 @@
 
 #include "FbTk/App.hh"
 
-#include <X11/Xutil.h>
 #include <X11/Xatom.h>
+#include <X11/Xutil.h>
 
-SlitClient::SlitClient(BScreen *screen, Window win) {
-    initialize(screen, win);
+SlitClient::SlitClient(BScreen *screen, Window win) { initialize(screen, win); }
+
+SlitClient::SlitClient(const char *name)
+    : m_match_name(FbTk::BiDiString(!name ? "" : name)) {
+  initialize();
 }
-
-SlitClient::SlitClient(const char *name) :
-    m_match_name(FbTk::BiDiString(!name ? "" : name)) {
-    initialize();
-}
-
 
 void SlitClient::initialize(BScreen *screen, Window win) {
-    // Now we pre-initialize a list of slit clients with names for
-    // comparison with incoming client windows.  This allows the slit
-    // to maintain a sorted order based on a saved window name list.
-    // Incoming windows not found in the list are appended.  Matching
-    // duplicates are inserted after the last found instance of the
-    // matching name.
+  // Now we pre-initialize a list of slit clients with names for
+  // comparison with incoming client windows.  This allows the slit
+  // to maintain a sorted order based on a saved window name list.
+  // Incoming windows not found in the list are appended.  Matching
+  // duplicates are inserted after the last found instance of the
+  // matching name.
 
-    m_client_window = win;
-    m_window = m_icon_window = None;
-    move(0, 0);
-    resize(0, 0);
+  m_client_window = win;
+  m_window = m_icon_window = None;
+  move(0, 0);
+  resize(0, 0);
 
-    if (matchName().logical().empty())
-        m_match_name.setLogical(Xutil::getWMClassName(clientWindow()));
-    m_visible = true;
+  if (matchName().logical().empty())
+    m_match_name.setLogical(Xutil::getWMClassName(clientWindow()));
+  m_visible = true;
 }
 
 void SlitClient::disableEvents() {
-    if (window() == 0)
-        return;
-    Display *disp = FbTk::App::instance()->display();
-    XSelectInput(disp, window(), NoEventMask);
+  if (window() == 0)
+    return;
+  Display *disp = FbTk::App::instance()->display();
+  XSelectInput(disp, window(), NoEventMask);
 }
 
 void SlitClient::enableEvents() {
-    if (window() == 0)
-        return;
-    Display *disp = FbTk::App::instance()->display();
-    XSelectInput(disp, window(), StructureNotifyMask |
-                 SubstructureNotifyMask | EnterWindowMask);
+  if (window() == 0)
+    return;
+  Display *disp = FbTk::App::instance()->display();
+  XSelectInput(disp, window(),
+               StructureNotifyMask | SubstructureNotifyMask | EnterWindowMask);
 }
 
 void SlitClient::hide() {
-    XUnmapWindow(FbTk::App::instance()->display(), window());
+  XUnmapWindow(FbTk::App::instance()->display(), window());
 }
 
 void SlitClient::show() {
-    XMapWindow(FbTk::App::instance()->display(), window());
+  XMapWindow(FbTk::App::instance()->display(), window());
 }

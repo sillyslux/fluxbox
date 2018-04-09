@@ -33,99 +33,88 @@ class Font;
 /// wrapper for X GC
 class GContext {
 public:
+  typedef enum {
+    JOINMITER = JoinMiter,
+    JOINROUND = JoinRound,
+    JOINBEVEL = JoinBevel
+  } JoinStyle;
 
-    typedef enum { JOINMITER= JoinMiter,
-                   JOINROUND= JoinRound,
-                   JOINBEVEL= JoinBevel
-    } JoinStyle;
+  typedef enum {
+    LINESOLID = LineSolid,
+    LINEONOFFDASH = LineOnOffDash,
+    LINEDOUBLEDASH = LineDoubleDash
+  } LineStyle;
 
-    typedef enum { LINESOLID= LineSolid,
-                   LINEONOFFDASH= LineOnOffDash,
-                   LINEDOUBLEDASH= LineDoubleDash
-    } LineStyle;
+  typedef enum {
+    CAPNOTLAST = CapNotLast,
+    CAPBUTT = CapButt,
+    CAPROUND = CapRound,
+    CAPPROJECTING = CapProjecting
+  } CapStyle;
 
-    typedef enum { CAPNOTLAST= CapNotLast,
-                   CAPBUTT= CapButt,
-                   CAPROUND= CapRound,
-                   CAPPROJECTING= CapProjecting
-    } CapStyle;
+  /// for FbTk drawable
+  explicit GContext(const FbTk::FbDrawable &drawable);
+  /// for X drawable
+  explicit GContext(Drawable drawable);
+  GContext(Drawable d, const FbTk::GContext &gc);
+  virtual ~GContext();
 
-    /// for FbTk drawable
-    explicit GContext(const FbTk::FbDrawable &drawable);
-    /// for X drawable
-    explicit GContext(Drawable drawable);
-    GContext(Drawable d, const FbTk::GContext &gc);
-    virtual ~GContext();
+  void setForeground(const FbTk::Color &color) { setForeground(color.pixel()); }
 
-    void setForeground(const FbTk::Color &color) {
-        setForeground(color.pixel());
-    }
+  void setForeground(long pixel_value) {
+    XSetForeground(m_display, m_gc, pixel_value);
+  }
 
-    void setForeground(long pixel_value) {
-        XSetForeground(m_display, m_gc,
-                       pixel_value);
-    }
+  void setBackground(const FbTk::Color &color) { setBackground(color.pixel()); }
 
-    void setBackground(const FbTk::Color &color) {
-        setBackground(color.pixel());
-    }
+  void setBackground(long pixel_value) {
+    XSetBackground(m_display, m_gc, pixel_value);
+  }
 
-    void setBackground(long pixel_value) {
-        XSetBackground(m_display, m_gc, pixel_value);
-    }
+  void setTile(Drawable draw) { XSetTile(m_display, m_gc, draw); }
 
-    void setTile(Drawable draw) {
-        XSetTile(m_display, m_gc, draw);
-    }
+  void setTile(const FbTk::FbPixmap &draw) { setTile(draw.drawable()); }
 
-    void setTile(const FbTk::FbPixmap &draw) {
-        setTile(draw.drawable());
-    }
+  /// not implemented
+  void setFont(const FbTk::Font &) {}
 
-    /// not implemented
-    void setFont(const FbTk::Font &) {}
+  /// set font id
+  void setFont(int fid) { XSetFont(m_display, m_gc, fid); }
 
-    /// set font id
-    void setFont(int fid) {
-        XSetFont(m_display, m_gc, fid);
-    }
+  void setGraphicsExposure(bool value) {
+    XSetGraphicsExposures(m_display, m_gc, value);
+  }
 
-    void setGraphicsExposure(bool value) {
-        XSetGraphicsExposures(m_display, m_gc, value);
-    }
+  void setFunction(int func) { XSetFunction(m_display, m_gc, func); }
 
-    void setFunction(int func) {
-        XSetFunction(m_display, m_gc, func);
-    }
+  void setSubwindowMode(int mode) { XSetSubwindowMode(m_display, m_gc, mode); }
+  void setFillStyle(int style) { XSetFillStyle(m_display, m_gc, style); }
 
-    void setSubwindowMode(int mode) {
-        XSetSubwindowMode(m_display, m_gc, mode);
-    }
-    void setFillStyle(int style) {
-        XSetFillStyle(m_display, m_gc, style);
-    }
+  void setLineAttributes(unsigned int width, int line_style, int cap_style,
+                         int join_style) {
 
-    void setLineAttributes(unsigned int width,
-                                  int line_style,
-                                  int cap_style,
-                                  int join_style) {
+    XSetLineAttributes(m_display, m_gc, width, line_style, cap_style,
+                       join_style);
+  }
 
-        XSetLineAttributes(m_display, m_gc, width, line_style, cap_style, join_style);
-    }
+  void copy(GC gc);
+  void copy(const GContext &gc);
 
-
-    void copy(GC gc);
-    void copy(const GContext &gc);
-
-    GContext &operator = (const GContext &copy_gc) { copy(copy_gc); return *this; }
-    GContext &operator = (GC copy_gc) { copy(copy_gc); return *this; }
-    GC gc() const { return m_gc; }
+  GContext &operator=(const GContext &copy_gc) {
+    copy(copy_gc);
+    return *this;
+  }
+  GContext &operator=(GC copy_gc) {
+    copy(copy_gc);
+    return *this;
+  }
+  GC gc() const { return m_gc; }
 
 private:
-    GContext(const GContext &cont);
+  GContext(const GContext &cont);
 
-    static Display *m_display; // worth caching
-    GC m_gc;
+  static Display *m_display; // worth caching
+  GC m_gc;
 };
 
 } // end namespace FbTk

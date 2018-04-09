@@ -33,34 +33,34 @@ namespace {
 template <typename M>
 M *addCommands(M *macro, const std::string &args, bool trusted) {
 
-    std::string remainder;
-    std::list<std::string> cmds;
-    StringUtil::stringTokensBetween(cmds, args, remainder, '{', '}');
-    RefCount<Command<void> > cmd(0);
+  std::string remainder;
+  std::list<std::string> cmds;
+  StringUtil::stringTokensBetween(cmds, args, remainder, '{', '}');
+  RefCount<Command<void>> cmd(0);
 
-    if (remainder.length() == 0) {
-        std::list<std::string>::iterator it = cmds.begin(), it_end = cmds.end();
-        for (; it != it_end; ++it) {
-            cmd.reset( CommandParser<void>::instance().parse(*it, trusted) );
-            if (cmd)
-                macro->add(cmd);
-        }
+  if (remainder.length() == 0) {
+    std::list<std::string>::iterator it = cmds.begin(), it_end = cmds.end();
+    for (; it != it_end; ++it) {
+      cmd.reset(CommandParser<void>::instance().parse(*it, trusted));
+      if (cmd)
+        macro->add(cmd);
     }
+  }
 
-    if (macro->size() > 0)
-        return macro;
+  if (macro->size() > 0)
+    return macro;
 
-    delete macro;
-    return 0;
+  delete macro;
+  return 0;
 }
 
-Command<void> *parseMacroCmd(const std::string &command, const std::string &args,
-                       bool trusted) {
-    if (command == "macrocmd")
-        return addCommands<MacroCommand >(new MacroCommand, args, trusted);
-    else if (command == "togglecmd")
-        return addCommands<ToggleCommand >(new ToggleCommand, args, trusted);
-    return 0;
+Command<void> *parseMacroCmd(const std::string &command,
+                             const std::string &args, bool trusted) {
+  if (command == "macrocmd")
+    return addCommands<MacroCommand>(new MacroCommand, args, trusted);
+  else if (command == "togglecmd")
+    return addCommands<ToggleCommand>(new ToggleCommand, args, trusted);
+  return 0;
 }
 
 REGISTER_COMMAND_PARSER(macrocmd, parseMacroCmd, void);
@@ -68,37 +68,29 @@ REGISTER_COMMAND_PARSER(togglecmd, parseMacroCmd, void);
 
 } // end anonymous namespace
 
-void MacroCommand::add(RefCount<Command<void> > &com) {
-    m_commandlist.push_back(com);
+void MacroCommand::add(RefCount<Command<void>> &com) {
+  m_commandlist.push_back(com);
 }
 
-size_t MacroCommand::size() const {
-    return m_commandlist.size();
-}
+size_t MacroCommand::size() const { return m_commandlist.size(); }
 
 void MacroCommand::execute() {
-    for (size_t i=0; i < m_commandlist.size(); ++i)
-        m_commandlist[i]->execute();
+  for (size_t i = 0; i < m_commandlist.size(); ++i)
+    m_commandlist[i]->execute();
 }
 
-ToggleCommand::ToggleCommand() {
+ToggleCommand::ToggleCommand() { m_state = 0; }
+
+void ToggleCommand::add(RefCount<Command<void>> &com) {
+  m_commandlist.push_back(com);
+}
+
+size_t ToggleCommand::size() const { return m_commandlist.size(); }
+
+void ToggleCommand::execute() {
+  m_commandlist[m_state]->execute();
+  if (++m_state >= m_commandlist.size())
     m_state = 0;
 }
 
-void ToggleCommand::add(RefCount<Command<void> > &com) {
-    m_commandlist.push_back(com);
-}
-
-size_t ToggleCommand::size() const {
-    return m_commandlist.size();
-}
-
-void ToggleCommand::execute() {
-    m_commandlist[m_state]->execute();
-    if (++m_state >= m_commandlist.size())
-        m_state = 0;
-}
-
 } // end namespace FbTk
-
-

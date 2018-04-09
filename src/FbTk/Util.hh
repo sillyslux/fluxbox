@@ -1,6 +1,6 @@
-// Util.hh for fluxbox 
+// Util.hh for fluxbox
 // Copyright (c) 2010 Mathias Gumz (akira at fluxbox org)
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation
@@ -26,18 +26,17 @@ namespace FbTk {
 
 namespace Util {
 
-template<typename T>
-inline T clamp(const T& value, const T& lower, const T& upper) {
-    if (value < lower)
-        return lower;
-    else if (value > upper)
-        return upper;
-    return value;
+template <typename T>
+inline T clamp(const T &value, const T &lower, const T &upper) {
+  if (value < lower)
+    return lower;
+  else if (value > upper)
+    return upper;
+  return value;
 }
 
 } // end namespace Util
 
 } // end namespace FbTk
-
 
 #endif // FBTK_UTIL_HH

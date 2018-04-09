@@ -27,14 +27,14 @@
 namespace FbTk {
 
 /** Interface class for commands
- * Actually, it's very similar to Slot (execute instead of operator()) and could be removed at
+ * Actually, it's very similar to Slot (execute instead of operator()) and could
+ * be removed at
  * some point.
  */
-template <typename Ret=void>
-class Command: public Slot<Ret> {
+template <typename Ret = void> class Command : public Slot<Ret> {
 public:
-    virtual Ret execute() = 0;
-    virtual Ret operator()() { return execute(); }
+  virtual Ret execute() = 0;
+  virtual Ret operator()() { return execute(); }
 };
 
 } // end namespace FbTk

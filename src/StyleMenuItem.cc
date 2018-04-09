@@ -27,21 +27,18 @@
 
 #include "FbTk/StringUtil.hh"
 
-StyleMenuItem::StyleMenuItem(const FbTk::FbString &label, const std::string &filename):
-    FbTk::RadioMenuItem(label), 
-    m_filename(filename) {
-    // perform shell style ~ home directory expansion
-    // and insert style      
-    FbTk::RefCount<FbTk::Command<void> > 
-        setstyle_cmd(new FbCommands::
-                     SetStyleCmd(m_filename));
-    setCommand(setstyle_cmd);
-    setToggleItem(true);
-    setCloseOnClick(false);
+StyleMenuItem::StyleMenuItem(const FbTk::FbString &label,
+                             const std::string &filename)
+    : FbTk::RadioMenuItem(label), m_filename(filename) {
+  // perform shell style ~ home directory expansion
+  // and insert style
+  FbTk::RefCount<FbTk::Command<void>> setstyle_cmd(
+      new FbCommands::SetStyleCmd(m_filename));
+  setCommand(setstyle_cmd);
+  setToggleItem(true);
+  setCloseOnClick(false);
 }
-
 
 bool StyleMenuItem::isSelected() const {
-    return Fluxbox::instance()->getStyleFilename() == m_filename;
+  return Fluxbox::instance()->getStyleFilename() == m_filename;
 }
-

@@ -25,28 +25,27 @@
 
 class Strut {
 public:
-    Strut(int head, int left, int right,
-          int top, int bottom, Strut* next = 0)
-        :m_head(head), m_left(left), m_right(right),
-         m_top(top), m_bottom(bottom), m_next(next) { }
-    int head() const { return m_head; }
-    int left() const { return m_left; }
-    int right() const { return m_right; }
-    int bottom() const { return m_bottom; }
-    int top() const { return m_top; }
-    Strut* next() const { return m_next; }
-    bool operator == (const Strut &test) const {
-        return (head() == test.head() &&
-                left() == test.left() &&
-                right() == test.right() &&
-                top() == test.top() &&
-                bottom() == test.bottom());
-    }
+  Strut(int head, int left, int right, int top, int bottom, Strut *next = 0)
+      : m_head(head), m_left(left), m_right(right), m_top(top),
+        m_bottom(bottom), m_next(next) {}
+  int head() const { return m_head; }
+  int left() const { return m_left; }
+  int right() const { return m_right; }
+  int bottom() const { return m_bottom; }
+  int top() const { return m_top; }
+  Strut *next() const { return m_next; }
+  bool operator==(const Strut &test) const {
+    return (head() == test.head() && left() == test.left() &&
+            right() == test.right() && top() == test.top() &&
+            bottom() == test.bottom());
+  }
+
 private:
-    Strut():m_head(0), m_left(0), m_right(0), m_top(0), m_bottom(0), m_next(0) {}
-    int m_head;
-    int m_left, m_right, m_top, m_bottom;
-    Strut *m_next; ///< link to struts on all heads
+  Strut()
+      : m_head(0), m_left(0), m_right(0), m_top(0), m_bottom(0), m_next(0) {}
+  int m_head;
+  int m_left, m_right, m_top, m_bottom;
+  Strut *m_next; ///< link to struts on all heads
 };
 
 #endif // STRUT_HH

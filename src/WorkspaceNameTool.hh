@@ -25,8 +25,8 @@
 
 #include "ToolbarItem.hh"
 
-#include "FbTk/TextButton.hh"
 #include "FbTk/Signal.hh"
+#include "FbTk/TextButton.hh"
 
 class BScreen;
 class ToolTheme;
@@ -35,39 +35,38 @@ namespace FbTk {
 template <class T> class ThemeProxy;
 }
 
-class WorkspaceNameTool: public ToolbarItem, private FbTk::SignalTracker {
+class WorkspaceNameTool : public ToolbarItem, private FbTk::SignalTracker {
 public:
-    WorkspaceNameTool(const FbTk::FbWindow &parent, FbTk::ThemeProxy<ToolTheme> &theme, BScreen &screen);
-    virtual ~WorkspaceNameTool();
+  WorkspaceNameTool(const FbTk::FbWindow &parent,
+                    FbTk::ThemeProxy<ToolTheme> &theme, BScreen &screen);
+  virtual ~WorkspaceNameTool();
 
-    void move(int x, int y);
-    void resize(unsigned int width, unsigned int height);
-    void moveResize(int x, int y,
-                    unsigned int width, unsigned int height);
+  void move(int x, int y);
+  void resize(unsigned int width, unsigned int height);
+  void moveResize(int x, int y, unsigned int width, unsigned int height);
 
-    void show();
-    void hide();
-    unsigned int width() const;
-    unsigned int height() const;
-    unsigned int borderWidth() const;
+  void show();
+  void hide();
+  unsigned int width() const;
+  unsigned int height() const;
+  unsigned int borderWidth() const;
 
-    FbTk::Button &button() { return m_button; }
-    const FbTk::Button &button() const { return m_button; }
-    void setOrientation(FbTk::Orientation orient);
+  FbTk::Button &button() { return m_button; }
+  const FbTk::Button &button() const { return m_button; }
+  void setOrientation(FbTk::Orientation orient);
 
-    void parentMoved() { m_button.parentMoved(); }
+  void parentMoved() { m_button.parentMoved(); }
 
 private:
-    void update();
+  void update();
 
-    void renderTheme(int alpha);
-    void reRender();
-    void updateSizing();
-    FbTk::TextButton m_button;
-    const FbTk::ThemeProxy<ToolTheme> &m_theme;
-    BScreen &m_screen;
-    Pixmap m_pixmap;
+  void renderTheme(int alpha);
+  void reRender();
+  void updateSizing();
+  FbTk::TextButton m_button;
+  const FbTk::ThemeProxy<ToolTheme> &m_theme;
+  BScreen &m_screen;
+  Pixmap m_pixmap;
 };
 
 #endif // WORKSPACENAMETOOL_HH
-

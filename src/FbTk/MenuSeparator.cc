@@ -22,30 +22,29 @@
 
 #include "MenuSeparator.hh"
 
+#include "FbDrawable.hh"
 #include "GContext.hh"
 #include "MenuTheme.hh"
-#include "FbDrawable.hh"
 
 namespace FbTk {
 
 void MenuSeparator::draw(FbDrawable &drawable,
                          const FbTk::ThemeProxy<MenuTheme> &theme,
-                         bool highlight, bool draw_foreground, bool draw_background,
-                         int x, int y,
-                         unsigned int width, unsigned int height) const {
+                         bool highlight, bool draw_foreground,
+                         bool draw_background, int x, int y, unsigned int width,
+                         unsigned int height) const {
 
-    if (draw_background) {
-        const GContext &tgc =
-// its a separator, it shouldn't be highlighted! or shown as disabled
-//            (highlight ? theme->hiliteTextGC() :
-//             (isEnabled() ? theme->frameTextGC() : theme->disableTextGC() ) );
-            theme->frameTextGC();
+  if (draw_background) {
+    const GContext &tgc =
+        // its a separator, it shouldn't be highlighted! or shown as disabled
+        //            (highlight ? theme->hiliteTextGC() :
+        //             (isEnabled() ? theme->frameTextGC() :
+        //             theme->disableTextGC() ) );
+        theme->frameTextGC();
 
-        drawable.drawRectangle(tgc.gc(),
-                               x + theme->bevelWidth() + height + 1, y + height / 2,
-                               width - ((theme->bevelWidth() + height) * 2) - 1, 0);
-    }
+    drawable.drawRectangle(tgc.gc(), x + theme->bevelWidth() + height + 1,
+                           y + height / 2,
+                           width - ((theme->bevelWidth() + height) * 2) - 1, 0);
+  }
 }
-
 }
-
