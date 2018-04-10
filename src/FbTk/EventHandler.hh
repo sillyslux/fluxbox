@@ -28,8 +28,8 @@
 
 namespace FbTk {
 
-/// interface for X events
-/**
+    /// interface for X events
+    /**
  * Use this class to catch events from X windows and FbWindows \n
  * Register instance of this class to EventManager \n
  * example: \n
@@ -38,25 +38,25 @@ namespace FbTk {
  * EventManager::instance()->remove(your_window);
  * @see EventManager
  */
-class EventHandler {
-public:
-  virtual ~EventHandler() {}
+    class EventHandler {
+    public:
+        virtual ~EventHandler() {}
 
-  /**
+        /**
      Events that don't have an specific event function
   */
-  virtual void handleEvent(XEvent &) {}
-  virtual void buttonPressEvent(XButtonEvent &) {}
-  virtual void buttonReleaseEvent(XButtonEvent &) {}
-  virtual void exposeEvent(XExposeEvent &) {}
-  virtual void motionNotifyEvent(XMotionEvent &) {}
-  virtual void keyPressEvent(XKeyEvent &) {}
-  virtual void keyReleaseEvent(XKeyEvent &) {}
-  virtual void leaveNotifyEvent(XCrossingEvent &) {}
-  virtual void enterNotifyEvent(XCrossingEvent &) {}
+        virtual void handleEvent(XEvent&) {}
+        virtual void buttonPressEvent(XButtonEvent&) {}
+        virtual void buttonReleaseEvent(XButtonEvent&) {}
+        virtual void exposeEvent(XExposeEvent&) {}
+        virtual void motionNotifyEvent(XMotionEvent&) {}
+        virtual void keyPressEvent(XKeyEvent&) {}
+        virtual void keyReleaseEvent(XKeyEvent&) {}
+        virtual void leaveNotifyEvent(XCrossingEvent&) {}
+        virtual void enterNotifyEvent(XCrossingEvent&) {}
 
-  virtual void grabButtons() {}
-};
+        virtual void grabButtons() {}
+    };
 
 } // end namespace FbTk
 

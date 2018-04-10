@@ -28,47 +28,48 @@
 
 namespace FbTk {
 
-class LayerItem;
-class Layer;
+    class LayerItem;
+    class Layer;
 
-class MultLayers {
-public:
-  explicit MultLayers(int numlayers);
-  ~MultLayers();
-  LayerItem *getLowestItemAboveLayer(int layernum);
+    class MultLayers {
+    public:
+        explicit MultLayers(int numlayers);
+        ~MultLayers();
+        LayerItem* getLowestItemAboveLayer(int layernum);
 
-  /// if there are none below, it will return null
-  LayerItem *getItemBelow(LayerItem &item);
-  LayerItem *getItemAbove(LayerItem &item);
-  void addToTop(LayerItem &item, int layernum);
-  void remove(LayerItem &item);
+        /// if there are none below, it will return null
+        LayerItem* getItemBelow(LayerItem& item);
+        LayerItem* getItemAbove(LayerItem& item);
+        void addToTop(LayerItem& item, int layernum);
+        void remove(LayerItem& item);
 
-  // raise/lower the whole layer
-  void raise(Layer &layer);
-  void lower(Layer &layer);
+        // raise/lower the whole layer
+        void raise(Layer& layer);
+        void lower(Layer& layer);
 
-  // raise/lower the item a whole layer, not just to top of current layer
-  void raiseLayer(LayerItem &item);
-  void lowerLayer(LayerItem &item);
+        // raise/lower the item a whole layer, not just to top of current layer
+        void raiseLayer(LayerItem& item);
+        void lowerLayer(LayerItem& item);
 
-  void moveToLayer(LayerItem &item, int layernum);
-  int size();
+        void moveToLayer(LayerItem& item, int layernum);
+        int size();
 
-  Layer *getLayer(size_t num);
-  const Layer *getLayer(size_t num) const;
+        Layer* getLayer(size_t num);
+        const Layer* getLayer(size_t num) const;
 
-  bool isUpdatable() const { return m_lock == 0; }
-  void lock() { ++m_lock; }
-  void unlock() {
-    if (--m_lock == 0)
-      restack();
-  }
+        bool isUpdatable() const { return m_lock == 0; }
+        void lock() { ++m_lock; }
+        void unlock()
+        {
+            if (--m_lock == 0)
+                restack();
+        }
 
-private:
-  void restack();
+    private:
+        void restack();
 
-  std::vector<Layer *> m_layers;
-  int m_lock;
-};
+        std::vector<Layer*> m_layers;
+        int m_lock;
+    };
 }
 #endif // FBTK_MULTLAYERS_HH

@@ -40,70 +40,85 @@
 template <typename ItemType>
 class XineramaHeadMenuItem : public FbTk::RadioMenuItem {
 public:
-  XineramaHeadMenuItem(const FbTk::FbString &label, ItemType &object,
-                       int headnum, FbTk::RefCount<FbTk::Command<void>> &cmd)
-      : FbTk::RadioMenuItem(label, cmd), m_object(object), m_headnum(headnum) {}
-  XineramaHeadMenuItem(const FbTk::FbString &label, ItemType &object,
-                       int headnum)
-      : FbTk::RadioMenuItem(label), m_object(object), m_headnum(headnum) {}
+    XineramaHeadMenuItem(const FbTk::FbString& label, ItemType& object,
+        int headnum, FbTk::RefCount<FbTk::Command<void> >& cmd)
+        : FbTk::RadioMenuItem(label, cmd)
+        , m_object(object)
+        , m_headnum(headnum)
+    {
+    }
+    XineramaHeadMenuItem(const FbTk::FbString& label, ItemType& object,
+        int headnum)
+        : FbTk::RadioMenuItem(label)
+        , m_object(object)
+        , m_headnum(headnum)
+    {
+    }
 
-  bool isSelected() const { return m_object.getOnHead() == m_headnum; }
-  void click(int button, int time, unsigned int mods) {
-    m_object.saveOnHead(m_headnum);
-    FbTk::RadioMenuItem::click(button, time, mods);
-  }
+    bool isSelected() const { return m_object.getOnHead() == m_headnum; }
+    void click(int button, int time, unsigned int mods)
+    {
+        m_object.saveOnHead(m_headnum);
+        FbTk::RadioMenuItem::click(button, time, mods);
+    }
 
 private:
-  ItemType &m_object;
-  int m_headnum;
+    ItemType& m_object;
+    int m_headnum;
 };
 
 /// Create a xinerama menu
-template <typename ItemType> class XineramaHeadMenu : public ToggleMenu {
+template <typename ItemType>
+class XineramaHeadMenu : public ToggleMenu {
 public:
-  XineramaHeadMenu(FbTk::ThemeProxy<FbTk::MenuTheme> &tm, BScreen &screen,
-                   FbTk::ImageControl &imgctrl, FbTk::Layer &layer,
-                   ItemType &item, const FbTk::FbString &title = "");
-  void reloadHeads();
+    XineramaHeadMenu(FbTk::ThemeProxy<FbTk::MenuTheme>& tm, BScreen& screen,
+        FbTk::ImageControl& imgctrl, FbTk::Layer& layer,
+        ItemType& item, const FbTk::FbString& title = "");
+    void reloadHeads();
 
 private:
-  ItemType &m_object;
-  BScreen &m_screen;
+    ItemType& m_object;
+    BScreen& m_screen;
 };
 
 template <typename ItemType>
 XineramaHeadMenu<ItemType>::XineramaHeadMenu(
-    FbTk::ThemeProxy<FbTk::MenuTheme> &tm, BScreen &screen,
-    FbTk::ImageControl &imgctrl, FbTk::Layer &layer, ItemType &item,
-    const FbTk::FbString &title)
-    : ToggleMenu(tm, imgctrl, layer), m_object(item), m_screen(screen) {
-  setLabel(title);
-  reloadHeads();
+    FbTk::ThemeProxy<FbTk::MenuTheme>& tm, BScreen& screen,
+    FbTk::ImageControl& imgctrl, FbTk::Layer& layer, ItemType& item,
+    const FbTk::FbString& title)
+    : ToggleMenu(tm, imgctrl, layer)
+    , m_object(item)
+    , m_screen(screen)
+{
+    setLabel(title);
+    reloadHeads();
 }
 
-template <typename ItemType> void XineramaHeadMenu<ItemType>::reloadHeads() {
-  removeAll();
-  FbTk::RefCount<FbTk::Command<void>> saverc_cmd(
-      new FbTk::SimpleCommand<Fluxbox>(*Fluxbox::instance(),
-                                       &Fluxbox::save_rc));
-  for (int i = 1; i <= m_screen.numHeads(); ++i) {
-    // TODO: nls
-    /*
+template <typename ItemType>
+void XineramaHeadMenu<ItemType>::reloadHeads()
+{
+    removeAll();
+    FbTk::RefCount<FbTk::Command<void> > saverc_cmd(
+        new FbTk::SimpleCommand<Fluxbox>(*Fluxbox::instance(),
+            &Fluxbox::save_rc));
+    for (int i = 1; i <= m_screen.numHeads(); ++i) {
+        // TODO: nls
+        /*
             sprintf(tname, I18n::instance()->
                     getMessage(
                         FBNLS::ScreenSet,
                         FBNLS::XineramaDefaultHeadFormat,
                         "Head %d"), i); //m_id starts at 0
     */
-    std::string tname("Head ");
-    tname += FbTk::StringUtil::number2String(i);
-    insertItem(new XineramaHeadMenuItem<ItemType>(tname.c_str(), m_object, i,
-                                                  saverc_cmd));
-  }
-  // TODO: nls
-  insertItem(
-      new XineramaHeadMenuItem<ItemType>("All Heads", m_object, 0, saverc_cmd));
-  updateMenu();
+        std::string tname("Head ");
+        tname += FbTk::StringUtil::number2String(i);
+        insertItem(new XineramaHeadMenuItem<ItemType>(tname.c_str(), m_object, i,
+            saverc_cmd));
+    }
+    // TODO: nls
+    insertItem(
+        new XineramaHeadMenuItem<ItemType>("All Heads", m_object, 0, saverc_cmd));
+    updateMenu();
 }
 
 #endif // XINERAMA_HH

@@ -51,167 +51,168 @@ class FbMenu;
 class ToolbarItem;
 
 namespace FbTk {
-class ImageControl;
-class Shape;
-class TextButton;
+    class ImageControl;
+    class Shape;
+    class TextButton;
 }
 
 /// The toolbar.
 /// Handles iconbar, workspace name view and clock view
 class Toolbar : public FbTk::EventHandler, public LayerObject {
 public:
-  /// Toolbar placement on the screen
-  enum Placement {
-    // top and bottom placement
-    TOPLEFT = 1,
-    TOPCENTER,
-    TOPRIGHT,
-    BOTTOMLEFT,
-    BOTTOMCENTER,
-    BOTTOMRIGHT,
-    // left and right placement
-    LEFTBOTTOM,
-    LEFTCENTER,
-    LEFTTOP,
-    RIGHTBOTTOM,
-    RIGHTCENTER,
-    RIGHTTOP,
+    /// Toolbar placement on the screen
+    enum Placement {
+        // top and bottom placement
+        TOPLEFT = 1,
+        TOPCENTER,
+        TOPRIGHT,
+        BOTTOMLEFT,
+        BOTTOMCENTER,
+        BOTTOMRIGHT,
+        // left and right placement
+        LEFTBOTTOM,
+        LEFTCENTER,
+        LEFTTOP,
+        RIGHTBOTTOM,
+        RIGHTCENTER,
+        RIGHTTOP,
 
-    DEFAULT = BOTTOMRIGHT
-  };
+        DEFAULT = BOTTOMRIGHT
+    };
 
-  /// Create a toolbar on the screen with specific width
-  Toolbar(BScreen &screen, FbTk::Layer &layer, size_t width = 200);
+    /// Create a toolbar on the screen with specific width
+    Toolbar(BScreen& screen, FbTk::Layer& layer, size_t width = 200);
 
-  virtual ~Toolbar();
+    virtual ~Toolbar();
 
-  void raise();
-  void lower();
-  void updateVisibleState();
-  void toggleHidden();
+    void raise();
+    void lower();
+    void updateVisibleState();
+    void toggleHidden();
 
-  void toggleAboveDock();
+    void toggleAboveDock();
 
-  void moveToLayer(int layernum);
+    void moveToLayer(int layernum);
 
-  void saveOnHead(int head);
+    void saveOnHead(int head);
 
-  /**
+    /**
      @name eventhandlers
   */
-  //@{
-  void buttonPressEvent(XButtonEvent &be);
-  void enterNotifyEvent(XCrossingEvent &ce);
-  void leaveNotifyEvent(XCrossingEvent &ce);
-  void exposeEvent(XExposeEvent &ee);
-  void handleEvent(XEvent &event);
-  //@}
+    //@{
+    void buttonPressEvent(XButtonEvent& be);
+    void enterNotifyEvent(XCrossingEvent& ce);
+    void leaveNotifyEvent(XCrossingEvent& ce);
+    void exposeEvent(XExposeEvent& ee);
+    void handleEvent(XEvent& event);
+    //@}
 
-  void relayout();
-  void reconfigure();
-  void setPlacement(Placement where);
+    void relayout();
+    void reconfigure();
+    void setPlacement(Placement where);
 
-  int layerNumber() const {
-    return const_cast<FbTk::LayerItem &>(m_layeritem).getLayerNum();
-  }
+    int layerNumber() const
+    {
+        return const_cast<FbTk::LayerItem&>(m_layeritem).getLayerNum();
+    }
 
-  const FbTk::Menu &menu() const { return m_toolbarmenu; }
-  FbTk::Menu &menu() { return m_toolbarmenu; }
-  FbTk::Menu &placementMenu() { return m_placementmenu; }
-  const FbTk::Menu &placementMenu() const { return m_placementmenu; }
+    const FbTk::Menu& menu() const { return m_toolbarmenu; }
+    FbTk::Menu& menu() { return m_toolbarmenu; }
+    FbTk::Menu& placementMenu() { return m_placementmenu; }
+    const FbTk::Menu& placementMenu() const { return m_placementmenu; }
 
-  FbTk::Menu &layerMenu() { return m_layermenu; }
-  const FbTk::Menu &layerMenu() const { return m_layermenu; }
+    FbTk::Menu& layerMenu() { return m_layermenu; }
+    const FbTk::Menu& layerMenu() const { return m_layermenu; }
 
-  /// are we hidden?
-  bool isHidden() const { return m_hidden; }
-  /// do we auto hide the toolbar?
-  bool doAutoHide() const { return *m_rc_auto_hide; }
-  ///	@return X window of the toolbar
-  const FbTk::FbWindow &window() const { return frame.window; }
-  BScreen &screen() { return m_screen; }
-  const BScreen &screen() const { return m_screen; }
-  unsigned int width() const { return frame.window.width(); }
-  unsigned int height() const { return frame.window.height(); }
-  int x() const { return isHidden() ? frame.x_hidden : frame.x; }
-  int y() const { return isHidden() ? frame.y_hidden : frame.y; }
-  Placement placement() const { return *m_rc_placement; }
-  /// @return pointer to iconbar if it got one, else 0
-  const FbTk::ThemeProxy<ToolbarTheme> &theme() const { return m_theme; }
-  FbTk::ThemeProxy<ToolbarTheme> &theme() { return m_theme; }
-  bool isVertical() const;
+    /// are we hidden?
+    bool isHidden() const { return m_hidden; }
+    /// do we auto hide the toolbar?
+    bool doAutoHide() const { return *m_rc_auto_hide; }
+    ///	@return X window of the toolbar
+    const FbTk::FbWindow& window() const { return frame.window; }
+    BScreen& screen() { return m_screen; }
+    const BScreen& screen() const { return m_screen; }
+    unsigned int width() const { return frame.window.width(); }
+    unsigned int height() const { return frame.window.height(); }
+    int x() const { return isHidden() ? frame.x_hidden : frame.x; }
+    int y() const { return isHidden() ? frame.y_hidden : frame.y; }
+    Placement placement() const { return *m_rc_placement; }
+    /// @return pointer to iconbar if it got one, else 0
+    const FbTk::ThemeProxy<ToolbarTheme>& theme() const { return m_theme; }
+    FbTk::ThemeProxy<ToolbarTheme>& theme() { return m_theme; }
+    bool isVertical() const;
 
-  int getOnHead() const { return *m_rc_on_head; }
+    int getOnHead() const { return *m_rc_on_head; }
 
-  unsigned char alpha() const { return *m_rc_alpha; }
+    unsigned char alpha() const { return *m_rc_alpha; }
 
 private:
-  void rearrangeItems();
-  void deleteItems();
+    void rearrangeItems();
+    void deleteItems();
 
-  void setupMenus(bool skip_new_placement = false);
-  void clearStrut();
-  void updateStrut();
-  void updateAlpha();
+    void setupMenus(bool skip_new_placement = false);
+    void clearStrut();
+    void updateStrut();
+    void updateAlpha();
 
-  void updateCrossingState();
+    void updateCrossingState();
 
-  /// Called when the screen changed property.
-  void screenChanged(BScreen &screen);
+    /// Called when the screen changed property.
+    void screenChanged(BScreen& screen);
 
-  bool m_hidden; ///< hidden state
+    bool m_hidden; ///< hidden state
 
-  /// Toolbar frame
-  struct Frame {
-    Frame(FbTk::EventHandler &evh, int screen_num);
-    ~Frame();
+    /// Toolbar frame
+    struct Frame {
+        Frame(FbTk::EventHandler& evh, int screen_num);
+        ~Frame();
 
-    FbTk::FbWindow window;
+        FbTk::FbWindow window;
 
-    int x, y, x_hidden, y_hidden, grab_x, grab_y;
-    unsigned int width, height, bevel_w;
-  } frame;
-  // background pixmap
-  Pixmap m_window_pm;
+        int x, y, x_hidden, y_hidden, grab_x, grab_y;
+        unsigned int width, height, bevel_w;
+    } frame;
+    // background pixmap
+    Pixmap m_window_pm;
 
-  BScreen &m_screen; ///< screen connection
+    BScreen& m_screen; ///< screen connection
 
-  FbTk::Timer m_hide_timer; ///< timer to for auto hide toolbar
+    FbTk::Timer m_hide_timer; ///< timer to for auto hide toolbar
 
-  FbTk::LayerItem
-      m_layeritem; ///< layer item, must be declared before layermenu
-  LayerMenu m_layermenu;
-  FbMenu m_placementmenu, m_toolbarmenu;
+    FbTk::LayerItem
+        m_layeritem; ///< layer item, must be declared before layermenu
+    LayerMenu m_layermenu;
+    FbMenu m_placementmenu, m_toolbarmenu;
 #ifdef XINERAMA
-  XineramaHeadMenu<Toolbar> *m_xineramaheadmenu;
+    XineramaHeadMenu<Toolbar>* m_xineramaheadmenu;
 #endif // XINERAMA
 
-  // themes
-  ToolbarTheme m_theme;
+    // themes
+    ToolbarTheme m_theme;
 
-  typedef std::list<ToolbarItem *> ItemList;
-  ItemList m_item_list;
+    typedef std::list<ToolbarItem*> ItemList;
+    ItemList m_item_list;
 
-  ToolFactory m_tool_factory;
+    ToolFactory m_tool_factory;
 
-  Strut *m_strut; ///< created and destroyed by BScreen
+    Strut* m_strut; ///< created and destroyed by BScreen
 
-  // resources
-  FbTk::Resource<bool> m_rc_auto_hide, m_rc_auto_raise, m_rc_maximize_over,
-      m_rc_visible;
-  FbTk::Resource<int> m_rc_width_percent;
-  FbTk::Resource<int> m_rc_alpha;
-  FbTk::Resource<class ResourceLayer> m_rc_layernum;
-  FbTk::Resource<int> m_rc_on_head;
-  FbTk::Resource<Placement> m_rc_placement;
-  FbTk::Resource<int> m_rc_height;
-  FbTk::Resource<std::string> m_rc_tools;
-  std::unique_ptr<FbTk::Shape> m_shape;
-  typedef std::list<std::string> StringList;
-  StringList m_tools;
+    // resources
+    FbTk::Resource<bool> m_rc_auto_hide, m_rc_auto_raise, m_rc_maximize_over,
+        m_rc_visible;
+    FbTk::Resource<int> m_rc_width_percent;
+    FbTk::Resource<int> m_rc_alpha;
+    FbTk::Resource<class ResourceLayer> m_rc_layernum;
+    FbTk::Resource<int> m_rc_on_head;
+    FbTk::Resource<Placement> m_rc_placement;
+    FbTk::Resource<int> m_rc_height;
+    FbTk::Resource<std::string> m_rc_tools;
+    std::unique_ptr<FbTk::Shape> m_shape;
+    typedef std::list<std::string> StringList;
+    StringList m_tools;
 
-  bool m_resize_lock; ///< to lock rearrangeItems or not
-  FbTk::SignalTracker m_signal_tracker;
+    bool m_resize_lock; ///< to lock rearrangeItems or not
+    FbTk::SignalTracker m_signal_tracker;
 };
 
 #endif // TOOLBAR_HH

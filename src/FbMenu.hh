@@ -31,32 +31,33 @@
 class FluxboxWindow;
 
 namespace FbTk {
-class MenuTheme;
+    class MenuTheme;
 }
 
 /// a layered and shaped menu
 class FbMenu : public FbTk::Menu {
 public:
-  static void setWindow(FluxboxWindow *win);
-  static FluxboxWindow *window();
+    static void setWindow(FluxboxWindow* win);
+    static FluxboxWindow* window();
 
-  FbMenu(FbTk::ThemeProxy<FbTk::MenuTheme> &tm, FbTk::ImageControl &imgctrl,
-         FbTk::Layer &layer);
-  virtual ~FbMenu() {}
-  void raise() { m_layeritem.raise(); }
-  void lower() { m_layeritem.lower(); }
-  void buttonPressEvent(XButtonEvent &be);
-  void buttonReleaseEvent(XButtonEvent &be);
-  void keyPressEvent(XKeyEvent &ke);
+    FbMenu(FbTk::ThemeProxy<FbTk::MenuTheme>& tm, FbTk::ImageControl& imgctrl,
+        FbTk::Layer& layer);
+    virtual ~FbMenu() {}
+    void raise() { m_layeritem.raise(); }
+    void lower() { m_layeritem.lower(); }
+    void buttonPressEvent(XButtonEvent& be);
+    void buttonReleaseEvent(XButtonEvent& be);
+    void keyPressEvent(XKeyEvent& ke);
 
-  void setReloadHelper(FbTk::AutoReloadHelper *helper) {
-    m_reloader.reset(helper);
-  }
-  FbTk::AutoReloadHelper *reloadHelper() { return m_reloader.get(); }
+    void setReloadHelper(FbTk::AutoReloadHelper* helper)
+    {
+        m_reloader.reset(helper);
+    }
+    FbTk::AutoReloadHelper* reloadHelper() { return m_reloader.get(); }
 
 private:
-  FbTk::LayerItem m_layeritem;
-  std::unique_ptr<FbTk::AutoReloadHelper> m_reloader;
+    FbTk::LayerItem m_layeritem;
+    std::unique_ptr<FbTk::AutoReloadHelper> m_reloader;
 };
 
 #endif // FBMENU_HH

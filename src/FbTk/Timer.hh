@@ -33,76 +33,79 @@
 
 namespace FbTk {
 
-/**
+    /**
     Handles Timeout
 */
-class Timer {
-public:
-  Timer();
-  explicit Timer(const RefCount<Slot<void>> &handler);
-  ~Timer();
+    class Timer {
+    public:
+        Timer();
+        explicit Timer(const RefCount<Slot<void> >& handler);
+        ~Timer();
 
-  void fireOnce(bool once) { m_once = once; }
-  void setTimeout(uint64_t timeout, bool force_start = false);
-  void setCommand(const RefCount<Slot<void>> &cmd);
+        void fireOnce(bool once) { m_once = once; }
+        void setTimeout(uint64_t timeout, bool force_start = false);
+        void setCommand(const RefCount<Slot<void> >& cmd);
 
-  template <typename Functor> void setFunctor(const Functor &functor) {
-    setCommand(RefCount<Slot<void>>(new SlotImpl<Functor, void>(functor)));
-  }
+        template <typename Functor>
+        void setFunctor(const Functor& functor)
+        {
+            setCommand(RefCount<Slot<void> >(new SlotImpl<Functor, void>(functor)));
+        }
 
-  void setInterval(int seconds) { m_interval = seconds; }
-  void start();
-  void stop();
+        void setInterval(int seconds) { m_interval = seconds; }
+        void start();
+        void stop();
 
-  static void updateTimers(int file_descriptor);
+        static void updateTimers(int file_descriptor);
 
-  int isTiming() const;
-  int getInterval() const { return m_interval; }
+        int isTiming() const;
+        int getInterval() const { return m_interval; }
 
-  int doOnce() const { return m_once; }
+        int doOnce() const { return m_once; }
 
-  uint64_t getTimeout() const { return m_timeout; }
-  uint64_t getStartTime() const { return m_start; }
-  uint64_t getEndTime() const;
+        uint64_t getTimeout() const { return m_timeout; }
+        uint64_t getStartTime() const { return m_start; }
+        uint64_t getEndTime() const;
 
-protected:
-  /// force a timeout
-  void fireTimeout();
+    protected:
+        /// force a timeout
+        void fireTimeout();
 
-private:
-  RefCount<Slot<void>> m_handler; ///< what to do on a timeout
+    private:
+        RefCount<Slot<void> > m_handler; ///< what to do on a timeout
 
-  bool m_once;    ///< do timeout only once?
-  int m_interval; ///< Is an interval-only timer (e.g. clock), in seconds
+        bool m_once; ///< do timeout only once?
+        int m_interval; ///< Is an interval-only timer (e.g. clock), in seconds
 
-  uint64_t m_start;   ///< start time in microseconds
-  uint64_t m_timeout; ///< time length in microseconds
-};
+        uint64_t m_start; ///< start time in microseconds
+        uint64_t m_timeout; ///< time length in microseconds
+    };
 
-/// executes a command after a specified timeout
-class DelayedCmd : public Command<void> {
-public:
-  // timeout in microseconds
-  DelayedCmd(const RefCount<Slot<void>> &cmd, uint64_t timeout = 200);
+    /// executes a command after a specified timeout
+    class DelayedCmd : public Command<void> {
+    public:
+        // timeout in microseconds
+        DelayedCmd(const RefCount<Slot<void> >& cmd, uint64_t timeout = 200);
 
-  // this constructor has inverted order of parameters to avoid ambiguity with
-  // the previous
-  // constructor
-  template <typename Functor>
-  DelayedCmd(uint64_t timeout, const Functor &functor) {
-    initTimer(timeout);
-    m_timer.setFunctor(functor);
-  }
+        // this constructor has inverted order of parameters to avoid ambiguity with
+        // the previous
+        // constructor
+        template <typename Functor>
+        DelayedCmd(uint64_t timeout, const Functor& functor)
+        {
+            initTimer(timeout);
+            m_timer.setFunctor(functor);
+        }
 
-  void execute();
-  static Command<void> *parse(const std::string &command,
-                              const std::string &args, bool trusted);
+        void execute();
+        static Command<void>* parse(const std::string& command,
+            const std::string& args, bool trusted);
 
-private:
-  void initTimer(uint64_t timeout);
+    private:
+        void initTimer(uint64_t timeout);
 
-  Timer m_timer;
-};
+        Timer m_timer;
+    };
 
 } // end namespace FbTk
 

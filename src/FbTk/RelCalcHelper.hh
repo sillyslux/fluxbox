@@ -30,12 +30,12 @@
 
 namespace FbTk {
 
-namespace RelCalcHelper {
+    namespace RelCalcHelper {
 
-int calPercentageOf(int i, int j);
+        int calPercentageOf(int i, int j);
 
-int calPercentageValueOf(int i, int j);
-}
+        int calPercentageValueOf(int i, int j);
+    }
 }
 
 #endif // FBTK_RELCALCHELPER_HH

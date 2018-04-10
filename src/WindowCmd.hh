@@ -30,38 +30,44 @@
 /// holds context for WindowCmd
 class WindowCmd_base {
 public:
-  // some window commands (e.g. close, kill, detach) need to know which client
-  // the command refers to, so we store it here as well, in case it is not the
-  // current client (selected from workspace menu, for example)
-  static void setWindow(FluxboxWindow *win) {
-    s_win = win;
-    s_client = (win ? &win->winClient() : 0);
-  }
-  static void setClient(WinClient *client) {
-    s_client = client;
-    s_win = (client ? client->fbwindow() : 0);
-  }
-  static FluxboxWindow *window() { return s_win; }
-  static WinClient *client() { return s_client; }
+    // some window commands (e.g. close, kill, detach) need to know which client
+    // the command refers to, so we store it here as well, in case it is not the
+    // current client (selected from workspace menu, for example)
+    static void setWindow(FluxboxWindow* win)
+    {
+        s_win = win;
+        s_client = (win ? &win->winClient() : 0);
+    }
+    static void setClient(WinClient* client)
+    {
+        s_client = client;
+        s_win = (client ? client->fbwindow() : 0);
+    }
+    static FluxboxWindow* window() { return s_win; }
+    static WinClient* client() { return s_client; }
 
 protected:
-  static FluxboxWindow *s_win;
-  static WinClient *s_client;
+    static FluxboxWindow* s_win;
+    static WinClient* s_client;
 };
 
 /// executes action for a dynamic context set in WindowCmd_base
 template <typename ReturnType = void>
 class WindowCmd : public WindowCmd_base, public FbTk::Command<void> {
 public:
-  typedef ReturnType (FluxboxWindow::*Action)();
-  WindowCmd(Action a) : m_action(a) {}
-  void execute() {
-    if (window() != 0)
-      (*window().*m_action)();
-  }
+    typedef ReturnType (FluxboxWindow::*Action)();
+    WindowCmd(Action a)
+        : m_action(a)
+    {
+    }
+    void execute()
+    {
+        if (window() != 0)
+            (*window().*m_action)();
+    }
 
 private:
-  Action m_action;
+    Action m_action;
 };
 
 #endif // WINDOWCMD_HH

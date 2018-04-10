@@ -27,33 +27,33 @@
 /// atom handler for basic X atoms
 class FbAtoms {
 public:
-  ~FbAtoms();
+    ~FbAtoms();
 
-  static FbAtoms *instance();
+    static FbAtoms* instance();
 
-  Atom getWMChangeStateAtom() const { return xa_wm_change_state; }
-  Atom getWMStateAtom() const { return xa_wm_state; }
-  Atom getWMDeleteAtom() const { return xa_wm_delete_window; }
-  Atom getWMProtocolsAtom() const { return xa_wm_protocols; }
-  Atom getWMTakeFocusAtom() const { return xa_wm_take_focus; }
+    Atom getWMChangeStateAtom() const { return xa_wm_change_state; }
+    Atom getWMStateAtom() const { return xa_wm_state; }
+    Atom getWMDeleteAtom() const { return xa_wm_delete_window; }
+    Atom getWMProtocolsAtom() const { return xa_wm_protocols; }
+    Atom getWMTakeFocusAtom() const { return xa_wm_take_focus; }
 
-  Atom getMWMHintsAtom() const { return motif_wm_hints; }
+    Atom getMWMHintsAtom() const { return motif_wm_hints; }
 
-  // these atoms are for normal app->WM interaction beyond the scope of the
-  // ICCCM...
-  Atom getFluxboxAttributesAtom() const { return blackbox_attributes; }
+    // these atoms are for normal app->WM interaction beyond the scope of the
+    // ICCCM...
+    Atom getFluxboxAttributesAtom() const { return blackbox_attributes; }
 
 private:
-  FbAtoms();
+    FbAtoms();
 
-  Atom blackbox_attributes;
-  Atom motif_wm_info;
-  Atom motif_wm_hints;
-  Atom xa_wm_protocols;
-  Atom xa_wm_state;
-  Atom xa_wm_delete_window;
-  Atom xa_wm_take_focus;
-  Atom xa_wm_change_state;
+    Atom blackbox_attributes;
+    Atom motif_wm_info;
+    Atom motif_wm_hints;
+    Atom xa_wm_protocols;
+    Atom xa_wm_state;
+    Atom xa_wm_delete_window;
+    Atom xa_wm_take_focus;
+    Atom xa_wm_change_state;
 };
 
 #endif // FBATOMS_HH

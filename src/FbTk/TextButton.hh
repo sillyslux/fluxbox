@@ -27,58 +27,58 @@
 
 namespace FbTk {
 
-class Font;
+    class Font;
 
-/// Displays a text on a button
-class TextButton : public FbTk::Button, FbTk::FbWindowRenderer {
-public:
-  TextButton(const FbTk::FbWindow &parent, FbTk::Font &font,
-             const FbTk::BiDiString &text);
+    /// Displays a text on a button
+    class TextButton : public FbTk::Button, FbTk::FbWindowRenderer {
+    public:
+        TextButton(const FbTk::FbWindow& parent, FbTk::Font& font,
+            const FbTk::BiDiString& text);
 
-  void setJustify(FbTk::Justify just);
-  bool setOrientation(FbTk::Orientation orient);
-  void setText(const FbTk::BiDiString &text);
-  void setFont(FbTk::Font &font);
-  void setTextPadding(unsigned int padding);
-  void setTextPaddingLeft(unsigned int leftpadding);
-  void setTextPaddingRight(unsigned int rightpadding);
+        void setJustify(FbTk::Justify just);
+        bool setOrientation(FbTk::Orientation orient);
+        void setText(const FbTk::BiDiString& text);
+        void setFont(FbTk::Font& font);
+        void setTextPadding(unsigned int padding);
+        void setTextPaddingLeft(unsigned int leftpadding);
+        void setTextPaddingRight(unsigned int rightpadding);
 
-  /// clears window and redraw text
-  void clear();
-  /// clears area and redraws text
-  void clearArea(int x, int y, unsigned int width, unsigned int height,
-                 bool exposure = false);
+        /// clears window and redraw text
+        void clear();
+        /// clears area and redraws text
+        void clearArea(int x, int y, unsigned int width, unsigned int height,
+            bool exposure = false);
 
-  void exposeEvent(XExposeEvent &event);
+        void exposeEvent(XExposeEvent& event);
 
-  // void renderForeground(FbDrawable &drawable);
-  void renderForeground(FbWindow &win, FbDrawable &drawable);
+        // void renderForeground(FbDrawable &drawable);
+        void renderForeground(FbWindow& win, FbDrawable& drawable);
 
-  FbTk::Justify justify() const { return m_justify; }
-  const BiDiString &text() const { return m_text; }
-  FbTk::Font &font() const { return *m_font; }
-  FbTk::Orientation orientation() const { return m_orientation; }
-  unsigned int textWidth() const;
-  int bevel() const { return m_bevel; }
+        FbTk::Justify justify() const { return m_justify; }
+        const BiDiString& text() const { return m_text; }
+        FbTk::Font& font() const { return *m_font; }
+        FbTk::Orientation orientation() const { return m_orientation; }
+        unsigned int textWidth() const;
+        int bevel() const { return m_bevel; }
 
-  virtual unsigned int preferredWidth() const;
+        virtual unsigned int preferredWidth() const;
 
-protected:
-  virtual void drawText(int x_offset, int y_offset,
-                        FbDrawable *drawable_override);
-  // return true if the text will be truncated
-  bool textExceeds(int x_offset);
+    protected:
+        virtual void drawText(int x_offset, int y_offset,
+            FbDrawable* drawable_override);
+        // return true if the text will be truncated
+        bool textExceeds(int x_offset);
 
-private:
-  FbTk::Font *m_font;
-  BiDiString m_text;
-  FbTk::Justify m_justify;
-  FbTk::Orientation m_orientation;
+    private:
+        FbTk::Font* m_font;
+        BiDiString m_text;
+        FbTk::Justify m_justify;
+        FbTk::Orientation m_orientation;
 
-  int m_bevel;
-  unsigned int m_left_padding;  ///< space between buttonborder and text
-  unsigned int m_right_padding; ///< space between buttonborder and text
-};
+        int m_bevel;
+        unsigned int m_left_padding; ///< space between buttonborder and text
+        unsigned int m_right_padding; ///< space between buttonborder and text
+    };
 
 } // end namespace FbTk
 

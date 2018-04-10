@@ -25,7 +25,7 @@
 class FluxboxWindow;
 
 struct PlacementStrategy {
-  /**
+    /**
    * Calculates a placement for @win and returns suggested placement in @place_x
    * and @place_y
    * @param win the window that needs to be placed
@@ -33,10 +33,11 @@ struct PlacementStrategy {
    * @param place_y y placement of specific strategy
    * @return true if the strategy found a placement for the window
    */
-  virtual bool placeWindow(const FluxboxWindow &win, int head, int &place_x,
-                           int &place_y) = 0;
+    virtual bool placeWindow(const FluxboxWindow& win, int head, int& place_x,
+        int& place_y)
+        = 0;
 
-  virtual ~PlacementStrategy() {}
+    virtual ~PlacementStrategy() {}
 };
 
 #endif // PLACEMENTSTRATEGY_HH

@@ -26,42 +26,44 @@
 
 namespace FbTk {
 
-void AutoReloadHelper::checkReload() {
-  if (!m_reload_cmd.get())
-    return;
-  TimestampMap::const_iterator it = m_timestamps.begin();
-  TimestampMap::const_iterator it_end = m_timestamps.end();
-  for (; it != it_end; ++it) {
-    if (FileUtil::getLastStatusChangeTimestamp(it->first.c_str()) !=
-        it->second) {
-      reload();
-      return;
+    void AutoReloadHelper::checkReload()
+    {
+        if (!m_reload_cmd.get())
+            return;
+        TimestampMap::const_iterator it = m_timestamps.begin();
+        TimestampMap::const_iterator it_end = m_timestamps.end();
+        for (; it != it_end; ++it) {
+            if (FileUtil::getLastStatusChangeTimestamp(it->first.c_str()) != it->second) {
+                reload();
+                return;
+            }
+        }
     }
-  }
-}
 
-void AutoReloadHelper::setMainFile(const std::string &file) {
-  std::string expanded_file = StringUtil::expandFilename(file);
-  if (expanded_file == m_main_file)
-    return;
-  m_main_file = expanded_file;
-  reload();
-}
+    void AutoReloadHelper::setMainFile(const std::string& file)
+    {
+        std::string expanded_file = StringUtil::expandFilename(file);
+        if (expanded_file == m_main_file)
+            return;
+        m_main_file = expanded_file;
+        reload();
+    }
 
-void AutoReloadHelper::addFile(const std::string &file) {
-  if (file.empty())
-    return;
-  std::string expanded_file = StringUtil::expandFilename(file);
-  m_timestamps[expanded_file] =
-      FileUtil::getLastStatusChangeTimestamp(expanded_file.c_str());
-}
+    void AutoReloadHelper::addFile(const std::string& file)
+    {
+        if (file.empty())
+            return;
+        std::string expanded_file = StringUtil::expandFilename(file);
+        m_timestamps[expanded_file] = FileUtil::getLastStatusChangeTimestamp(expanded_file.c_str());
+    }
 
-void AutoReloadHelper::reload() {
-  if (!m_reload_cmd.get())
-    return;
-  m_timestamps.clear();
-  addFile(m_main_file);
-  m_reload_cmd->execute();
-}
+    void AutoReloadHelper::reload()
+    {
+        if (!m_reload_cmd.get())
+            return;
+        m_timestamps.clear();
+        addFile(m_main_file);
+        m_reload_cmd->execute();
+    }
 
 } // end namespace FbTk

@@ -26,24 +26,26 @@
 
 using namespace std;
 
-void testKeys(int argc, char **argv) {
-  FbTk::App app(0);
-  if (app.display() == 0) {
-    cerr << "Cant open display." << endl;
-    return;
-  }
-  std::string theline;
-  cout << "Type key: ";
-  getline(cin, theline);
-  unsigned int key = FbTk::KeyUtil::getKey(theline.c_str());
-  cerr << "key = " << key << endl;
-  if (key == NoSymbol)
-    cerr << "NoSymbol" << endl;
+void testKeys(int argc, char** argv)
+{
+    FbTk::App app(0);
+    if (app.display() == 0) {
+        cerr << "Cant open display." << endl;
+        return;
+    }
+    std::string theline;
+    cout << "Type key: ";
+    getline(cin, theline);
+    unsigned int key = FbTk::KeyUtil::getKey(theline.c_str());
+    cerr << "key = " << key << endl;
+    if (key == NoSymbol)
+        cerr << "NoSymbol" << endl;
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
 #ifdef UDS
-  uds::Init uds_init;
+    uds::Init uds_init;
 #endif
-  testKeys(argc, argv);
+    testKeys(argc, argv);
 }

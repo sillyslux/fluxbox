@@ -26,18 +26,22 @@
 
 namespace FbTk {
 
-/// a simple command
-template <typename Receiver, typename ReturnType = void>
-class SimpleCommand : public Command<ReturnType> {
-public:
-  typedef ReturnType (Receiver::*Action)();
-  SimpleCommand(Receiver &r, Action a) : m_receiver(r), m_action(a) {}
-  void execute() { (m_receiver.*m_action)(); }
+    /// a simple command
+    template <typename Receiver, typename ReturnType = void>
+    class SimpleCommand : public Command<ReturnType> {
+    public:
+        typedef ReturnType (Receiver::*Action)();
+        SimpleCommand(Receiver& r, Action a)
+            : m_receiver(r)
+            , m_action(a)
+        {
+        }
+        void execute() { (m_receiver.*m_action)(); }
 
-private:
-  Receiver &m_receiver;
-  Action m_action;
-};
+    private:
+        Receiver& m_receiver;
+        Action m_action;
+    };
 
 } // end namespace FbTk
 

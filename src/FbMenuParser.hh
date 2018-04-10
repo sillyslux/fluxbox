@@ -29,31 +29,43 @@
 
 class FbMenuParser : public FbTk::Parser {
 public:
-  FbMenuParser() : m_row(0), m_curr_pos(0), m_curr_token(TYPE) {}
-  FbMenuParser(const std::string &filename)
-      : m_row(0), m_curr_pos(0), m_curr_token(TYPE) {
-    open(filename);
-  }
-  ~FbMenuParser() { close(); }
+    FbMenuParser()
+        : m_row(0)
+        , m_curr_pos(0)
+        , m_curr_token(TYPE)
+    {
+    }
+    FbMenuParser(const std::string& filename)
+        : m_row(0)
+        , m_curr_pos(0)
+        , m_curr_token(TYPE)
+    {
+        open(filename);
+    }
+    ~FbMenuParser() { close(); }
 
-  bool open(const std::string &filename);
-  void close() { m_file.close(); }
-  FbTk::Parser &operator>>(FbTk::Parser::Item &out);
-  FbTk::Parser::Item nextItem();
+    bool open(const std::string& filename);
+    void close() { m_file.close(); }
+    FbTk::Parser& operator>>(FbTk::Parser::Item& out);
+    FbTk::Parser::Item nextItem();
 
-  bool isLoaded() const { return m_file.is_open(); }
-  bool eof() const { return m_file.eof(); }
-  int row() const { return m_row; }
-  std::string line() const { return m_curr_line; }
+    bool isLoaded() const { return m_file.is_open(); }
+    bool eof() const { return m_file.eof(); }
+    int row() const { return m_row; }
+    std::string line() const { return m_curr_line; }
 
 private:
-  bool nextLine();
+    bool nextLine();
 
-  mutable std::ifstream m_file;
-  int m_row;
-  int m_curr_pos;
-  std::string m_curr_line;
-  enum Object { TYPE, NAME, ARGUMENT, ICON, DONE } m_curr_token;
+    mutable std::ifstream m_file;
+    int m_row;
+    int m_curr_pos;
+    std::string m_curr_line;
+    enum Object { TYPE,
+        NAME,
+        ARGUMENT,
+        ICON,
+        DONE } m_curr_token;
 };
 
 #endif // FBMENUPARSER_HH

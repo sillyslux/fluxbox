@@ -27,21 +27,24 @@
 
 using namespace FbTk;
 
-LayerItem::LayerItem(FbWindow &win, Layer &layer) : m_layer(&layer) {
-  m_windows.push_back(&win);
-  m_layer->insert(*this);
+LayerItem::LayerItem(FbWindow& win, Layer& layer)
+    : m_layer(&layer)
+{
+    m_windows.push_back(&win);
+    m_layer->insert(*this);
 }
 
 LayerItem::~LayerItem() { m_layer->remove(*this); }
 
-void LayerItem::setLayer(Layer &layer) {
-  // make sure we don't try to set the same layer
-  if (m_layer == &layer)
-    return;
+void LayerItem::setLayer(Layer& layer)
+{
+    // make sure we don't try to set the same layer
+    if (m_layer == &layer)
+        return;
 
-  m_layer->remove(*this);
-  m_layer = &layer;
-  m_layer->insert(*this);
+    m_layer->remove(*this);
+    m_layer = &layer;
+    m_layer->insert(*this);
 }
 
 void LayerItem::raise() { m_layer->raise(*this); }
@@ -54,28 +57,31 @@ void LayerItem::raiseLayer() { m_layer->raiseLayer(*this); }
 
 void LayerItem::lowerLayer() { m_layer->lowerLayer(*this); }
 
-void LayerItem::moveToLayer(int layernum) {
-  m_layer->moveToLayer(*this, layernum);
+void LayerItem::moveToLayer(int layernum)
+{
+    m_layer->moveToLayer(*this, layernum);
 }
 
-void LayerItem::addWindow(FbWindow &win) {
-  // I'd like to think we can trust ourselves that it won't be added twice...
-  // Otherwise we're always scanning through the list.
-  m_windows.push_back(&win);
-  m_layer->alignItem(*this);
+void LayerItem::addWindow(FbWindow& win)
+{
+    // I'd like to think we can trust ourselves that it won't be added twice...
+    // Otherwise we're always scanning through the list.
+    m_windows.push_back(&win);
+    m_layer->alignItem(*this);
 }
 
-void LayerItem::removeWindow(FbWindow &win) {
-  // I'd like to think we can trust ourselves that it won't be added twice...
-  // Otherwise we're always scanning through the list.
+void LayerItem::removeWindow(FbWindow& win)
+{
+    // I'd like to think we can trust ourselves that it won't be added twice...
+    // Otherwise we're always scanning through the list.
 
-  LayerItem::Windows::iterator it =
-      std::find(m_windows.begin(), m_windows.end(), &win);
-  if (it != m_windows.end())
-    m_windows.erase(it);
+    LayerItem::Windows::iterator it = std::find(m_windows.begin(), m_windows.end(), &win);
+    if (it != m_windows.end())
+        m_windows.erase(it);
 }
 
-void LayerItem::bringToTop(FbWindow &win) {
-  removeWindow(win);
-  addWindow(win);
+void LayerItem::bringToTop(FbWindow& win)
+{
+    removeWindow(win);
+    addWindow(win);
 }

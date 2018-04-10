@@ -26,9 +26,9 @@
 
 namespace FbTk {
 
-///   Main class for applications, every application must create an instance of
-///   this class
-/**
+    ///   Main class for applications, every application must create an instance of
+    ///   this class
+    /**
  * Usage: \n
  * App app; \n
  * ... \n
@@ -39,34 +39,34 @@ namespace FbTk {
  *
  * To end main loop you call App::instance()->end()
  */
-class App {
-public:
-  /// @return singleton instance of App
-  static App *instance();
-  /// creates a display connection
-  explicit App(const char *displayname = 0);
-  virtual ~App();
-  /// display connection
-  Display *display() const { return m_display; }
-  void sync(bool discard);
-  /// starts event loop
-  virtual void eventLoop();
-  /// forces an end to event loop
-  void end();
-  bool done() const { return m_done; }
-  const XIM &inputModule() const { return m_xim; }
+    class App {
+    public:
+        /// @return singleton instance of App
+        static App* instance();
+        /// creates a display connection
+        explicit App(const char* displayname = 0);
+        virtual ~App();
+        /// display connection
+        Display* display() const { return m_display; }
+        void sync(bool discard);
+        /// starts event loop
+        virtual void eventLoop();
+        /// forces an end to event loop
+        void end();
+        bool done() const { return m_done; }
+        const XIM& inputModule() const { return m_xim; }
 
-  // the setenv()-routine is not everywhere available and
-  // putenv() doesnt manage the strings in the environment
-  // and hence we have to do that on our own to avoid memleaking
-  static bool setenv(const char *key, const char *value);
+        // the setenv()-routine is not everywhere available and
+        // putenv() doesnt manage the strings in the environment
+        // and hence we have to do that on our own to avoid memleaking
+        static bool setenv(const char* key, const char* value);
 
-private:
-  static App *s_app;
-  bool m_done;
-  Display *m_display;
-  XIM m_xim;
-};
+    private:
+        static App* s_app;
+        bool m_done;
+        Display* m_display;
+        XIM m_xim;
+    };
 
 } // end namespace FbTk
 

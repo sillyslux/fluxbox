@@ -24,22 +24,30 @@
 
 namespace FbTk {
 
-CachedPixmap::CachedPixmap(FbTk::ImageControl &ctrl)
-    : m_pixmap(0), m_ctrl(ctrl) {}
+    CachedPixmap::CachedPixmap(FbTk::ImageControl& ctrl)
+        : m_pixmap(0)
+        , m_ctrl(ctrl)
+    {
+    }
 
-CachedPixmap::CachedPixmap(FbTk::ImageControl &ctrl, Pixmap pm)
-    : m_pixmap(pm), m_ctrl(ctrl) {}
+    CachedPixmap::CachedPixmap(FbTk::ImageControl& ctrl, Pixmap pm)
+        : m_pixmap(pm)
+        , m_ctrl(ctrl)
+    {
+    }
 
-CachedPixmap::~CachedPixmap() { destroy(); }
+    CachedPixmap::~CachedPixmap() { destroy(); }
 
-void CachedPixmap::reset(Pixmap pm) {
-  destroy();
-  m_pixmap = pm;
-}
+    void CachedPixmap::reset(Pixmap pm)
+    {
+        destroy();
+        m_pixmap = pm;
+    }
 
-void CachedPixmap::destroy() {
-  if (m_pixmap != 0) {
-    m_ctrl.removeImage(m_pixmap);
-  }
-}
+    void CachedPixmap::destroy()
+    {
+        if (m_pixmap != 0) {
+            m_ctrl.removeImage(m_pixmap);
+        }
+    }
 }

@@ -29,56 +29,58 @@
 /// An item in the toolbar that has either fixed or relative size to the toolbar
 class ToolbarItem {
 public:
-  /// size type in the toolbar
-  enum Type {
-    FIXED,    ///< the size can not be changed
-    RELATIVE, ///< the size can be changed
-    SQUARE ///< the size is fixed relative to the parent, and in both dimensions
-  };
+    /// size type in the toolbar
+    enum Type {
+        FIXED, ///< the size can not be changed
+        RELATIVE, ///< the size can be changed
+        SQUARE ///< the size is fixed relative to the parent, and in both dimensions
+    };
 
-  explicit ToolbarItem(Type type);
-  virtual ~ToolbarItem();
+    explicit ToolbarItem(Type type);
+    virtual ~ToolbarItem();
 
-  virtual void move(int x, int y) = 0;
-  virtual void resize(unsigned int width, unsigned int height) = 0;
-  virtual void moveResize(int x, int y, unsigned int width,
-                          unsigned int height) = 0;
+    virtual void move(int x, int y) = 0;
+    virtual void resize(unsigned int width, unsigned int height) = 0;
+    virtual void moveResize(int x, int y, unsigned int width,
+        unsigned int height)
+        = 0;
 
-  virtual void show() = 0;
-  virtual void hide() = 0;
-  virtual unsigned int width() const = 0;
-  virtual unsigned int preferredWidth() const { return width(); }
-  virtual unsigned int height() const = 0;
-  virtual unsigned int borderWidth() const = 0;
-  // some items might be there, but effectively empty, so shouldn't appear
-  virtual bool active() { return true; }
+    virtual void show() = 0;
+    virtual void hide() = 0;
+    virtual unsigned int width() const = 0;
+    virtual unsigned int preferredWidth() const { return width(); }
+    virtual unsigned int height() const = 0;
+    virtual unsigned int borderWidth() const = 0;
+    // some items might be there, but effectively empty, so shouldn't appear
+    virtual bool active() { return true; }
 
-  // Tools should NOT listen to theme changes - they'll get notified by
-  // the toolbar instead. Otherwise there are ordering problems.
-  virtual void renderTheme(int alpha) = 0;
+    // Tools should NOT listen to theme changes - they'll get notified by
+    // the toolbar instead. Otherwise there are ordering problems.
+    virtual void renderTheme(int alpha) = 0;
 
-  // insist implemented, even if blank
-  virtual void parentMoved() = 0; // called when moved from hiding
+    // insist implemented, even if blank
+    virtual void parentMoved() = 0; // called when moved from hiding
 
-  // just update theme items that affect the size
-  virtual void updateSizing() = 0;
+    // just update theme items that affect the size
+    virtual void updateSizing() = 0;
 
-  FbTk::Signal<> &resizeSig() { return m_resize_sig; }
+    FbTk::Signal<>& resizeSig() { return m_resize_sig; }
 
-  void setType(Type type) { m_type = type; }
-  Type type() const { return m_type; }
+    void setType(Type type) { m_type = type; }
+    Type type() const { return m_type; }
 
-  FbTk::Orientation orientation() const { return m_orientation; }
-  virtual void setOrientation(FbTk::Orientation orient) {
-    m_orientation = orient;
-  }
+    FbTk::Orientation orientation() const { return m_orientation; }
+    virtual void setOrientation(FbTk::Orientation orient)
+    {
+        m_orientation = orient;
+    }
 
 private:
-  Type m_type;
+    Type m_type;
 
-  FbTk::Orientation m_orientation;
+    FbTk::Orientation m_orientation;
 
-  FbTk::Signal<> m_resize_sig;
+    FbTk::Signal<> m_resize_sig;
 };
 
 #endif // TOOLBARITEM_HH

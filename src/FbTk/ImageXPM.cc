@@ -28,22 +28,23 @@
 
 namespace FbTk {
 
-ImageXPM::ImageXPM() { Image::registerType("XPM", *this); }
+    ImageXPM::ImageXPM() { Image::registerType("XPM", *this); }
 
-PixmapWithMask *ImageXPM::load(const std::string &filename,
-                               int screen_num) const {
+    PixmapWithMask* ImageXPM::load(const std::string& filename,
+        int screen_num) const
+    {
 
-  XpmAttributes xpm_attr;
-  xpm_attr.valuemask = 0;
-  Display *dpy = FbTk::App::instance()->display();
-  Pixmap pm = 0, mask = 0;
-  int retvalue = XpmReadFileToPixmap(dpy, RootWindow(dpy, screen_num),
-                                     const_cast<char *>(filename.c_str()), &pm,
-                                     &mask, &xpm_attr);
-  if (retvalue == 0) // success
-    return new PixmapWithMask(pm, mask);
-  else // failure
-    return 0;
-}
+        XpmAttributes xpm_attr;
+        xpm_attr.valuemask = 0;
+        Display* dpy = FbTk::App::instance()->display();
+        Pixmap pm = 0, mask = 0;
+        int retvalue = XpmReadFileToPixmap(dpy, RootWindow(dpy, screen_num),
+            const_cast<char*>(filename.c_str()), &pm,
+            &mask, &xpm_attr);
+        if (retvalue == 0) // success
+            return new PixmapWithMask(pm, mask);
+        else // failure
+            return 0;
+    }
 
 } // end namespace FbTk

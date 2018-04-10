@@ -29,32 +29,32 @@
 
 class ButtonTheme : public ToolTheme, public FbTk::ThemeProxy<ButtonTheme> {
 public:
-  ButtonTheme(int screen_num, const std::string &name,
-              const std::string &alt_name, const std::string &extra_fallback,
-              const std::string &extra_fallback_alt);
-  virtual ~ButtonTheme() {}
+    ButtonTheme(int screen_num, const std::string& name,
+        const std::string& alt_name, const std::string& extra_fallback,
+        const std::string& extra_fallback_alt);
+    virtual ~ButtonTheme() {}
 
-  bool fallback(FbTk::ThemeItem_base &item);
-  void reconfigTheme();
+    bool fallback(FbTk::ThemeItem_base& item);
+    void reconfigTheme();
 
-  const FbTk::Texture &pressed() const { return *m_pressed_texture; }
-  GC gc() const { return m_gc.gc(); }
-  int scale() const { return *m_scale; } // scale factor for inside objects
-  const std::string &name() const { return m_name; }
+    const FbTk::Texture& pressed() const { return *m_pressed_texture; }
+    GC gc() const { return m_gc.gc(); }
+    int scale() const { return *m_scale; } // scale factor for inside objects
+    const std::string& name() const { return m_name; }
 
-  virtual FbTk::Signal<> &reconfigSig() { return FbTk::Theme::reconfigSig(); }
+    virtual FbTk::Signal<>& reconfigSig() { return FbTk::Theme::reconfigSig(); }
 
-  virtual ButtonTheme &operator*() { return *this; }
-  virtual const ButtonTheme &operator*() const { return *this; }
+    virtual ButtonTheme& operator*() { return *this; }
+    virtual const ButtonTheme& operator*() const { return *this; }
 
 private:
-  FbTk::ThemeItem<FbTk::Color> m_pic_color;
-  FbTk::ThemeItem<FbTk::Texture> m_pressed_texture;
-  FbTk::GContext m_gc;
-  FbTk::ThemeItem<int> m_scale;
-  const std::string m_name;
-  const std::string m_fallbackname;
-  const std::string m_altfallbackname;
+    FbTk::ThemeItem<FbTk::Color> m_pic_color;
+    FbTk::ThemeItem<FbTk::Texture> m_pressed_texture;
+    FbTk::GContext m_gc;
+    FbTk::ThemeItem<int> m_scale;
+    const std::string m_name;
+    const std::string m_fallbackname;
+    const std::string m_altfallbackname;
 };
 
 #endif // BUTTONTHEME_HH

@@ -34,30 +34,31 @@
  */
 class TooltipWindow : public OSDWindow {
 public:
-  TooltipWindow(const FbTk::FbWindow &parent, BScreen &screen,
-                FbTk::ThemeProxy<FbWinFrameTheme> &theme);
-  /**
+    TooltipWindow(const FbTk::FbWindow& parent, BScreen& screen,
+        FbTk::ThemeProxy<FbWinFrameTheme>& theme);
+    /**
    * Sets the text in the window and starts the display timer.
    * @param text the text to show in the window.
    */
-  void showText(const FbTk::BiDiString &text);
-  /// updates the text directly without any delay
-  void updateText(const FbTk::BiDiString &text);
+    void showText(const FbTk::BiDiString& text);
+    /// updates the text directly without any delay
+    void updateText(const FbTk::BiDiString& text);
 
-  /// Sets the delay before the window pops up
-  void setDelay(int delay) {
-    m_delay = delay;
-    m_timer.setTimeout(delay * FbTk::FbTime::IN_MILLISECONDS);
-  }
+    /// Sets the delay before the window pops up
+    void setDelay(int delay)
+    {
+        m_delay = delay;
+        m_timer.setTimeout(delay * FbTk::FbTime::IN_MILLISECONDS);
+    }
 
-  void hide();
+    void hide();
 
 private:
-  void raiseTooltip();
-  void show();
-  int m_delay;                 ///< delay time for the timer
-  FbTk::BiDiString m_lastText; ///< last text to be displayed
-  FbTk::Timer m_timer;         ///< delay timer before the tooltip will show
+    void raiseTooltip();
+    void show();
+    int m_delay; ///< delay time for the timer
+    FbTk::BiDiString m_lastText; ///< last text to be displayed
+    FbTk::Timer m_timer; ///< delay timer before the tooltip will show
 };
 
 #endif // TOOLTIPWINDOW_HH_

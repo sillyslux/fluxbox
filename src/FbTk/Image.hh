@@ -28,37 +28,37 @@
 
 namespace FbTk {
 
-class ImageBase;
-class PixmapWithMask;
+    class ImageBase;
+    class PixmapWithMask;
 
-/// loads images
-namespace Image {
+    /// loads images
+    namespace Image {
 
-/// @return an instance of PixmapWithMask on success, 0 on failure
-PixmapWithMask *load(const std::string &filename, int screen_num);
-/// for register file type and imagebase
-/// @return false on failure
-bool registerType(const std::string &type, ImageBase &base);
-/// removes a imagebase class from register
-/// @return false on failure
-void remove(ImageBase &base);
-/// adds a path to search images from
-void addSearchPath(const std::string &search_path);
-/// removes a path to search images from
-void removeSearchPath(const std::string &search_path);
-/// adds a path to search images from
-void removeAllSearchPaths();
-/// locates an image in the search path
-std::string locateFile(const std::string &filename);
-}
+        /// @return an instance of PixmapWithMask on success, 0 on failure
+        PixmapWithMask* load(const std::string& filename, int screen_num);
+        /// for register file type and imagebase
+        /// @return false on failure
+        bool registerType(const std::string& type, ImageBase& base);
+        /// removes a imagebase class from register
+        /// @return false on failure
+        void remove(ImageBase& base);
+        /// adds a path to search images from
+        void addSearchPath(const std::string& search_path);
+        /// removes a path to search images from
+        void removeSearchPath(const std::string& search_path);
+        /// adds a path to search images from
+        void removeAllSearchPaths();
+        /// locates an image in the search path
+        std::string locateFile(const std::string& filename);
+    }
 
-/// common interface for all image classes
-class ImageBase {
-public:
-  virtual ~ImageBase() { Image::remove(*this); }
-  virtual PixmapWithMask *load(const std::string &name,
-                               int screen_num) const = 0;
-};
+    /// common interface for all image classes
+    class ImageBase {
+    public:
+        virtual ~ImageBase() { Image::remove(*this); }
+        virtual PixmapWithMask* load(const std::string& name,
+            int screen_num) const = 0;
+    };
 
 } // end namespace FbTk
 

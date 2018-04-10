@@ -25,62 +25,71 @@
 #include <algorithm>
 #include <iostream>
 
-HeadArea::HeadArea() : m_available_workspace_area(new Strut(0, 0, 0, 0, 0)) {}
-
-Strut *HeadArea::requestStrut(int head, int left, int right, int top,
-                              int bottom, Strut *next) {
-  Strut *str = new Strut(head, left, right, top, bottom, next);
-  m_strutlist.push_back(str);
-  return str;
+HeadArea::HeadArea()
+    : m_available_workspace_area(new Strut(0, 0, 0, 0, 0))
+{
 }
 
-void HeadArea::clearStrut(Strut *str) {
-  if (str == 0)
-    return;
-  // find strut and erase it
-  std::list<Strut *>::iterator pos =
-      std::find(m_strutlist.begin(), m_strutlist.end(), str);
-  if (pos == m_strutlist.end()) {
-    std::cerr << "clearStrut() failed because the strut was not found"
-              << std::endl;
-    return;
-  }
+Strut* HeadArea::requestStrut(int head, int left, int right, int top,
+    int bottom, Strut* next)
+{
+    Strut* str = new Strut(head, left, right, top, bottom, next);
+    m_strutlist.push_back(str);
+    return str;
+}
 
-  m_strutlist.erase(pos);
-  delete str;
+void HeadArea::clearStrut(Strut* str)
+{
+    if (str == 0)
+        return;
+    // find strut and erase it
+    std::list<Strut*>::iterator pos = std::find(m_strutlist.begin(), m_strutlist.end(), str);
+    if (pos == m_strutlist.end()) {
+        std::cerr << "clearStrut() failed because the strut was not found"
+                  << std::endl;
+        return;
+    }
+
+    m_strutlist.erase(pos);
+    delete str;
 }
 
 /// helper class for for_each in HeadArea::updateAvailableWorkspaceArea()
 namespace {
-class MaxArea {
-public:
-  MaxArea(Strut &max_area) : m_available_workspace_area(max_area) {}
-  void operator()(const Strut *str) {
-    static int left, right, bottom, top;
-    left = std::max(m_available_workspace_area.left(), str->left());
-    right = std::max(m_available_workspace_area.right(), str->right());
-    bottom = std::max(m_available_workspace_area.bottom(), str->bottom());
-    top = std::max(m_available_workspace_area.top(), str->top());
-    m_available_workspace_area = Strut(0, left, right, top, bottom);
-  }
+    class MaxArea {
+    public:
+        MaxArea(Strut& max_area)
+            : m_available_workspace_area(max_area)
+        {
+        }
+        void operator()(const Strut* str)
+        {
+            static int left, right, bottom, top;
+            left = std::max(m_available_workspace_area.left(), str->left());
+            right = std::max(m_available_workspace_area.right(), str->right());
+            bottom = std::max(m_available_workspace_area.bottom(), str->bottom());
+            top = std::max(m_available_workspace_area.top(), str->top());
+            m_available_workspace_area = Strut(0, left, right, top, bottom);
+        }
 
-private:
-  Strut &m_available_workspace_area;
-};
+    private:
+        Strut& m_available_workspace_area;
+    };
 
 } // end anonymous namespace
 
-bool HeadArea::updateAvailableWorkspaceArea() {
-  // find max of left, right, top and bottom and set avaible workspace area
+bool HeadArea::updateAvailableWorkspaceArea()
+{
+    // find max of left, right, top and bottom and set avaible workspace area
 
-  // clear old area
-  Strut oldarea = *(m_available_workspace_area.get());
-  m_available_workspace_area.reset(new Strut(0, 0, 0, 0, 0));
+    // clear old area
+    Strut oldarea = *(m_available_workspace_area.get());
+    m_available_workspace_area.reset(new Strut(0, 0, 0, 0, 0));
 
-  // calculate max area
-  std::for_each(m_strutlist.begin(), m_strutlist.end(),
-                MaxArea(*m_available_workspace_area.get()));
+    // calculate max area
+    std::for_each(m_strutlist.begin(), m_strutlist.end(),
+        MaxArea(*m_available_workspace_area.get()));
 
-  // only notify if the area changed
-  return !(oldarea == *(m_available_workspace_area.get()));
+    // only notify if the area changed
+    return !(oldarea == *(m_available_workspace_area.get()));
 }

@@ -25,47 +25,48 @@
 #include "Screen.hh"
 #include "Window.hh"
 
-bool UnderMousePlacement::placeWindow(const FluxboxWindow &win, int head,
-                                      int &place_x, int &place_y) {
+bool UnderMousePlacement::placeWindow(const FluxboxWindow& win, int head,
+    int& place_x, int& place_y)
+{
 
-  int root_x, root_y, ignore_i;
+    int root_x, root_y, ignore_i;
 
-  unsigned int ignore_ui;
+    unsigned int ignore_ui;
 
-  Window ignore_w;
+    Window ignore_w;
 
-  XQueryPointer(FbTk::App::instance()->display(),
-                win.screen().rootWindow().window(), &ignore_w, &ignore_w,
-                &root_x, &root_y, &ignore_i, &ignore_i, &ignore_ui);
+    XQueryPointer(FbTk::App::instance()->display(),
+        win.screen().rootWindow().window(), &ignore_w, &ignore_w,
+        &root_x, &root_y, &ignore_i, &ignore_i, &ignore_ui);
 
-  // 2*border = border on each side of the screen
-  // not using offset ones because we won't let tabs influence the "centre"
-  int win_w = win.width() + win.fbWindow().borderWidth() * 2,
-      win_h = win.height() + win.fbWindow().borderWidth() * 2;
+    // 2*border = border on each side of the screen
+    // not using offset ones because we won't let tabs influence the "centre"
+    int win_w = win.width() + win.fbWindow().borderWidth() * 2,
+        win_h = win.height() + win.fbWindow().borderWidth() * 2;
 
-  int test_x = root_x - (win_w / 2);
-  int test_y = root_y - (win_h / 2);
+    int test_x = root_x - (win_w / 2);
+    int test_y = root_y - (win_h / 2);
 
-  // keep the window inside the screen
-  int head_left = (signed)win.screen().maxLeft(head);
-  int head_right = (signed)win.screen().maxRight(head);
-  int head_top = (signed)win.screen().maxTop(head);
-  int head_bot = (signed)win.screen().maxBottom(head);
+    // keep the window inside the screen
+    int head_left = (signed)win.screen().maxLeft(head);
+    int head_right = (signed)win.screen().maxRight(head);
+    int head_top = (signed)win.screen().maxTop(head);
+    int head_bot = (signed)win.screen().maxBottom(head);
 
-  if (test_x < head_left)
-    test_x = head_left;
+    if (test_x < head_left)
+        test_x = head_left;
 
-  if (test_x + win_w > head_right)
-    test_x = head_right - win_w;
+    if (test_x + win_w > head_right)
+        test_x = head_right - win_w;
 
-  if (test_y < head_top)
-    test_y = head_top;
+    if (test_y < head_top)
+        test_y = head_top;
 
-  if (test_y + win_h > head_bot)
-    test_y = head_bot - win_h;
+    if (test_y + win_h > head_bot)
+        test_y = head_bot - win_h;
 
-  place_x = test_x;
-  place_y = test_y;
+    place_x = test_x;
+    place_y = test_y;
 
-  return true;
+    return true;
 }

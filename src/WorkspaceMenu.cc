@@ -40,117 +40,122 @@
 
 namespace {
 
-// the menu consists of (* means static)
-//   - icons               * 0
-//   --------------------- * 1
-//   - workspaces            2
-//   --------------------- * 3
-//   - new workspace       * 4
-//   - edit workspace name * 5
-//   - remove last         * 6
-//
+    // the menu consists of (* means static)
+    //   - icons               * 0
+    //   --------------------- * 1
+    //   - workspaces            2
+    //   --------------------- * 3
+    //   - new workspace       * 4
+    //   - edit workspace name * 5
+    //   - remove last         * 6
+    //
 
-const unsigned int IDX_AFTER_ICONS = 2;
-const unsigned int NR_STATIC_ITEMS = 6;
+    const unsigned int IDX_AFTER_ICONS = 2;
+    const unsigned int NR_STATIC_ITEMS = 6;
 
-void add_workspaces(WorkspaceMenu &menu, BScreen &screen) {
-  for (size_t i = 0; i < screen.numberOfWorkspaces(); ++i) {
-    Workspace *w = screen.getWorkspace(i);
-    w->menu().setInternalMenu();
-    FbTk::MultiButtonMenuItem *submenu = new FbTk::MultiButtonMenuItem(
-        5, FbTk::BiDiString(w->name()), &w->menu());
-    FbTk::RefCount<FbTk::Command<void>> jump_cmd(
-        new JumpToWorkspaceCmd(w->workspaceID()));
-    submenu->setCommand(3, jump_cmd);
-    menu.insertItem(submenu, i + IDX_AFTER_ICONS);
-  }
-}
+    void add_workspaces(WorkspaceMenu& menu, BScreen& screen)
+    {
+        for (size_t i = 0; i < screen.numberOfWorkspaces(); ++i) {
+            Workspace* w = screen.getWorkspace(i);
+            w->menu().setInternalMenu();
+            FbTk::MultiButtonMenuItem* submenu = new FbTk::MultiButtonMenuItem(
+                5, FbTk::BiDiString(w->name()), &w->menu());
+            FbTk::RefCount<FbTk::Command<void> > jump_cmd(
+                new JumpToWorkspaceCmd(w->workspaceID()));
+            submenu->setCommand(3, jump_cmd);
+            menu.insertItem(submenu, i + IDX_AFTER_ICONS);
+        }
+    }
 
 } // end of anonymous namespace
 
-WorkspaceMenu::WorkspaceMenu(BScreen &screen)
+WorkspaceMenu::WorkspaceMenu(BScreen& screen)
     : FbMenu(screen.menuTheme(), screen.imageControl(),
-             *screen.layerManager().getLayer(ResourceLayer::MENU)) {
+          *screen.layerManager().getLayer(ResourceLayer::MENU))
+{
 
-  init(screen);
+    init(screen);
 }
 
-void WorkspaceMenu::workspaceInfoChanged(BScreen &screen) {
-  while (numberOfItems() > NR_STATIC_ITEMS) {
-    remove(IDX_AFTER_ICONS);
-  }
-  ::add_workspaces(*this, screen);
-  updateMenu();
-}
-
-void WorkspaceMenu::workspaceChanged(BScreen &screen) {
-  FbTk::MenuItem *item = 0;
-  for (unsigned int i = 0; i < screen.numberOfWorkspaces(); ++i) {
-    item = find(i + IDX_AFTER_ICONS);
-    if (item && item->isSelected()) {
-      setItemSelected(i + IDX_AFTER_ICONS, false);
-      updateMenu();
-      break;
+void WorkspaceMenu::workspaceInfoChanged(BScreen& screen)
+{
+    while (numberOfItems() > NR_STATIC_ITEMS) {
+        remove(IDX_AFTER_ICONS);
     }
-  }
-  setItemSelected(screen.currentWorkspace()->workspaceID() + IDX_AFTER_ICONS,
-                  true);
-  updateMenu();
+    ::add_workspaces(*this, screen);
+    updateMenu();
 }
 
-void WorkspaceMenu::init(BScreen &screen) {
+void WorkspaceMenu::workspaceChanged(BScreen& screen)
+{
+    FbTk::MenuItem* item = 0;
+    for (unsigned int i = 0; i < screen.numberOfWorkspaces(); ++i) {
+        item = find(i + IDX_AFTER_ICONS);
+        if (item && item->isSelected()) {
+            setItemSelected(i + IDX_AFTER_ICONS, false);
+            updateMenu();
+            break;
+        }
+    }
+    setItemSelected(screen.currentWorkspace()->workspaceID() + IDX_AFTER_ICONS,
+        true);
+    updateMenu();
+}
 
-  join(screen.currentWorkspaceSig(),
-       FbTk::MemFun(*this, &WorkspaceMenu::workspaceChanged));
-  join(screen.workspaceCountSig(),
-       FbTk::MemFun(*this, &WorkspaceMenu::workspaceInfoChanged));
-  join(screen.workspaceNamesSig(),
-       FbTk::MemFun(*this, &WorkspaceMenu::workspaceInfoChanged));
+void WorkspaceMenu::init(BScreen& screen)
+{
 
-  using namespace FbTk;
-  _FB_USES_NLS;
+    join(screen.currentWorkspaceSig(),
+        FbTk::MemFun(*this, &WorkspaceMenu::workspaceChanged));
+    join(screen.workspaceCountSig(),
+        FbTk::MemFun(*this, &WorkspaceMenu::workspaceInfoChanged));
+    join(screen.workspaceNamesSig(),
+        FbTk::MemFun(*this, &WorkspaceMenu::workspaceInfoChanged));
 
-  removeAll();
+    using namespace FbTk;
+    _FB_USES_NLS;
 
-  setLabel(_FB_XTEXT(Workspace, MenuTitle, "Workspaces",
-                     "Title of main workspace menu"));
-  insertSubmenu(_FB_XTEXT(Menu, Icons, "Icons", "Iconic windows menu title"),
-                MenuCreator::createMenuType("iconmenu", screen.screenNumber()));
-  insertItem(new FbTk::MenuSeparator());
+    removeAll();
 
-  ::add_workspaces(*this, screen);
-  setItemSelected(screen.currentWorkspace()->workspaceID() + IDX_AFTER_ICONS,
-                  true);
+    setLabel(_FB_XTEXT(Workspace, MenuTitle, "Workspaces",
+        "Title of main workspace menu"));
+    insertSubmenu(_FB_XTEXT(Menu, Icons, "Icons", "Iconic windows menu title"),
+        MenuCreator::createMenuType("iconmenu", screen.screenNumber()));
+    insertItem(new FbTk::MenuSeparator());
 
-  RefCount<Command<void>> saverc_cmd(new FbCommands::SaveResources());
+    ::add_workspaces(*this, screen);
+    setItemSelected(screen.currentWorkspace()->workspaceID() + IDX_AFTER_ICONS,
+        true);
 
-  MacroCommand *new_workspace_macro = new MacroCommand();
-  RefCount<Command<void>> addworkspace(new SimpleCommand<BScreen>(
-      screen, (SimpleCommand<BScreen>::Action) & BScreen::addWorkspace));
-  new_workspace_macro->add(addworkspace);
-  new_workspace_macro->add(saverc_cmd);
-  RefCount<Command<void>> new_workspace_cmd(new_workspace_macro);
+    RefCount<Command<void> > saverc_cmd(new FbCommands::SaveResources());
 
-  MacroCommand *remove_workspace_macro = new MacroCommand();
-  RefCount<Command<void>> rmworkspace(new SimpleCommand<BScreen>(
-      screen, (SimpleCommand<BScreen>::Action) & BScreen::removeLastWorkspace));
-  remove_workspace_macro->add(rmworkspace);
-  remove_workspace_macro->add(saverc_cmd);
-  RefCount<Command<void>> remove_last_cmd(remove_workspace_macro);
+    MacroCommand* new_workspace_macro = new MacroCommand();
+    RefCount<Command<void> > addworkspace(new SimpleCommand<BScreen>(
+        screen, (SimpleCommand<BScreen>::Action) & BScreen::addWorkspace));
+    new_workspace_macro->add(addworkspace);
+    new_workspace_macro->add(saverc_cmd);
+    RefCount<Command<void> > new_workspace_cmd(new_workspace_macro);
 
-  RefCount<Command<void>> start_edit(
-      FbTk::CommandParser<void>::instance().parse("setworkspacenamedialog"));
+    MacroCommand* remove_workspace_macro = new MacroCommand();
+    RefCount<Command<void> > rmworkspace(new SimpleCommand<BScreen>(
+        screen, (SimpleCommand<BScreen>::Action) & BScreen::removeLastWorkspace));
+    remove_workspace_macro->add(rmworkspace);
+    remove_workspace_macro->add(saverc_cmd);
+    RefCount<Command<void> > remove_last_cmd(remove_workspace_macro);
 
-  insertItem(new FbTk::MenuSeparator());
-  insertCommand(_FB_XTEXT(Workspace, NewWorkspace, "New Workspace",
-                          "Add a new workspace"),
-                new_workspace_cmd);
-  insertCommand(_FB_XTEXT(Toolbar, EditWkspcName, "Edit current workspace name",
-                          "Edit current workspace name"),
-                start_edit);
-  insertCommand(_FB_XTEXT(Workspace, RemoveLast, "Remove Last",
-                          "Remove the last workspace"),
-                remove_last_cmd);
+    RefCount<Command<void> > start_edit(
+        FbTk::CommandParser<void>::instance().parse("setworkspacenamedialog"));
 
-  updateMenu();
+    insertItem(new FbTk::MenuSeparator());
+    insertCommand(_FB_XTEXT(Workspace, NewWorkspace, "New Workspace",
+                      "Add a new workspace"),
+        new_workspace_cmd);
+    insertCommand(_FB_XTEXT(Toolbar, EditWkspcName, "Edit current workspace name",
+                      "Edit current workspace name"),
+        start_edit);
+    insertCommand(_FB_XTEXT(Workspace, RemoveLast, "Remove Last",
+                      "Remove the last workspace"),
+        remove_last_cmd);
+
+    updateMenu();
 }

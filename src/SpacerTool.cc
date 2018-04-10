@@ -22,14 +22,19 @@
 #include "SpacerTool.hh"
 
 SpacerTool::SpacerTool(int size)
-    : ToolbarItem(size < 0 ? RELATIVE : FIXED), m_size(size) {}
+    : ToolbarItem(size < 0 ? RELATIVE : FIXED)
+    , m_size(size)
+{
+}
 
 SpacerTool::~SpacerTool() {}
 
-unsigned int SpacerTool::width() const {
-  return ((orientation() & 1) || m_size < 0) ? 0 : m_size;
+unsigned int SpacerTool::width() const
+{
+    return ((orientation() & 1) || m_size < 0) ? 0 : m_size;
 }
 
-unsigned int SpacerTool::height() const {
-  return ((orientation() & 1) && m_size > -1) ? m_size : 0;
+unsigned int SpacerTool::height() const
+{
+    return ((orientation() & 1) && m_size > -1) ? m_size : 0;
 }

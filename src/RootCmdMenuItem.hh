@@ -26,12 +26,12 @@
 
 class RootCmdMenuItem : public FbTk::MenuItem {
 public:
-  RootCmdMenuItem(const FbTk::FbString &label, const std::string &filename,
-                  const std::string &cmd = "");
-  bool isSelected() const;
+    RootCmdMenuItem(const FbTk::FbString& label, const std::string& filename,
+        const std::string& cmd = "");
+    bool isSelected() const;
 
 private:
-  const std::string m_filename;
+    const std::string m_filename;
 };
 
 #endif // ROOTCMDMENUITEM_HH

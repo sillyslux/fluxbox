@@ -32,41 +32,42 @@
 class ToolTheme;
 
 namespace FbTk {
-class FbWindow;
-template <class T> class ThemeProxy;
+    class FbWindow;
+    template <class T>
+    class ThemeProxy;
 }
 
 /// helper class for simple tools, i.e buttons etc
 class GenericTool : public ToolbarItem, private FbTk::NotCopyable {
 public:
-  GenericTool(FbTk::FbWindow *new_window, ToolbarItem::Type type,
-              FbTk::ThemeProxy<ToolTheme> &theme);
-  virtual ~GenericTool();
-  void move(int x, int y);
-  void resize(unsigned int x, unsigned int y);
-  void moveResize(int x, int y, unsigned int width, unsigned int height);
-  void show();
-  void hide();
+    GenericTool(FbTk::FbWindow* new_window, ToolbarItem::Type type,
+        FbTk::ThemeProxy<ToolTheme>& theme);
+    virtual ~GenericTool();
+    void move(int x, int y);
+    void resize(unsigned int x, unsigned int y);
+    void moveResize(int x, int y, unsigned int width, unsigned int height);
+    void show();
+    void hide();
 
-  unsigned int width() const;
-  unsigned int height() const;
-  unsigned int borderWidth() const;
+    unsigned int width() const;
+    unsigned int height() const;
+    unsigned int borderWidth() const;
 
-  void parentMoved();
+    void parentMoved();
 
-  const FbTk::ThemeProxy<ToolTheme> &theme() const { return m_theme; }
-  FbTk::FbWindow &window() { return *m_window; }
-  const FbTk::FbWindow &window() const { return *m_window; }
+    const FbTk::ThemeProxy<ToolTheme>& theme() const { return m_theme; }
+    FbTk::FbWindow& window() { return *m_window; }
+    const FbTk::FbWindow& window() const { return *m_window; }
 
 protected:
-  virtual void renderTheme(int alpha);
+    virtual void renderTheme(int alpha);
 
 private:
-  void themeReconfigured();
+    void themeReconfigured();
 
-  std::unique_ptr<FbTk::FbWindow> m_window;
-  FbTk::ThemeProxy<ToolTheme> &m_theme;
-  FbTk::SignalTracker m_tracker;
+    std::unique_ptr<FbTk::FbWindow> m_window;
+    FbTk::ThemeProxy<ToolTheme>& m_theme;
+    FbTk::SignalTracker m_tracker;
 };
 
 #endif // GENERICTOOL_HH

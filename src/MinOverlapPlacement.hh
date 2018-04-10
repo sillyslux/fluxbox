@@ -26,10 +26,10 @@
 
 class MinOverlapPlacement : public PlacementStrategy {
 public:
-  MinOverlapPlacement(){};
+    MinOverlapPlacement(){};
 
-  bool placeWindow(const FluxboxWindow &win, int head, int &place_x,
-                   int &place_y);
+    bool placeWindow(const FluxboxWindow& win, int head, int& place_x,
+        int& place_y);
 
 private:
 };

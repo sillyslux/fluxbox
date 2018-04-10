@@ -28,20 +28,20 @@
 
 namespace FbTk {
 
-/// helper class for border theme items
-class BorderTheme {
-public:
-  BorderTheme(Theme &theme, const std::string &name,
-              const std::string &altname);
-  virtual ~BorderTheme() {}
+    /// helper class for border theme items
+    class BorderTheme {
+    public:
+        BorderTheme(Theme& theme, const std::string& name,
+            const std::string& altname);
+        virtual ~BorderTheme() {}
 
-  int width() const { return *m_width; }
-  const Color &color() const { return *m_color; }
+        int width() const { return *m_width; }
+        const Color& color() const { return *m_color; }
 
-private:
-  ThemeItem<int> m_width;
-  ThemeItem<Color> m_color;
-};
+    private:
+        ThemeItem<int> m_width;
+        ThemeItem<Color> m_color;
+    };
 
 } // end namespace FbTk
 

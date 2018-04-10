@@ -32,49 +32,53 @@ class BScreen;
 
 class AtomHandler {
 public:
-  virtual ~AtomHandler() {}
+    virtual ~AtomHandler() {}
 
-  virtual void initForScreen(BScreen &screen) = 0;
-  virtual void setupFrame(FluxboxWindow &win) = 0;
-  virtual void setupClient(WinClient &winclient) = 0;
+    virtual void initForScreen(BScreen& screen) = 0;
+    virtual void setupFrame(FluxboxWindow& win) = 0;
+    virtual void setupClient(WinClient& winclient) = 0;
 
-  virtual void updateFocusedWindow(BScreen &screen, Window win) = 0;
-  virtual void updateClientList(BScreen &screen) = 0;
-  virtual void updateWorkspaceNames(BScreen &screen) = 0;
-  virtual void updateCurrentWorkspace(BScreen &screen) = 0;
-  virtual void updateWorkspaceCount(BScreen &screen) = 0;
-  virtual void updateWorkarea(BScreen &screen) = 0;
+    virtual void updateFocusedWindow(BScreen& screen, Window win) = 0;
+    virtual void updateClientList(BScreen& screen) = 0;
+    virtual void updateWorkspaceNames(BScreen& screen) = 0;
+    virtual void updateCurrentWorkspace(BScreen& screen) = 0;
+    virtual void updateWorkspaceCount(BScreen& screen) = 0;
+    virtual void updateWorkarea(BScreen& screen) = 0;
 
-  virtual void updateFrameClose(FluxboxWindow &win) = 0;
-  virtual void updateClientClose(WinClient &winclient) = 0;
-  virtual void updateWorkspace(FluxboxWindow &win) = 0;
-  virtual void updateState(FluxboxWindow &win) = 0;
-  virtual void updateHints(FluxboxWindow &win) = 0;
-  virtual void updateLayer(FluxboxWindow &win) = 0;
-  virtual void updateFrameExtents(FluxboxWindow &win) {}
-  virtual bool checkClientMessage(const XClientMessageEvent &ce,
-                                  BScreen *screen,
-                                  WinClient *const winclient) = 0;
+    virtual void updateFrameClose(FluxboxWindow& win) = 0;
+    virtual void updateClientClose(WinClient& winclient) = 0;
+    virtual void updateWorkspace(FluxboxWindow& win) = 0;
+    virtual void updateState(FluxboxWindow& win) = 0;
+    virtual void updateHints(FluxboxWindow& win) = 0;
+    virtual void updateLayer(FluxboxWindow& win) = 0;
+    virtual void updateFrameExtents(FluxboxWindow& win) {}
+    virtual bool checkClientMessage(const XClientMessageEvent& ce,
+        BScreen* screen,
+        WinClient* const winclient)
+        = 0;
 
-  virtual bool propertyNotify(WinClient &winclient, Atom the_property) = 0;
+    virtual bool propertyNotify(WinClient& winclient, Atom the_property) = 0;
 
-  virtual void reconfigure() {}
+    virtual void reconfigure() {}
 
-  /// should this object be updated or not?
-  bool update() const { return m_update; }
+    /// should this object be updated or not?
+    bool update() const { return m_update; }
 
-  void setName(const std::string &name) { m_name = name; }
-  const std::string &getName() const { return m_name; }
+    void setName(const std::string& name) { m_name = name; }
+    const std::string& getName() const { return m_name; }
 
 protected:
-  AtomHandler() : m_update(true) {}
+    AtomHandler()
+        : m_update(true)
+    {
+    }
 
-  void disableUpdate() { m_update = false; }
-  void enableUpdate() { m_update = true; }
+    void disableUpdate() { m_update = false; }
+    void enableUpdate() { m_update = true; }
 
 private:
-  bool m_update;      ///< do we get update or not
-  std::string m_name; ///< name of atomhandler
+    bool m_update; ///< do we get update or not
+    std::string m_name; ///< name of atomhandler
 };
 
 #endif // ATOMHANDLER_HH

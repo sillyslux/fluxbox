@@ -39,22 +39,22 @@
 
 namespace FbTk {
 
-class RegExp : private NotCopyable {
-public:
-  RegExp(const std::string &str, bool full_match = true);
-  ~RegExp();
+    class RegExp : private NotCopyable {
+    public:
+        RegExp(const std::string& str, bool full_match = true);
+        ~RegExp();
 
-  bool match(const std::string &str) const;
+        bool match(const std::string& str) const;
 
-  bool error() const;
+        bool error() const;
 
-private:
+    private:
 #ifdef USE_REGEXP
-  regex_t *m_regex;
-#else  // notdef USE_REGEXP
-  std::string m_str;
+        regex_t* m_regex;
+#else // notdef USE_REGEXP
+        std::string m_str;
 #endif // USE_REGEXP
-};
+    };
 
 } // end namespace FbTk
 

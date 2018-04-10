@@ -21,5 +21,5 @@
 
 #include "WindowCmd.hh"
 
-FluxboxWindow *WindowCmd_base::s_win = 0;
-WinClient *WindowCmd_base::s_client = 0;
+FluxboxWindow* WindowCmd_base::s_win = 0;
+WinClient* WindowCmd_base::s_client = 0;

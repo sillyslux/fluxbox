@@ -26,38 +26,45 @@
 
 namespace FbTk {
 
-template <typename> class Accessor;
+    template <typename>
+    class Accessor;
 
-/// a bool menu item
-class BoolMenuItem : public FbTk::MenuItem {
-public:
-  BoolMenuItem(const FbTk::FbString &label, Accessor<bool> &item,
-               FbTk::RefCount<FbTk::Command<void>> &cmd)
-      : FbTk::MenuItem(label, cmd), m_item(item) {
-    FbTk::MenuItem::setSelected(m_item);
-    setToggleItem(true);
-    setCloseOnClick(false);
-  }
-  BoolMenuItem(const FbTk::FbString &label, Accessor<bool> &item)
-      : FbTk::MenuItem(label), m_item(item) {
-    FbTk::MenuItem::setSelected(m_item);
-    setToggleItem(true);
-    setCloseOnClick(false);
-  }
-  bool isSelected() const { return m_item; }
-  // toggle state
-  void click(int button, int time, unsigned int mods) {
-    setSelected(!m_item);
-    FbTk::MenuItem::click(button, time, mods);
-  }
-  void setSelected(bool value) {
-    m_item = value;
-    FbTk::MenuItem::setSelected(m_item);
-  }
+    /// a bool menu item
+    class BoolMenuItem : public FbTk::MenuItem {
+    public:
+        BoolMenuItem(const FbTk::FbString& label, Accessor<bool>& item,
+            FbTk::RefCount<FbTk::Command<void> >& cmd)
+            : FbTk::MenuItem(label, cmd)
+            , m_item(item)
+        {
+            FbTk::MenuItem::setSelected(m_item);
+            setToggleItem(true);
+            setCloseOnClick(false);
+        }
+        BoolMenuItem(const FbTk::FbString& label, Accessor<bool>& item)
+            : FbTk::MenuItem(label)
+            , m_item(item)
+        {
+            FbTk::MenuItem::setSelected(m_item);
+            setToggleItem(true);
+            setCloseOnClick(false);
+        }
+        bool isSelected() const { return m_item; }
+        // toggle state
+        void click(int button, int time, unsigned int mods)
+        {
+            setSelected(!m_item);
+            FbTk::MenuItem::click(button, time, mods);
+        }
+        void setSelected(bool value)
+        {
+            m_item = value;
+            FbTk::MenuItem::setSelected(m_item);
+        }
 
-private:
-  Accessor<bool> &m_item;
-};
+    private:
+        Accessor<bool>& m_item;
+    };
 
 } // end namespace FbTk
 

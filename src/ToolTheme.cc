@@ -22,24 +22,29 @@
 
 #include "ToolTheme.hh"
 
-ToolTheme::ToolTheme(int screen_num, const std::string &name,
-                     const std::string &altname)
-    : FbTk::Theme(screen_num), FbTk::TextTheme(*this, name, altname),
-      m_texture(*this, name, altname), m_border(*this, name, altname),
-      m_alpha(255) {
+ToolTheme::ToolTheme(int screen_num, const std::string& name,
+    const std::string& altname)
+    : FbTk::Theme(screen_num)
+    , FbTk::TextTheme(*this, name, altname)
+    , m_texture(*this, name, altname)
+    , m_border(*this, name, altname)
+    , m_alpha(255)
+{
 
-  FbTk::ThemeManager::instance().loadTheme(*this);
+    FbTk::ThemeManager::instance().loadTheme(*this);
 }
 
 ToolTheme::~ToolTheme() {}
 
-void ToolTheme::reconfigTheme() {
-  // update text theme
-  updateTextColor();
+void ToolTheme::reconfigTheme()
+{
+    // update text theme
+    updateTextColor();
 }
 
-bool ToolTheme::fallback(FbTk::ThemeItem_base &item) {
-  /* Don't fallback these for theme backwards compatibility
+bool ToolTheme::fallback(FbTk::ThemeItem_base& item)
+{
+    /* Don't fallback these for theme backwards compatibility
   if (item.name().find(".borderWidth") != std::string::npos) {
       return FbTk::ThemeManager::instance().loadItem(item, "borderWidth",
   "BorderWidth");
@@ -48,10 +53,10 @@ bool ToolTheme::fallback(FbTk::ThemeItem_base &item) {
   "BorderColor");
   } else
   */
-  if (item.name().find(".justify") != std::string::npos) {
-    return FbTk::ThemeManager::instance().loadItem(item, "toolbar.justify",
-                                                   "Toolbar.Justify");
-  }
+    if (item.name().find(".justify") != std::string::npos) {
+        return FbTk::ThemeManager::instance().loadItem(item, "toolbar.justify",
+            "Toolbar.Justify");
+    }
 
-  return false;
+    return false;
 }

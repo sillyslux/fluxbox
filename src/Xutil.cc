@@ -42,99 +42,102 @@ using std::endl;
 
 namespace Xutil {
 
-FbTk::FbString getWMName(Window window) {
+    FbTk::FbString getWMName(Window window)
+    {
 
-  if (window == None)
-    return FbTk::FbString("");
+        if (window == None)
+            return FbTk::FbString("");
 
-  Display *display = FbTk::App::instance()->display();
+        Display* display = FbTk::App::instance()->display();
 
-  XTextProperty text_prop;
-  text_prop.value = 0;
-  char **list = 0;
-  int num = 0;
-  _FB_USES_NLS;
-  FbTk::FbString name;
+        XTextProperty text_prop;
+        text_prop.value = 0;
+        char** list = 0;
+        int num = 0;
+        _FB_USES_NLS;
+        FbTk::FbString name;
 
-  if (XGetWMName(display, window, &text_prop)) {
-    if (text_prop.value && text_prop.nitems > 0) {
-      if (text_prop.encoding != XA_STRING) {
+        if (XGetWMName(display, window, &text_prop)) {
+            if (text_prop.value && text_prop.nitems > 0) {
+                if (text_prop.encoding != XA_STRING) {
 
-        text_prop.nitems = strlen((char *)text_prop.value);
-        XmbTextPropertyToTextList(display, &text_prop, &list, &num);
+                    text_prop.nitems = strlen((char*)text_prop.value);
+                    XmbTextPropertyToTextList(display, &text_prop, &list, &num);
 
-        if (num > 0 && list != 0)
-          name = FbTk::FbStringUtil::LocaleStrToFb(static_cast<char *>(*list));
-        else
-          name = text_prop.value
-                     ? FbTk::FbStringUtil::XStrToFb((char *)text_prop.value)
-                     : "";
+                    if (num > 0 && list != 0)
+                        name = FbTk::FbStringUtil::LocaleStrToFb(static_cast<char*>(*list));
+                    else
+                        name = text_prop.value
+                            ? FbTk::FbStringUtil::XStrToFb((char*)text_prop.value)
+                            : "";
 
-        if (list)
-          XFreeStringList(list);
+                    if (list)
+                        XFreeStringList(list);
 
-      } else
-        name = text_prop.value
-                   ? FbTk::FbStringUtil::XStrToFb((char *)text_prop.value)
-                   : "";
+                } else
+                    name = text_prop.value
+                        ? FbTk::FbStringUtil::XStrToFb((char*)text_prop.value)
+                        : "";
 
-      XFree(text_prop.value);
+                XFree(text_prop.value);
 
-    } else { // default name
-      name = _FB_XTEXT(Window, Unnamed, "Unnamed",
-                       "Default name for a window without a WM_NAME");
+            } else { // default name
+                name = _FB_XTEXT(Window, Unnamed, "Unnamed",
+                    "Default name for a window without a WM_NAME");
+            }
+        } else {
+            // default name
+            name = _FB_XTEXT(Window, Unnamed, "Unnamed",
+                "Default name for a window without a WM_NAME");
+        }
+
+        return name;
     }
-  } else {
-    // default name
-    name = _FB_XTEXT(Window, Unnamed, "Unnamed",
-                     "Default name for a window without a WM_NAME");
-  }
 
-  return name;
-}
+    // The name of this particular instance
+    FbTk::FbString getWMClassName(Window win)
+    {
 
-// The name of this particular instance
-FbTk::FbString getWMClassName(Window win) {
+        XClassHint ch;
+        FbTk::FbString instance_name;
 
-  XClassHint ch;
-  FbTk::FbString instance_name;
+        if (XGetClassHint(FbTk::App::instance()->display(), win, &ch) == 0) {
+            fbdbg << "Xutil: Failed to read class hint!" << endl;
+        } else {
 
-  if (XGetClassHint(FbTk::App::instance()->display(), win, &ch) == 0) {
-    fbdbg << "Xutil: Failed to read class hint!" << endl;
-  } else {
+            XFree(ch.res_class);
 
-    XFree(ch.res_class);
+            if (ch.res_name != 0) {
+                instance_name = const_cast<char*>(ch.res_name);
+                XFree(ch.res_name);
+                ch.res_name = 0;
+            }
+        }
 
-    if (ch.res_name != 0) {
-      instance_name = const_cast<char *>(ch.res_name);
-      XFree(ch.res_name);
-      ch.res_name = 0;
+        return instance_name;
     }
-  }
 
-  return instance_name;
-}
+    // the name of the general class of the app
+    FbTk::FbString getWMClassClass(Window win)
+    {
 
-// the name of the general class of the app
-FbTk::FbString getWMClassClass(Window win) {
+        XClassHint ch;
+        FbTk::FbString class_name;
 
-  XClassHint ch;
-  FbTk::FbString class_name;
+        if (XGetClassHint(FbTk::App::instance()->display(), win, &ch) == 0) {
+            fbdbg << "Xutil: Failed to read class hint!" << endl;
+        } else {
 
-  if (XGetClassHint(FbTk::App::instance()->display(), win, &ch) == 0) {
-    fbdbg << "Xutil: Failed to read class hint!" << endl;
-  } else {
+            XFree(ch.res_name);
 
-    XFree(ch.res_name);
+            if (ch.res_class != 0) {
+                class_name = const_cast<char*>(ch.res_class);
+                XFree(ch.res_class);
+                ch.res_class = 0;
+            }
+        }
 
-    if (ch.res_class != 0) {
-      class_name = const_cast<char *>(ch.res_class);
-      XFree(ch.res_class);
-      ch.res_class = 0;
+        return class_name;
     }
-  }
-
-  return class_name;
-}
 
 } // end namespace Xutil

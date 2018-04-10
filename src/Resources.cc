@@ -40,151 +40,182 @@ using std::vector;
 //-----------------------------------------------------------------
 namespace FbTk {
 
-template <> string FbTk::Resource<int>::getString() const {
-  return FbTk::StringUtil::number2String(**this);
-}
-
-template <> void FbTk::Resource<int>::setFromString(const char *strval) {
-  FbTk::StringUtil::extractNumber(strval, get());
-}
-
-template <> string FbTk::Resource<string>::getString() const { return **this; }
-
-template <> void FbTk::Resource<string>::setFromString(const char *strval) {
-  *this = strval;
-}
-
-template <> string FbTk::Resource<bool>::getString() const {
-  return string(**this == true ? "true" : "false");
-}
-
-template <> void FbTk::Resource<bool>::setFromString(char const *strval) {
-  *this = (bool)!strcasecmp(strval, "true");
-}
-
-template <> string FbTk::Resource<vector<WinButton::Type>>::getString() const {
-  string retval;
-  for (size_t i = 0; i < m_value.size(); i++) {
-    switch (m_value[i]) {
-    case WinButton::SHADE:
-      retval.append("Shade");
-      break;
-    case WinButton::MINIMIZE:
-      retval.append("Minimize");
-      break;
-    case WinButton::MAXIMIZE:
-      retval.append("Maximize");
-      break;
-    case WinButton::CLOSE:
-      retval.append("Close");
-      break;
-    case WinButton::STICK:
-      retval.append("Stick");
-      break;
-    case WinButton::MENUICON:
-      retval.append("MenuIcon");
-      break;
-    case WinButton::LEFT_HALF:
-      retval.append("LHalf");
-      break;
-    case WinButton::RIGHT_HALF:
-      retval.append("RHalf");
-      break;
-    default:
-      break;
+    template <>
+    string FbTk::Resource<int>::getString() const
+    {
+        return FbTk::StringUtil::number2String(**this);
     }
-    retval.append(" ");
-  }
 
-  return retval;
-}
+    template <>
+    void FbTk::Resource<int>::setFromString(const char* strval)
+    {
+        FbTk::StringUtil::extractNumber(strval, get());
+    }
 
-template <>
-void FbTk::Resource<vector<WinButton::Type>>::setFromString(
-    char const *strval) {
-  vector<string> val;
-  StringUtil::stringtok(val, strval);
-  // clear old values
-  m_value.clear();
+    template <>
+    string FbTk::Resource<string>::getString() const { return **this; }
 
-  std::string v;
-  for (size_t i = 0; i < val.size(); i++) {
-    v = FbTk::StringUtil::toLower(val[i]);
-    if (v == "maximize")
-      m_value.push_back(WinButton::MAXIMIZE);
-    else if (v == "minimize")
-      m_value.push_back(WinButton::MINIMIZE);
-    else if (v == "shade")
-      m_value.push_back(WinButton::SHADE);
-    else if (v == "stick")
-      m_value.push_back(WinButton::STICK);
-    else if (v == "menuicon")
-      m_value.push_back(WinButton::MENUICON);
-    else if (v == "close")
-      m_value.push_back(WinButton::CLOSE);
-    else if (v == "lhalf")
-      m_value.push_back(WinButton::LEFT_HALF);
-    else if (v == "rhalf")
-      m_value.push_back(WinButton::RIGHT_HALF);
-  }
-}
+    template <>
+    void FbTk::Resource<string>::setFromString(const char* strval)
+    {
+        *this = strval;
+    }
 
-template <> string FbTk::Resource<Fluxbox::TabsAttachArea>::getString() const {
-  if (m_value == Fluxbox::ATTACH_AREA_TITLEBAR)
-    return "Titlebar";
-  else
-    return "Window";
-}
+    template <>
+    string FbTk::Resource<bool>::getString() const
+    {
+        return string(**this == true ? "true" : "false");
+    }
 
-template <>
-void FbTk::Resource<Fluxbox::TabsAttachArea>::setFromString(
-    char const *strval) {
-  if (strcasecmp(strval, "Titlebar") == 0)
-    m_value = Fluxbox::ATTACH_AREA_TITLEBAR;
-  else
-    m_value = Fluxbox::ATTACH_AREA_WINDOW;
-}
+    template <>
+    void FbTk::Resource<bool>::setFromString(char const* strval)
+    {
+        *this = (bool)!strcasecmp(strval, "true");
+    }
 
-template <> string FbTk::Resource<unsigned int>::getString() const {
-  return FbTk::StringUtil::number2String(m_value);
-}
+    template <>
+    string FbTk::Resource<vector<WinButton::Type> >::getString() const
+    {
+        string retval;
+        for (size_t i = 0; i < m_value.size(); i++) {
+            switch (m_value[i]) {
+            case WinButton::SHADE:
+                retval.append("Shade");
+                break;
+            case WinButton::MINIMIZE:
+                retval.append("Minimize");
+                break;
+            case WinButton::MAXIMIZE:
+                retval.append("Maximize");
+                break;
+            case WinButton::CLOSE:
+                retval.append("Close");
+                break;
+            case WinButton::STICK:
+                retval.append("Stick");
+                break;
+            case WinButton::MENUICON:
+                retval.append("MenuIcon");
+                break;
+            case WinButton::LEFT_HALF:
+                retval.append("LHalf");
+                break;
+            case WinButton::RIGHT_HALF:
+                retval.append("RHalf");
+                break;
+            default:
+                break;
+            }
+            retval.append(" ");
+        }
 
-template <>
-void FbTk::Resource<unsigned int>::setFromString(const char *strval) {
-  if (!FbTk::StringUtil::extractNumber(strval, m_value))
-    setDefaultValue();
-}
+        return retval;
+    }
 
-template <> string FbTk::Resource<long long>::getString() const {
-  return FbTk::StringUtil::number2String(m_value);
-}
+    template <>
+    void FbTk::Resource<vector<WinButton::Type> >::setFromString(
+        char const* strval)
+    {
+        vector<string> val;
+        StringUtil::stringtok(val, strval);
+        // clear old values
+        m_value.clear();
 
-template <> void FbTk::Resource<long long>::setFromString(const char *strval) {
-  if (!FbTk::StringUtil::extractNumber(strval, m_value))
-    setDefaultValue();
-}
+        std::string v;
+        for (size_t i = 0; i < val.size(); i++) {
+            v = FbTk::StringUtil::toLower(val[i]);
+            if (v == "maximize")
+                m_value.push_back(WinButton::MAXIMIZE);
+            else if (v == "minimize")
+                m_value.push_back(WinButton::MINIMIZE);
+            else if (v == "shade")
+                m_value.push_back(WinButton::SHADE);
+            else if (v == "stick")
+                m_value.push_back(WinButton::STICK);
+            else if (v == "menuicon")
+                m_value.push_back(WinButton::MENUICON);
+            else if (v == "close")
+                m_value.push_back(WinButton::CLOSE);
+            else if (v == "lhalf")
+                m_value.push_back(WinButton::LEFT_HALF);
+            else if (v == "rhalf")
+                m_value.push_back(WinButton::RIGHT_HALF);
+        }
+    }
 
-template <> string FbTk::Resource<ResourceLayer>::getString() const {
-  return ::ResourceLayer::getString(m_value.getNum());
-}
+    template <>
+    string FbTk::Resource<Fluxbox::TabsAttachArea>::getString() const
+    {
+        if (m_value == Fluxbox::ATTACH_AREA_TITLEBAR)
+            return "Titlebar";
+        else
+            return "Window";
+    }
 
-template <>
-void FbTk::Resource<ResourceLayer>::setFromString(const char *strval) {
-  string str(strval);
-  int tempnum = ::ResourceLayer::getNumFromString(str);
-  if (tempnum >= 0 && tempnum < ::ResourceLayer::NUM_LAYERS)
-    m_value = tempnum;
-  else
-    setDefaultValue();
-}
+    template <>
+    void FbTk::Resource<Fluxbox::TabsAttachArea>::setFromString(
+        char const* strval)
+    {
+        if (strcasecmp(strval, "Titlebar") == 0)
+            m_value = Fluxbox::ATTACH_AREA_TITLEBAR;
+        else
+            m_value = Fluxbox::ATTACH_AREA_WINDOW;
+    }
 
-template <> string FbTk::Resource<long>::getString() const {
-  return FbTk::StringUtil::number2String(m_value);
-}
+    template <>
+    string FbTk::Resource<unsigned int>::getString() const
+    {
+        return FbTk::StringUtil::number2String(m_value);
+    }
 
-template <> void FbTk::Resource<long>::setFromString(const char *strval) {
-  if (!FbTk::StringUtil::extractNumber(strval, m_value))
-    setDefaultValue();
-}
+    template <>
+    void FbTk::Resource<unsigned int>::setFromString(const char* strval)
+    {
+        if (!FbTk::StringUtil::extractNumber(strval, m_value))
+            setDefaultValue();
+    }
+
+    template <>
+    string FbTk::Resource<long long>::getString() const
+    {
+        return FbTk::StringUtil::number2String(m_value);
+    }
+
+    template <>
+    void FbTk::Resource<long long>::setFromString(const char* strval)
+    {
+        if (!FbTk::StringUtil::extractNumber(strval, m_value))
+            setDefaultValue();
+    }
+
+    template <>
+    string FbTk::Resource<ResourceLayer>::getString() const
+    {
+        return ::ResourceLayer::getString(m_value.getNum());
+    }
+
+    template <>
+    void FbTk::Resource<ResourceLayer>::setFromString(const char* strval)
+    {
+        string str(strval);
+        int tempnum = ::ResourceLayer::getNumFromString(str);
+        if (tempnum >= 0 && tempnum < ::ResourceLayer::NUM_LAYERS)
+            m_value = tempnum;
+        else
+            setDefaultValue();
+    }
+
+    template <>
+    string FbTk::Resource<long>::getString() const
+    {
+        return FbTk::StringUtil::number2String(m_value);
+    }
+
+    template <>
+    void FbTk::Resource<long>::setFromString(const char* strval)
+    {
+        if (!FbTk::StringUtil::extractNumber(strval, m_value))
+            setDefaultValue();
+    }
 
 } // end namespace FbTk

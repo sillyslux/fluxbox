@@ -31,22 +31,22 @@
 
 namespace FbTk {
 
-class AutoReloadHelper {
-public:
-  void setMainFile(const std::string &filename);
-  void addFile(const std::string &filename);
-  void setReloadCmd(RefCount<Command<void>> cmd) { m_reload_cmd = cmd; }
+    class AutoReloadHelper {
+    public:
+        void setMainFile(const std::string& filename);
+        void addFile(const std::string& filename);
+        void setReloadCmd(RefCount<Command<void> > cmd) { m_reload_cmd = cmd; }
 
-  void checkReload();
-  void reload();
+        void checkReload();
+        void reload();
 
-private:
-  RefCount<Command<void>> m_reload_cmd;
-  std::string m_main_file;
+    private:
+        RefCount<Command<void> > m_reload_cmd;
+        std::string m_main_file;
 
-  typedef std::map<std::string, time_t> TimestampMap;
-  TimestampMap m_timestamps;
-};
+        typedef std::map<std::string, time_t> TimestampMap;
+        TimestampMap m_timestamps;
+    };
 
 } // end namespace FbTk
 

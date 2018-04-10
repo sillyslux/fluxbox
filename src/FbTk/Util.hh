@@ -24,18 +24,19 @@
 
 namespace FbTk {
 
-namespace Util {
+    namespace Util {
 
-template <typename T>
-inline T clamp(const T &value, const T &lower, const T &upper) {
-  if (value < lower)
-    return lower;
-  else if (value > upper)
-    return upper;
-  return value;
-}
+        template <typename T>
+        inline T clamp(const T& value, const T& lower, const T& upper)
+        {
+            if (value < lower)
+                return lower;
+            else if (value > upper)
+                return upper;
+            return value;
+        }
 
-} // end namespace Util
+    } // end namespace Util
 
 } // end namespace FbTk
 

@@ -30,28 +30,28 @@
 
 class IconbarTheme : public FbTk::Theme, public FbTk::ThemeProxy<IconbarTheme> {
 public:
-  IconbarTheme(int screen_num, const std::string &name,
-               const std::string &altname);
-  virtual ~IconbarTheme();
+    IconbarTheme(int screen_num, const std::string& name,
+        const std::string& altname);
+    virtual ~IconbarTheme();
 
-  void reconfigTheme();
-  bool fallback(FbTk::ThemeItem_base &item);
+    void reconfigTheme();
+    bool fallback(FbTk::ThemeItem_base& item);
 
-  FbTk::TextTheme &text() { return m_text; }
-  const FbTk::BorderTheme &border() const { return m_border; }
-  const FbTk::Texture &texture() const { return *m_texture; }
-  const FbTk::Texture &emptyTexture() const { return *m_empty_texture; }
+    FbTk::TextTheme& text() { return m_text; }
+    const FbTk::BorderTheme& border() const { return m_border; }
+    const FbTk::Texture& texture() const { return *m_texture; }
+    const FbTk::Texture& emptyTexture() const { return *m_empty_texture; }
 
-  virtual FbTk::Signal<> &reconfigSig() { return FbTk::Theme::reconfigSig(); }
+    virtual FbTk::Signal<>& reconfigSig() { return FbTk::Theme::reconfigSig(); }
 
-  virtual IconbarTheme &operator*() { return *this; }
-  virtual const IconbarTheme &operator*() const { return *this; }
+    virtual IconbarTheme& operator*() { return *this; }
+    virtual const IconbarTheme& operator*() const { return *this; }
 
 private:
-  FbTk::ThemeItem<FbTk::Texture> m_texture, m_empty_texture;
-  FbTk::BorderTheme m_border;
-  FbTk::TextTheme m_text;
-  std::string m_name, m_altname;
+    FbTk::ThemeItem<FbTk::Texture> m_texture, m_empty_texture;
+    FbTk::BorderTheme m_border;
+    FbTk::TextTheme m_text;
+    std::string m_name, m_altname;
 };
 
 #endif // ICONBARTHEME_HH

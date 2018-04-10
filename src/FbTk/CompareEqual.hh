@@ -25,28 +25,34 @@
 #include <functional>
 namespace FbTk {
 
-/// @brief compares one class function with a value type
-template <typename ClassType, typename ValueType>
-class CompareEqual_base : public std::unary_function<ClassType, bool> {
-public:
-  typedef ValueType (ClassType::*Action)() const;
-  typedef ValueType Value;
-  CompareEqual_base(Action a, ValueType v) : m_action(a), m_value(v) {}
-  bool operator()(const ClassType *instance) const {
-    return (instance->*m_action)() == m_value;
-  }
+    /// @brief compares one class function with a value type
+    template <typename ClassType, typename ValueType>
+    class CompareEqual_base : public std::unary_function<ClassType, bool> {
+    public:
+        typedef ValueType (ClassType::*Action)() const;
+        typedef ValueType Value;
+        CompareEqual_base(Action a, ValueType v)
+            : m_action(a)
+            , m_value(v)
+        {
+        }
+        bool operator()(const ClassType* instance) const
+        {
+            return (instance->*m_action)() == m_value;
+        }
 
-private:
-  Action m_action;
-  Value m_value;
-};
+    private:
+        Action m_action;
+        Value m_value;
+    };
 
-// creates an CompareEqual_base object
-template <typename A, typename B>
-inline CompareEqual_base<A, B>
-CompareEqual(typename CompareEqual_base<A, B>::Action action, B b) {
-  return CompareEqual_base<A, B>(action, b);
-}
+    // creates an CompareEqual_base object
+    template <typename A, typename B>
+    inline CompareEqual_base<A, B>
+    CompareEqual(typename CompareEqual_base<A, B>::Action action, B b)
+    {
+        return CompareEqual_base<A, B>(action, b);
+    }
 } // end namespace FbTk
 
 #endif // FBTK_COMPAREEQUAL_HH

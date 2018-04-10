@@ -26,60 +26,60 @@
 
 namespace FbTk {
 
-/// regular X font implementation for FbTk
-class XFontImp : public FbTk::FontImp {
-public:
-  explicit XFontImp(const char *filename = 0);
-  ~XFontImp();
-  bool load(const std::string &filename);
-  unsigned int textWidth(const char *text, unsigned int len) const;
-  unsigned int height() const;
-  int ascent() const;
-  int descent() const { return m_fontstruct ? m_fontstruct->descent : 0; }
-  void drawText(const FbDrawable &w, int screen, GC gc, const char *text,
-                size_t len, int x, int y, FbTk::Orientation orient);
+    /// regular X font implementation for FbTk
+    class XFontImp : public FbTk::FontImp {
+    public:
+        explicit XFontImp(const char* filename = 0);
+        ~XFontImp();
+        bool load(const std::string& filename);
+        unsigned int textWidth(const char* text, unsigned int len) const;
+        unsigned int height() const;
+        int ascent() const;
+        int descent() const { return m_fontstruct ? m_fontstruct->descent : 0; }
+        void drawText(const FbDrawable& w, int screen, GC gc, const char* text,
+            size_t len, int x, int y, FbTk::Orientation orient);
 
-  bool validOrientation(FbTk::Orientation orient);
+        bool validOrientation(FbTk::Orientation orient);
 
-  bool loaded() const { return m_fontstruct != 0; }
+        bool loaded() const { return m_fontstruct != 0; }
 
-private:
-  struct BitmapStruct {
-    int bit_w;
-    int bit_h;
+    private:
+        struct BitmapStruct {
+            int bit_w;
+            int bit_h;
 
-    Pixmap bm;
-  };
-  struct XRotCharStruct {
-    int ascent;
-    int descent;
-    int lbearing;
-    int rbearing;
-    int width;
+            Pixmap bm;
+        };
+        struct XRotCharStruct {
+            int ascent;
+            int descent;
+            int lbearing;
+            int rbearing;
+            int width;
 
-    BitmapStruct glyph;
-  };
+            BitmapStruct glyph;
+        };
 
-  struct XRotFontStruct {
-    int height;
-    int max_ascent;
-    int max_descent;
-    int max_char;
-    int min_char;
+        struct XRotFontStruct {
+            int height;
+            int max_ascent;
+            int max_descent;
+            int max_char;
+            int min_char;
 
-    XRotCharStruct per_char[95];
-  };
+            XRotCharStruct per_char[95];
+        };
 
-  void rotate(FbTk::Orientation orient);
+        void rotate(FbTk::Orientation orient);
 
-  void freeRotFont(XRotFontStruct *rotfont);
-  void drawRotText(Drawable w, int screen, GC gc, const char *text, size_t len,
-                   int x, int y, FbTk::Orientation orient) const;
+        void freeRotFont(XRotFontStruct* rotfont);
+        void drawRotText(Drawable w, int screen, GC gc, const char* text, size_t len,
+            int x, int y, FbTk::Orientation orient) const;
 
-  XRotFontStruct *m_rotfonts[4]; ///< rotated font structure (only 3 used)
-  bool m_rotfonts_loaded[4];     // whether we've tried yet
-  XFontStruct *m_fontstruct;     ///< X font structure
-};
+        XRotFontStruct* m_rotfonts[4]; ///< rotated font structure (only 3 used)
+        bool m_rotfonts_loaded[4]; // whether we've tried yet
+        XFontStruct* m_fontstruct; ///< X font structure
+    };
 
 } // end namespace FbTk
 

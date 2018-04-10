@@ -29,33 +29,33 @@
 /// toolbar theme class container
 class ToolbarTheme : public FbTk::Theme, public FbTk::ThemeProxy<ToolbarTheme> {
 public:
-  explicit ToolbarTheme(int screen_num);
-  virtual ~ToolbarTheme();
+    explicit ToolbarTheme(int screen_num);
+    virtual ~ToolbarTheme();
 
-  void reconfigTheme();
+    void reconfigTheme();
 
-  const FbTk::BorderTheme &border() const { return m_border; }
-  const FbTk::Texture &toolbar() const { return *m_toolbar; }
+    const FbTk::BorderTheme& border() const { return m_border; }
+    const FbTk::Texture& toolbar() const { return *m_toolbar; }
 
-  bool fallback(FbTk::ThemeItem_base &item);
+    bool fallback(FbTk::ThemeItem_base& item);
 
-  int bevelWidth() const { return *m_bevel_width; }
-  bool shape() const { return *m_shape; }
-  int height() const { return *m_height; }
-  int buttonSize() const { return *m_button_size; }
+    int bevelWidth() const { return *m_bevel_width; }
+    bool shape() const { return *m_shape; }
+    int height() const { return *m_height; }
+    int buttonSize() const { return *m_button_size; }
 
-  virtual FbTk::Signal<> &reconfigSig() { return FbTk::Theme::reconfigSig(); }
+    virtual FbTk::Signal<>& reconfigSig() { return FbTk::Theme::reconfigSig(); }
 
-  virtual ToolbarTheme &operator*() { return *this; }
-  virtual const ToolbarTheme &operator*() const { return *this; }
+    virtual ToolbarTheme& operator*() { return *this; }
+    virtual const ToolbarTheme& operator*() const { return *this; }
 
 private:
-  FbTk::ThemeItem<FbTk::Texture> m_toolbar;
-  FbTk::BorderTheme m_border;
+    FbTk::ThemeItem<FbTk::Texture> m_toolbar;
+    FbTk::BorderTheme m_border;
 
-  FbTk::ThemeItem<int> m_bevel_width;
-  FbTk::ThemeItem<bool> m_shape;
-  FbTk::ThemeItem<int> m_height, m_button_size;
+    FbTk::ThemeItem<int> m_bevel_width;
+    FbTk::ThemeItem<bool> m_shape;
+    FbTk::ThemeItem<int> m_height, m_button_size;
 };
 
 #endif // TOOLBARTHEME_HH

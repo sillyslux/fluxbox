@@ -30,127 +30,130 @@
 using namespace std;
 using namespace FbTk;
 
-void testStringtok() {
-  vector<string> ls;
-  StringUtil::stringtok(
-      ls,
-      "   arg1   arg2   \targ3\n  arg4 arg5\t\t\t\targ6\n\n \n\n \t\t\narg7");
-  cerr << "Size:  " << ls.size() << ". Should be: 7." << endl;
-  for (vector<string>::const_iterator i = ls.begin(); i != ls.end(); ++i) {
-    cerr << ':' << (*i) << ":\n";
-  }
-}
-
-void testExpandFilename() {
-  string filename(
-      StringUtil::expandFilename("~/filename/~filename2/file3~/file4"));
-  cerr << "test ";
-  const char *home = getenv("HOME");
-  if (home) {
-    string test = string(home) + "/filename/~filename2/file3~/file4";
-    if (test == filename)
-      cerr << "ok.";
-    else
-      cerr << "failed";
-  } else {
-    cerr << "failed, can't get $HOME.";
-  }
-  cerr << endl;
-}
-
-void testStrcasestr() {
-  cerr << "test1 ";
-  if (StringUtil::strcasestr("Test", "TEST") == strcasestr("Test", "TEST"))
-    cerr << "ok." << endl;
-  else
-    cerr << "faild." << endl;
-
-  cerr << "test2 ";
-  if (StringUtil::strcasestr("Test", "ESTabc") == strcasestr("Test", "ESTabc"))
-    cerr << "ok." << endl;
-  else
-    cerr << "faild." << endl;
-
-  cerr << "test3 ";
-  if (StringUtil::strcasestr("TeSt", "abcTEStabc") ==
-      strcasestr("TeSt", "abcTEStabc"))
-    cerr << "ok." << endl;
-  else
-    cerr << "faild." << endl;
-
-  cerr << "test4 ";
-  if (StringUtil::strcasestr("TEST", "_TEST;_") ==
-      strcasestr("TEST", "_TEST;_"))
-    cerr << "ok." << endl;
-  else
-    cerr << "faild." << endl;
-}
-
-void showError(int line, int pos, string &instr) {
-
-  cerr << "Error on line: " << line << endl;
-  cerr << instr << endl;
-  for (int c = 0; c < pos; c++) {
-    if (instr[c] == '\t')
-      cerr << '\t';
-    else
-      cerr << " ";
-  }
-  cerr << "^ here" << endl;
-}
-
-void testGetStringBetween() {
-  string out;
-  vector<string> stringlist;
-  stringlist.push_back(" \t\t\t   \t[(in \\)\t haha )]  \t\t ");
-  stringlist.push_back("(in\\)) {_  _  my_ _}");
-  stringlist.push_back("(in) {_  _  my_ _}");
-  stringlist.push_back("(in){_  _  my_ _}");
-  stringlist.push_back("\t      \t \t (    in     )    {haha}");
-  stringlist.push_back("\t      \t \t (( 	in  \\) )  {haha}");
-  stringlist.push_back("\t      \t \t (( 	in  \\) ){hihi}");
-  stringlist.push_back("\t      \t \t (( 	in  \\) )|{hihi}");
-  for (unsigned int i = 0; i < stringlist.size(); i++) {
-    int pos =
-        StringUtil::getStringBetween(out, stringlist[i].c_str(), '(', ')');
-    int total_pos = 0;
-    if (pos < 0) {
-      showError(i + 1, -pos, stringlist[i]);
-      continue;
+void testStringtok()
+{
+    vector<string> ls;
+    StringUtil::stringtok(
+        ls,
+        "   arg1   arg2   \targ3\n  arg4 arg5\t\t\t\targ6\n\n \n\n \t\t\narg7");
+    cerr << "Size:  " << ls.size() << ". Should be: 7." << endl;
+    for (vector<string>::const_iterator i = ls.begin(); i != ls.end(); ++i) {
+        cerr << ':' << (*i) << ":\n";
     }
-    cerr << "string=" << stringlist[i] << endl;
-    cerr << "pos=" << pos << " ::" << out;
-    total_pos += pos;
-    pos = StringUtil::getStringBetween(out, stringlist[i].c_str() + total_pos,
-                                       '{', '}');
-    if (pos <= 0) {
-      pos = -pos;
-      showError(i + 1, total_pos + pos, stringlist[i]);
-      continue;
-    }
-    cerr << "::" << out << "::" << endl;
-    total_pos += pos;
-  }
 }
 
-int main() {
-  try {
-    string replaceme = "something((((otherthanthis)could[be]changed";
+void testExpandFilename()
+{
+    string filename(
+        StringUtil::expandFilename("~/filename/~filename2/file3~/file4"));
+    cerr << "test ";
+    const char* home = getenv("HOME");
+    if (home) {
+        string test = string(home) + "/filename/~filename2/file3~/file4";
+        if (test == filename)
+            cerr << "ok.";
+        else
+            cerr << "failed";
+    } else {
+        cerr << "failed, can't get $HOME.";
+    }
+    cerr << endl;
+}
 
-    string newstr = StringUtil::replaceString(replaceme, "(", "\\(");
+void testStrcasestr()
+{
+    cerr << "test1 ";
+    if (StringUtil::strcasestr("Test", "TEST") == strcasestr("Test", "TEST"))
+        cerr << "ok." << endl;
+    else
+        cerr << "faild." << endl;
 
-    newstr = StringUtil::replaceString(newstr, ")", "\\)");
-    newstr = StringUtil::replaceString(newstr, "be", "not be");
+    cerr << "test2 ";
+    if (StringUtil::strcasestr("Test", "ESTabc") == strcasestr("Test", "ESTabc"))
+        cerr << "ok." << endl;
+    else
+        cerr << "faild." << endl;
 
-    cerr << "original =  " << replaceme << endl;
-    cerr << "newstr   =  " << newstr << endl;
-  } catch (std::exception &e) {
-    cerr << "exception: " << e.what() << endl;
-  }
-  cerr << "Testing stringtok." << endl;
-  testStringtok();
-  cerr << "Testing expandFilename." << endl;
-  testExpandFilename();
-  cerr << "Testing strcasestr." << endl;
-  testStrcasestr();
+    cerr << "test3 ";
+    if (StringUtil::strcasestr("TeSt", "abcTEStabc") == strcasestr("TeSt", "abcTEStabc"))
+        cerr << "ok." << endl;
+    else
+        cerr << "faild." << endl;
+
+    cerr << "test4 ";
+    if (StringUtil::strcasestr("TEST", "_TEST;_") == strcasestr("TEST", "_TEST;_"))
+        cerr << "ok." << endl;
+    else
+        cerr << "faild." << endl;
+}
+
+void showError(int line, int pos, string& instr)
+{
+
+    cerr << "Error on line: " << line << endl;
+    cerr << instr << endl;
+    for (int c = 0; c < pos; c++) {
+        if (instr[c] == '\t')
+            cerr << '\t';
+        else
+            cerr << " ";
+    }
+    cerr << "^ here" << endl;
+}
+
+void testGetStringBetween()
+{
+    string out;
+    vector<string> stringlist;
+    stringlist.push_back(" \t\t\t   \t[(in \\)\t haha )]  \t\t ");
+    stringlist.push_back("(in\\)) {_  _  my_ _}");
+    stringlist.push_back("(in) {_  _  my_ _}");
+    stringlist.push_back("(in){_  _  my_ _}");
+    stringlist.push_back("\t      \t \t (    in     )    {haha}");
+    stringlist.push_back("\t      \t \t (( 	in  \\) )  {haha}");
+    stringlist.push_back("\t      \t \t (( 	in  \\) ){hihi}");
+    stringlist.push_back("\t      \t \t (( 	in  \\) )|{hihi}");
+    for (unsigned int i = 0; i < stringlist.size(); i++) {
+        int pos = StringUtil::getStringBetween(out, stringlist[i].c_str(), '(', ')');
+        int total_pos = 0;
+        if (pos < 0) {
+            showError(i + 1, -pos, stringlist[i]);
+            continue;
+        }
+        cerr << "string=" << stringlist[i] << endl;
+        cerr << "pos=" << pos << " ::" << out;
+        total_pos += pos;
+        pos = StringUtil::getStringBetween(out, stringlist[i].c_str() + total_pos,
+            '{', '}');
+        if (pos <= 0) {
+            pos = -pos;
+            showError(i + 1, total_pos + pos, stringlist[i]);
+            continue;
+        }
+        cerr << "::" << out << "::" << endl;
+        total_pos += pos;
+    }
+}
+
+int main()
+{
+    try {
+        string replaceme = "something((((otherthanthis)could[be]changed";
+
+        string newstr = StringUtil::replaceString(replaceme, "(", "\\(");
+
+        newstr = StringUtil::replaceString(newstr, ")", "\\)");
+        newstr = StringUtil::replaceString(newstr, "be", "not be");
+
+        cerr << "original =  " << replaceme << endl;
+        cerr << "newstr   =  " << newstr << endl;
+    } catch (std::exception& e) {
+        cerr << "exception: " << e.what() << endl;
+    }
+    cerr << "Testing stringtok." << endl;
+    testStringtok();
+    cerr << "Testing expandFilename." << endl;
+    testExpandFilename();
+    cerr << "Testing strcasestr." << endl;
+    testStrcasestr();
 }

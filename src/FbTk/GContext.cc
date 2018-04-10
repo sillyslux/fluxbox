@@ -29,55 +29,61 @@
 
 namespace FbTk {
 
-Display *GContext::m_display = 0;
+    Display* GContext::m_display = 0;
 
-GContext::GContext(const FbTk::FbDrawable &drawable)
-    : m_gc(XCreateGC(drawable.display(), drawable.drawable(), 0, 0)) {
+    GContext::GContext(const FbTk::FbDrawable& drawable)
+        : m_gc(XCreateGC(drawable.display(), drawable.drawable(), 0, 0))
+    {
 
-  if (m_display == 0)
-    m_display = drawable.display();
+        if (m_display == 0)
+            m_display = drawable.display();
 
-  setGraphicsExposure(false);
-}
+        setGraphicsExposure(false);
+    }
 
-GContext::GContext(Drawable drawable)
-    : m_gc(XCreateGC(m_display != 0 ? m_display
-                                    : FbTk::App::instance()->display(),
-                     drawable, 0, 0)) {
-  if (m_display == 0)
-    m_display = FbTk::App::instance()->display();
-  setGraphicsExposure(false);
-}
+    GContext::GContext(Drawable drawable)
+        : m_gc(XCreateGC(m_display != 0 ? m_display
+                                        : FbTk::App::instance()->display(),
+              drawable, 0, 0))
+    {
+        if (m_display == 0)
+            m_display = FbTk::App::instance()->display();
+        setGraphicsExposure(false);
+    }
 
-GContext::GContext(Drawable d, const GContext &gc)
-    : m_gc(XCreateGC(m_display != 0 ? m_display
-                                    : FbTk::App::instance()->display(),
-                     d, 0, 0)) {
-  if (m_display == 0)
-    m_display = FbTk::App::instance()->display();
-  setGraphicsExposure(false);
-  copy(gc);
-}
+    GContext::GContext(Drawable d, const GContext& gc)
+        : m_gc(XCreateGC(m_display != 0 ? m_display
+                                        : FbTk::App::instance()->display(),
+              d, 0, 0))
+    {
+        if (m_display == 0)
+            m_display = FbTk::App::instance()->display();
+        setGraphicsExposure(false);
+        copy(gc);
+    }
 
-GContext::~GContext() {
-  if (m_gc)
-    XFreeGC(m_display, m_gc);
-}
+    GContext::~GContext()
+    {
+        if (m_gc)
+            XFreeGC(m_display, m_gc);
+    }
 
-/// not implemented!
-// void GContext::setFont(const FbTk::Font &font) {
-//!! TODO
-//}
-void GContext::copy(GC gc) {
-  // copy gc with mask: all
-  XCopyGC(m_display, gc, ~0, m_gc);
-}
+    /// not implemented!
+    // void GContext::setFont(const FbTk::Font &font) {
+    //!! TODO
+    //}
+    void GContext::copy(GC gc)
+    {
+        // copy gc with mask: all
+        XCopyGC(m_display, gc, ~0, m_gc);
+    }
 
-void GContext::copy(const GContext &gc) {
-  // copy X gc
-  copy(gc.gc());
+    void GContext::copy(const GContext& gc)
+    {
+        // copy X gc
+        copy(gc.gc());
 
-  //!! TODO: copy our extended gcontext
-}
+        //!! TODO: copy our extended gcontext
+    }
 
 } // end namespace FbTk

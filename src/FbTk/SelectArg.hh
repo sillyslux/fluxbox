@@ -26,9 +26,9 @@
 
 namespace FbTk {
 
-namespace STLUtil {
+    namespace STLUtil {
 
-/**
+        /**
  * Selects a single argument from a maximum set of three arguments at compile
  * time.
  * For example:
@@ -46,28 +46,31 @@ namespace STLUtil {
  * SelectArg<2>()(10); // returns 10
  * \endcode
  */
-template <int N> struct SelectArg {
+        template <int N>
+        struct SelectArg {
 
-  template <typename Type1, typename Type2>
-  typename IfThenElse<N == 0, Type1, Type2>::ResultType &operator()(Type1 &a,
-                                                                    Type2 &b) {
-    return IfThenElse<N == 0, Type1, Type2>()(a, b);
-  }
+            template <typename Type1, typename Type2>
+            typename IfThenElse<N == 0, Type1, Type2>::ResultType& operator()(Type1& a,
+                Type2& b)
+            {
+                return IfThenElse<N == 0, Type1, Type2>()(a, b);
+            }
 
-  template <typename Type1, typename Type2, typename Type3>
-  typename IfThenElse<
-      N == 0, Type1,
-      typename IfThenElse<N == 1, Type2, Type3>::ResultType>::ResultType &
-  operator()(Type1 &a, Type2 &b, Type3 &c) {
-    return IfThenElse<N == 0, Type1,
-                      typename IfThenElse<N == 1, Type2, Type3>::ResultType>()(
-        a, IfThenElse<N == 1, Type2, Type3>()(b, c));
-  }
+            template <typename Type1, typename Type2, typename Type3>
+            typename IfThenElse<N == 0, Type1,
+                typename IfThenElse<N == 1, Type2, Type3>::ResultType>::ResultType&
+            operator()(Type1& a, Type2& b, Type3& c)
+            {
+                return IfThenElse<N == 0, Type1,
+                    typename IfThenElse<N == 1, Type2, Type3>::ResultType>()(
+                    a, IfThenElse<N == 1, Type2, Type3>()(b, c));
+            }
 
-  template <typename Type1> Type1 operator()(Type1 a) { return a; }
-};
+            template <typename Type1>
+            Type1 operator()(Type1 a) { return a; }
+        };
 
-} // end namespace STLUtil
+    } // end namespace STLUtil
 } // end namespace FbTk
 
 #endif // FBTK_STLUTIL_SELECT_ARG_HH

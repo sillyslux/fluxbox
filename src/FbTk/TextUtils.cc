@@ -28,93 +28,98 @@
 
 namespace {
 
-// calcs longest substring of 'text', fitting into 'n_pixels'
-// 'text_len' is an in-out parameter
-// 'text_width' is out parameter
-void maxTextLength(int n_pixels, const FbTk::Font &font, const char *const text,
-                   unsigned int &text_len, int &text_width) {
+    // calcs longest substring of 'text', fitting into 'n_pixels'
+    // 'text_len' is an in-out parameter
+    // 'text_width' is out parameter
+    void maxTextLength(int n_pixels, const FbTk::Font& font, const char* const text,
+        unsigned int& text_len, int& text_width)
+    {
 
-  text_width = font.textWidth(text, text_len);
+        text_width = font.textWidth(text, text_len);
 
-  // rendered text exceeds n_pixels. calculate 'len' to cut off 'text'.
-  if (text_width > n_pixels) {
+        // rendered text exceeds n_pixels. calculate 'len' to cut off 'text'.
+        if (text_width > n_pixels) {
 
-    // there is less room for thicker glyphs than for
-    // thin glyphs. 'text' contains usually a good mix of both. to decide
-    // upon where we cut off glyphs from 'text', we do a binary search
-    // over 'text' to find the optimal length that fits into 'n_pixels'.
-    //
-    // by assuming a text that consists of only thick glyphs ("WW") and
-    // a text that consist of only thin glyphs (".") we find a good
-    // start to binary search:
-    //
-    //                +---right
-    //  [...........|.R ]
-    //  [WWWWWWWWWWL|   ]
-    //             +------left
-    //              n_pixels
+            // there is less room for thicker glyphs than for
+            // thin glyphs. 'text' contains usually a good mix of both. to decide
+            // upon where we cut off glyphs from 'text', we do a binary search
+            // over 'text' to find the optimal length that fits into 'n_pixels'.
+            //
+            // by assuming a text that consists of only thick glyphs ("WW") and
+            // a text that consist of only thin glyphs (".") we find a good
+            // start to binary search:
+            //
+            //                +---right
+            //  [...........|.R ]
+            //  [WWWWWWWWWWL|   ]
+            //             +------left
+            //              n_pixels
 
-    int right = n_pixels / (font.textWidth(".", 1) + 1);
-    int left = n_pixels / (font.textWidth("WW", 2) + 1);
-    int middle;
+            int right = n_pixels / (font.textWidth(".", 1) + 1);
+            int left = n_pixels / (font.textWidth("WW", 2) + 1);
+            int middle;
 
-    // binary search for longest substring fitting into 'max_width' pixels
-    for (; left < (right - 1);) {
+            // binary search for longest substring fitting into 'max_width' pixels
+            for (; left < (right - 1);) {
 
-      middle = left + ((right - left) / 2);
-      text_width = font.textWidth(text, middle);
+                middle = left + ((right - left) / 2);
+                text_width = font.textWidth(text, middle);
 
-      if (text_width < n_pixels) {
-        left = middle;
-      } else {
-        right = middle;
-      }
+                if (text_width < n_pixels) {
+                    left = middle;
+                } else {
+                    right = middle;
+                }
+            }
+
+            text_len = left;
+        }
     }
-
-    text_len = left;
-  }
-}
 }
 
 namespace FbTk {
 
-int doAlignment(int n_pixels, int bevel, FbTk::Justify justify,
-                const FbTk::Font &font, const char *const text,
-                unsigned int textlen, unsigned int &newlen) {
+    int doAlignment(int n_pixels, int bevel, FbTk::Justify justify,
+        const FbTk::Font& font, const char* const text,
+        unsigned int textlen, unsigned int& newlen)
+    {
 
-  if (text == 0 || textlen == 0)
-    return 0;
+        if (text == 0 || textlen == 0)
+            return 0;
 
-  int text_width;
+        int text_width;
 
-  maxTextLength(n_pixels - bevel, font, text, textlen, text_width);
+        maxTextLength(n_pixels - bevel, font, text, textlen, text_width);
 
-  newlen = textlen;
+        newlen = textlen;
 
-  if (justify == FbTk::RIGHT) {
-    return n_pixels - text_width;
-  } else if (justify == FbTk::CENTER) {
-    return (n_pixels - text_width + bevel) / 2;
-  }
+        if (justify == FbTk::RIGHT) {
+            return n_pixels - text_width;
+        } else if (justify == FbTk::CENTER) {
+            return (n_pixels - text_width + bevel) / 2;
+        }
 
-  return bevel;
-}
+        return bevel;
+    }
 
-/// specialization for Justify
-template <> void ThemeItem<FbTk::Justify>::setDefaultValue() { m_value = LEFT; }
+    /// specialization for Justify
+    template <>
+    void ThemeItem<FbTk::Justify>::setDefaultValue() { m_value = LEFT; }
 
-template <> void ThemeItem<FbTk::Justify>::setFromString(const char *value) {
-  if (strcasecmp("center", value) == 0)
-    m_value = FbTk::CENTER;
-  else if (strcasecmp("right", value) == 0)
-    m_value = FbTk::RIGHT;
-  else // default
-    setDefaultValue();
-}
+    template <>
+    void ThemeItem<FbTk::Justify>::setFromString(const char* value)
+    {
+        if (strcasecmp("center", value) == 0)
+            m_value = FbTk::CENTER;
+        else if (strcasecmp("right", value) == 0)
+            m_value = FbTk::RIGHT;
+        else // default
+            setDefaultValue();
+    }
 
-// do nothing
-template <>
-void ThemeItem<FbTk::Justify>::load(const std::string *name,
-                                    const std::string *altname) {}
+    // do nothing
+    template <>
+    void ThemeItem<FbTk::Justify>::load(const std::string* name,
+        const std::string* altname) {}
 
 } // end namespace FbTk

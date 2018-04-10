@@ -30,69 +30,77 @@
 
 namespace FbTk {
 
-/// executes a Command<bool> and uses the result to decide what to do
-class IfCommand : public Command<void> {
-public:
-  IfCommand(RefCount<Command<bool>> &cond, RefCount<Command<void>> &t,
-            RefCount<Command<void>> &f)
-      : m_cond(cond), m_t(t), m_f(f) {}
-  void execute() {
-    if (m_cond->execute()) {
-      if (m_t)
-        m_t->execute();
-    } else if (m_f)
-      m_f->execute();
-  }
-  static Command<void> *parse(const std::string &cmd, const std::string &args,
-                              bool trusted);
+    /// executes a Command<bool> and uses the result to decide what to do
+    class IfCommand : public Command<void> {
+    public:
+        IfCommand(RefCount<Command<bool> >& cond, RefCount<Command<void> >& t,
+            RefCount<Command<void> >& f)
+            : m_cond(cond)
+            , m_t(t)
+            , m_f(f)
+        {
+        }
+        void execute()
+        {
+            if (m_cond->execute()) {
+                if (m_t)
+                    m_t->execute();
+            } else if (m_f)
+                m_f->execute();
+        }
+        static Command<void>* parse(const std::string& cmd, const std::string& args,
+            bool trusted);
 
-private:
-  RefCount<Command<bool>> m_cond;
-  RefCount<Command<void>> m_t, m_f;
-};
+    private:
+        RefCount<Command<bool> > m_cond;
+        RefCount<Command<void> > m_t, m_f;
+    };
 
-/// executes a list of Command<bool>s until one is true
-class OrCommand : public Command<bool> {
-public:
-  void add(RefCount<Command<bool>> &com);
-  size_t size() const;
-  bool execute();
+    /// executes a list of Command<bool>s until one is true
+    class OrCommand : public Command<bool> {
+    public:
+        void add(RefCount<Command<bool> >& com);
+        size_t size() const;
+        bool execute();
 
-private:
-  std::vector<RefCount<Command<bool>>> m_commandlist;
-};
+    private:
+        std::vector<RefCount<Command<bool> > > m_commandlist;
+    };
 
-/// executes a list of Command<bool>s until one is false
-class AndCommand : public Command<bool> {
-public:
-  void add(RefCount<Command<bool>> &com);
-  size_t size() const;
-  bool execute();
+    /// executes a list of Command<bool>s until one is false
+    class AndCommand : public Command<bool> {
+    public:
+        void add(RefCount<Command<bool> >& com);
+        size_t size() const;
+        bool execute();
 
-private:
-  std::vector<RefCount<Command<bool>>> m_commandlist;
-};
+    private:
+        std::vector<RefCount<Command<bool> > > m_commandlist;
+    };
 
-/// executes a list of Command<bool>s, returning the parity
-class XorCommand : public Command<bool> {
-public:
-  void add(RefCount<Command<bool>> &com);
-  size_t size() const;
-  bool execute();
+    /// executes a list of Command<bool>s, returning the parity
+    class XorCommand : public Command<bool> {
+    public:
+        void add(RefCount<Command<bool> >& com);
+        size_t size() const;
+        bool execute();
 
-private:
-  std::vector<RefCount<Command<bool>>> m_commandlist;
-};
+    private:
+        std::vector<RefCount<Command<bool> > > m_commandlist;
+    };
 
-/// executes a Command<bool> and returns the negation
-class NotCommand : public Command<bool> {
-public:
-  NotCommand(RefCount<Command<bool>> &com) : m_command(com) {}
-  bool execute() { return !m_command->execute(); }
+    /// executes a Command<bool> and returns the negation
+    class NotCommand : public Command<bool> {
+    public:
+        NotCommand(RefCount<Command<bool> >& com)
+            : m_command(com)
+        {
+        }
+        bool execute() { return !m_command->execute(); }
 
-private:
-  RefCount<Command<bool>> m_command;
-};
+    private:
+        RefCount<Command<bool> > m_command;
+    };
 
 } // end namespace FbTk
 

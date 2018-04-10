@@ -28,57 +28,57 @@
 
 namespace FbTk {
 
-class MultLayers;
-class LayerItem;
+    class MultLayers;
+    class LayerItem;
 
-class Layer {
-public:
-  Layer(MultLayers &manager, int layernum);
-  ~Layer();
+    class Layer {
+    public:
+        Layer(MultLayers& manager, int layernum);
+        ~Layer();
 
-  typedef std::list<LayerItem *> ItemList;
-  typedef std::list<LayerItem *>::iterator iterator;
+        typedef std::list<LayerItem*> ItemList;
+        typedef std::list<LayerItem*>::iterator iterator;
 
-  // typedef std::list<LayerItem *>::reverse_iterator reverse_iterator;
+        // typedef std::list<LayerItem *>::reverse_iterator reverse_iterator;
 
-  void setLayerNum(int layernum) { m_layernum = layernum; };
-  int getLayerNum() const { return m_layernum; };
-  // Put all items on the same layer (called when layer item added to)
-  void alignItem(LayerItem &item);
-  int countWindows();
-  void stackBelowItem(LayerItem &item, LayerItem *above);
-  LayerItem *getLowestItem();
-  const ItemList &itemList() const { return m_items; }
-  ItemList &itemList() { return m_items; }
+        void setLayerNum(int layernum) { m_layernum = layernum; };
+        int getLayerNum() const { return m_layernum; };
+        // Put all items on the same layer (called when layer item added to)
+        void alignItem(LayerItem& item);
+        int countWindows();
+        void stackBelowItem(LayerItem& item, LayerItem* above);
+        LayerItem* getLowestItem();
+        const ItemList& itemList() const { return m_items; }
+        ItemList& itemList() { return m_items; }
 
-  // we redefine these as Layer has special optimisations, and X restacking
-  // needs
-  iterator insert(LayerItem &item, unsigned int pos = 0);
-  void remove(LayerItem &item);
+        // we redefine these as Layer has special optimisations, and X restacking
+        // needs
+        iterator insert(LayerItem& item, unsigned int pos = 0);
+        void remove(LayerItem& item);
 
-  // bring to top of layer
-  void raise(LayerItem &item);
-  void lower(LayerItem &item);
+        // bring to top of layer
+        void raise(LayerItem& item);
+        void lower(LayerItem& item);
 
-  // raise it, but don't make it permanent (i.e. restack will revert)
-  void tempRaise(LayerItem &item);
+        // raise it, but don't make it permanent (i.e. restack will revert)
+        void tempRaise(LayerItem& item);
 
-  // send to next layer up
-  void raiseLayer(LayerItem &item);
-  void lowerLayer(LayerItem &item);
-  void moveToLayer(LayerItem &item, int layernum);
+        // send to next layer up
+        void raiseLayer(LayerItem& item);
+        void lowerLayer(LayerItem& item);
+        void moveToLayer(LayerItem& item, int layernum);
 
-  static void restack(const std::vector<Layer *> &layers);
+        static void restack(const std::vector<Layer*>& layers);
 
-private:
-  void restack();
-  void restackAndTempRaise(LayerItem &item);
+    private:
+        void restack();
+        void restackAndTempRaise(LayerItem& item);
 
-  MultLayers &m_manager;
-  int m_layernum;
-  bool m_needs_restack;
-  ItemList m_items;
-};
+        MultLayers& m_manager;
+        int m_layernum;
+        bool m_needs_restack;
+        ItemList m_items;
+    };
 
 } // namespace FbTk
 

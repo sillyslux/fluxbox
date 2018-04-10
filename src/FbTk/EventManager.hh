@@ -28,46 +28,46 @@
 
 namespace FbTk {
 
-class FbWindow;
-class EventHandler;
+    class FbWindow;
+    class EventHandler;
 
-/**
+    /**
    singleton mediator for EventHandlers
 */
-class EventManager {
-public:
-  static EventManager *instance();
+    class EventManager {
+    public:
+        static EventManager* instance();
 
-  void handleEvent(XEvent &ev);
-  // adds a parent to listen to the childrens events
-  void addParent(EventHandler &ev, const FbWindow &parent);
-  void add(EventHandler &ev, const FbWindow &win);
-  void remove(const FbWindow &win);
-  void add(EventHandler &ev, Window win) { registerEventHandler(ev, win); }
-  void remove(Window win) { unregisterEventHandler(win); }
+        void handleEvent(XEvent& ev);
+        // adds a parent to listen to the childrens events
+        void addParent(EventHandler& ev, const FbWindow& parent);
+        void add(EventHandler& ev, const FbWindow& win);
+        void remove(const FbWindow& win);
+        void add(EventHandler& ev, Window win) { registerEventHandler(ev, win); }
+        void remove(Window win) { unregisterEventHandler(win); }
 
-  bool grabKeyboard(Window win);
-  void ungrabKeyboard();
+        bool grabKeyboard(Window win);
+        void ungrabKeyboard();
 
-  EventHandler *find(Window win);
+        EventHandler* find(Window win);
 
-  // Some events have the parent window as the xany.window
-  // This function always returns the actual window member of the event
-  // structure
-  static Window getEventWindow(XEvent &ev);
+        // Some events have the parent window as the xany.window
+        // This function always returns the actual window member of the event
+        // structure
+        static Window getEventWindow(XEvent& ev);
 
-  void registerEventHandler(EventHandler &ev, Window win);
-  void unregisterEventHandler(Window win);
+        void registerEventHandler(EventHandler& ev, Window win);
+        void unregisterEventHandler(Window win);
 
-private:
-  EventManager() {}
-  ~EventManager();
-  void dispatch(Window win, XEvent &event, bool parent = false);
+    private:
+        EventManager() {}
+        ~EventManager();
+        void dispatch(Window win, XEvent& event, bool parent = false);
 
-  typedef std::map<Window, EventHandler *> EventHandlerMap;
-  EventHandlerMap m_eventhandlers;
-  EventHandlerMap m_parent;
-};
+        typedef std::map<Window, EventHandler*> EventHandlerMap;
+        EventHandlerMap m_eventhandlers;
+        EventHandlerMap m_parent;
+    };
 
 } // end namespace FbTk
 

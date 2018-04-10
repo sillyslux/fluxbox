@@ -29,23 +29,23 @@
 class ButtonTheme;
 
 namespace FbTk {
-class Button;
-class ImageControl;
+    class Button;
+    class ImageControl;
 }
 
 class ButtonTool : public GenericTool {
 public:
-  ButtonTool(FbTk::Button *button, ToolbarItem::Type type,
-             FbTk::ThemeProxy<ButtonTheme> &theme,
-             FbTk::ImageControl &img_ctrl);
-  virtual ~ButtonTool();
-  void setOrientation(FbTk::Orientation orient);
+    ButtonTool(FbTk::Button* button, ToolbarItem::Type type,
+        FbTk::ThemeProxy<ButtonTheme>& theme,
+        FbTk::ImageControl& img_ctrl);
+    virtual ~ButtonTool();
+    void setOrientation(FbTk::Orientation orient);
 
 protected:
-  void renderTheme(int alpha);
-  void updateSizing();
-  Pixmap m_cache_pm, m_cache_pressed_pm;
-  FbTk::ImageControl &m_image_ctrl;
+    void renderTheme(int alpha);
+    void updateSizing();
+    Pixmap m_cache_pm, m_cache_pressed_pm;
+    FbTk::ImageControl& m_image_ctrl;
 };
 
 #endif // BUTTONTOOL_HH

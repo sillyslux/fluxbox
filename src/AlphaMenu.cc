@@ -32,64 +32,63 @@
 #include "FbTk/I18n.hh"
 #include "Window.hh"
 
-AlphaMenu::AlphaMenu(FbTk::ThemeProxy<FbTk::MenuTheme> &tm,
-                     FbTk::ImageControl &imgctrl, FbTk::Layer &layer)
-    : ToggleMenu(tm, imgctrl, layer) {
+AlphaMenu::AlphaMenu(FbTk::ThemeProxy<FbTk::MenuTheme>& tm,
+    FbTk::ImageControl& imgctrl, FbTk::Layer& layer)
+    : ToggleMenu(tm, imgctrl, layer)
+{
 
-  static WindowMenuAccessor<int> m_focused_alpha(
-      (WindowMenuAccessor<int>::Getter) & FluxboxWindow::getFocusedAlpha,
-      (WindowMenuAccessor<int>::Setter) & FluxboxWindow::setFocusedAlpha, 255);
-  static WindowMenuAccessor<int> m_unfocused_alpha(
-      (WindowMenuAccessor<int>::Getter) & FluxboxWindow::getUnfocusedAlpha,
-      (WindowMenuAccessor<int>::Setter) & FluxboxWindow::setUnfocusedAlpha,
-      255);
+    static WindowMenuAccessor<int> m_focused_alpha(
+        (WindowMenuAccessor<int>::Getter) & FluxboxWindow::getFocusedAlpha,
+        (WindowMenuAccessor<int>::Setter) & FluxboxWindow::setFocusedAlpha, 255);
+    static WindowMenuAccessor<int> m_unfocused_alpha(
+        (WindowMenuAccessor<int>::Getter) & FluxboxWindow::getUnfocusedAlpha,
+        (WindowMenuAccessor<int>::Setter) & FluxboxWindow::setUnfocusedAlpha,
+        255);
 
-  _FB_USES_NLS;
+    _FB_USES_NLS;
 
-  // build menu...
+    // build menu...
 
-  const FbTk::FbString focused_alpha_label =
-      _FB_XTEXT(Configmenu, FocusedAlpha, "Focused Window Alpha",
-                "Transparency level of the focused window");
+    const FbTk::FbString focused_alpha_label = _FB_XTEXT(Configmenu, FocusedAlpha, "Focused Window Alpha",
+        "Transparency level of the focused window");
 
-  m_focused_alpha_item = new FbTk::IntMenuItem(focused_alpha_label,
-                                               m_focused_alpha, 0, 255, *this);
-  insertItem(m_focused_alpha_item);
+    m_focused_alpha_item = new FbTk::IntMenuItem(focused_alpha_label,
+        m_focused_alpha, 0, 255, *this);
+    insertItem(m_focused_alpha_item);
 
-  const FbTk::FbString unfocused_alpha_label =
-      _FB_XTEXT(Configmenu, UnfocusedAlpha, "Unfocused Window Alpha",
-                "Transparency level of unfocused windows");
+    const FbTk::FbString unfocused_alpha_label = _FB_XTEXT(Configmenu, UnfocusedAlpha, "Unfocused Window Alpha",
+        "Transparency level of unfocused windows");
 
-  m_unfocused_alpha_item = new FbTk::IntMenuItem(
-      unfocused_alpha_label, m_unfocused_alpha, 0, 255, *this);
-  insertItem(m_unfocused_alpha_item);
+    m_unfocused_alpha_item = new FbTk::IntMenuItem(
+        unfocused_alpha_label, m_unfocused_alpha, 0, 255, *this);
+    insertItem(m_unfocused_alpha_item);
 
-  const FbTk::FbString usedefault_label =
-      _FB_XTEXT(Windowmenu, DefaultAlpha, "Use Defaults",
-                "Default transparency settings for this window");
-  FbTk::MenuItem *usedefault_item =
-      new AlphaMenuSelectItem(usedefault_label, *this);
-  insertItem(usedefault_item);
+    const FbTk::FbString usedefault_label = _FB_XTEXT(Windowmenu, DefaultAlpha, "Use Defaults",
+        "Default transparency settings for this window");
+    FbTk::MenuItem* usedefault_item = new AlphaMenuSelectItem(usedefault_label, *this);
+    insertItem(usedefault_item);
 
-  updateMenu();
+    updateMenu();
 }
 
-void AlphaMenu::move(int x, int y) {
-  FbTk::Menu::move(x, y);
+void AlphaMenu::move(int x, int y)
+{
+    FbTk::Menu::move(x, y);
 
-  if (isVisible()) {
+    if (isVisible()) {
+        m_focused_alpha_item->updateLabel();
+        m_unfocused_alpha_item->updateLabel();
+        frameWindow().updateBackground(false);
+        FbTk::Menu::clearWindow();
+    }
+}
+
+void AlphaMenu::show()
+{
     m_focused_alpha_item->updateLabel();
     m_unfocused_alpha_item->updateLabel();
     frameWindow().updateBackground(false);
     FbTk::Menu::clearWindow();
-  }
-}
 
-void AlphaMenu::show() {
-  m_focused_alpha_item->updateLabel();
-  m_unfocused_alpha_item->updateLabel();
-  frameWindow().updateBackground(false);
-  FbTk::Menu::clearWindow();
-
-  FbTk::Menu::show();
+    FbTk::Menu::show();
 }

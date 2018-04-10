@@ -27,26 +27,26 @@
 
 namespace FbTk {
 
-/// Handles commands for the specified numbers of buttons
-class MultiButtonMenuItem : public FbTk::MenuItem {
-public:
-  MultiButtonMenuItem(int buttons, const FbTk::BiDiString &label);
-  MultiButtonMenuItem(int buttons, const FbTk::BiDiString &label,
-                      Menu *submenu);
-  virtual ~MultiButtonMenuItem();
-  /// sets command to specified button
-  void setCommand(int button, FbTk::RefCount<FbTk::Command<void>> &cmd);
-  /// executes command for the button click
-  virtual void click(int button, int time, unsigned int mods);
-  /// @return number of buttons this instance handles
-  unsigned int buttons() const { return m_buttons; }
+    /// Handles commands for the specified numbers of buttons
+    class MultiButtonMenuItem : public FbTk::MenuItem {
+    public:
+        MultiButtonMenuItem(int buttons, const FbTk::BiDiString& label);
+        MultiButtonMenuItem(int buttons, const FbTk::BiDiString& label,
+            Menu* submenu);
+        virtual ~MultiButtonMenuItem();
+        /// sets command to specified button
+        void setCommand(int button, FbTk::RefCount<FbTk::Command<void> >& cmd);
+        /// executes command for the button click
+        virtual void click(int button, int time, unsigned int mods);
+        /// @return number of buttons this instance handles
+        unsigned int buttons() const { return m_buttons; }
 
-private:
-  void init(int buttons);
+    private:
+        void init(int buttons);
 
-  FbTk::RefCount<FbTk::Command<void>> *m_button_exe;
-  unsigned int m_buttons;
-};
+        FbTk::RefCount<FbTk::Command<void> >* m_button_exe;
+        unsigned int m_buttons;
+    };
 
 } // end namespace FbTk
 

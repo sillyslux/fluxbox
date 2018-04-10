@@ -28,7 +28,7 @@
 #include <memory>
 
 namespace FbTk {
-class Menu;
+    class Menu;
 }
 class BScreen;
 
@@ -42,52 +42,52 @@ class BScreen;
  */
 class ScreenPlacement : public PlacementStrategy {
 public:
-  enum PlacementPolicy {
-    ROWSMARTPLACEMENT,
-    COLSMARTPLACEMENT,
-    COLMINOVERLAPPLACEMENT,
-    ROWMINOVERLAPPLACEMENT,
-    CASCADEPLACEMENT,
-    UNDERMOUSEPLACEMENT,
-    AUTOTABPLACEMENT
-  };
+    enum PlacementPolicy {
+        ROWSMARTPLACEMENT,
+        COLSMARTPLACEMENT,
+        COLMINOVERLAPPLACEMENT,
+        ROWMINOVERLAPPLACEMENT,
+        CASCADEPLACEMENT,
+        UNDERMOUSEPLACEMENT,
+        AUTOTABPLACEMENT
+    };
 
-  enum RowDirection {
-    LEFTRIGHT, ///< from left to right
-    RIGHTLEFT  ///< from right to left
-  };
-  enum ColumnDirection {
-    TOPBOTTOM, ///< from top to bottom
-    BOTTOMTOP  ///< from bottom to top
-  };
+    enum RowDirection {
+        LEFTRIGHT, ///< from left to right
+        RIGHTLEFT ///< from right to left
+    };
+    enum ColumnDirection {
+        TOPBOTTOM, ///< from top to bottom
+        BOTTOMTOP ///< from bottom to top
+    };
 
-  explicit ScreenPlacement(BScreen &screen);
+    explicit ScreenPlacement(BScreen& screen);
 
-  virtual ~ScreenPlacement() {}
-  /// placeWindow is guaranteed to succeed, ignore return value
-  /// @return true
-  bool placeWindow(const FluxboxWindow &window, int head, int &place_x,
-                   int &place_y);
+    virtual ~ScreenPlacement() {}
+    /// placeWindow is guaranteed to succeed, ignore return value
+    /// @return true
+    bool placeWindow(const FluxboxWindow& window, int head, int& place_x,
+        int& place_y);
 
-  // places and show 'menu' at 'x','y'
-  void placeAndShowMenu(FbTk::Menu &menu, int x, int y, bool respect_struts);
+    // places and show 'menu' at 'x','y'
+    void placeAndShowMenu(FbTk::Menu& menu, int x, int y, bool respect_struts);
 
-  PlacementPolicy placementPolicy() const { return *m_placement_policy; }
-  RowDirection rowDirection() const { return *m_row_direction; }
-  ColumnDirection colDirection() const { return *m_col_direction; }
+    PlacementPolicy placementPolicy() const { return *m_placement_policy; }
+    RowDirection rowDirection() const { return *m_row_direction; }
+    ColumnDirection colDirection() const { return *m_col_direction; }
 
 private:
-  FbTk::Resource<RowDirection> m_row_direction; ///< row direction resource
-  FbTk::Resource<ColumnDirection>
-      m_col_direction; ///< column direction resource
-  FbTk::Resource<PlacementPolicy>
-      m_placement_policy;       ///< placement policy resource
-  PlacementPolicy m_old_policy; ///< holds old policy, used to determine if
-                                /// resources has changed
-  std::unique_ptr<PlacementStrategy> m_strategy; ///< main strategy
-  std::unique_ptr<PlacementStrategy>
-      m_fallback_strategy; ///< a fallback strategy if the main strategy fails
-  BScreen &m_screen;
+    FbTk::Resource<RowDirection> m_row_direction; ///< row direction resource
+    FbTk::Resource<ColumnDirection>
+        m_col_direction; ///< column direction resource
+    FbTk::Resource<PlacementPolicy>
+        m_placement_policy; ///< placement policy resource
+    PlacementPolicy m_old_policy; ///< holds old policy, used to determine if
+    /// resources has changed
+    std::unique_ptr<PlacementStrategy> m_strategy; ///< main strategy
+    std::unique_ptr<PlacementStrategy>
+        m_fallback_strategy; ///< a fallback strategy if the main strategy fails
+    BScreen& m_screen;
 };
 
 #endif // SCREENPLACEMENT_HH

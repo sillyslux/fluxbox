@@ -30,27 +30,30 @@
  */
 class ToggleMenu : public FbMenu {
 public:
-  ToggleMenu(class FbTk::ThemeProxy<FbTk::MenuTheme> &tm,
-             FbTk::ImageControl &imgctrl, FbTk::Layer &layer)
-      : FbMenu(tm, imgctrl, layer) {}
-
-  virtual ~ToggleMenu() {}
-  void buttonReleaseEvent(XButtonEvent &ev) {
-
-    // do redraw of other items
-    FbMenu::buttonReleaseEvent(ev);
-
-    // since this menu consist of toggle menu items
-    // that relate to each other, we need to redraw
-    // the items each time we get a button release event
-    // so that the last toggled item gets redrawn as
-    // not toggled.
-    if (ev.window == frameWindow()) {
-      // force full foreground update
-      frameWindow().updateBackground(false);
+    ToggleMenu(class FbTk::ThemeProxy<FbTk::MenuTheme>& tm,
+        FbTk::ImageControl& imgctrl, FbTk::Layer& layer)
+        : FbMenu(tm, imgctrl, layer)
+    {
     }
-    clearWindow();
-  }
+
+    virtual ~ToggleMenu() {}
+    void buttonReleaseEvent(XButtonEvent& ev)
+    {
+
+        // do redraw of other items
+        FbMenu::buttonReleaseEvent(ev);
+
+        // since this menu consist of toggle menu items
+        // that relate to each other, we need to redraw
+        // the items each time we get a button release event
+        // so that the last toggled item gets redrawn as
+        // not toggled.
+        if (ev.window == frameWindow()) {
+            // force full foreground update
+            frameWindow().updateBackground(false);
+        }
+        clearWindow();
+    }
 };
 
 #endif // TOGGLEMENU_HH

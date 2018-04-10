@@ -35,18 +35,18 @@ class BScreen;
  */
 class SendToMenu : public FbMenu, private FbTk::SignalTracker {
 public:
-  /// @param screen the screen on which this menu should be created on.
-  explicit SendToMenu(BScreen &screen);
-  virtual ~SendToMenu();
-  /// @see FbTk::Menu
-  void show();
+    /// @param screen the screen on which this menu should be created on.
+    explicit SendToMenu(BScreen& screen);
+    virtual ~SendToMenu();
+    /// @see FbTk::Menu
+    void show();
 
 private:
-  /// workspace count changed on screen
-  void rebuildMenuForScreen(BScreen &screen) { rebuildMenu(); }
+    /// workspace count changed on screen
+    void rebuildMenuForScreen(BScreen& screen) { rebuildMenu(); }
 
-  /// Rebuild the menu from scratch.
-  void rebuildMenu();
+    /// Rebuild the menu from scratch.
+    void rebuildMenu();
 };
 
 #endif // SENDTOMENU_HH

@@ -32,65 +32,65 @@
 
 // Some defines to help out
 #ifdef NLS
-#define _FB_USES_NLS FbTk::I18n &i18n = FbTk::I18n::instance()
+#define _FB_USES_NLS FbTk::I18n& i18n = FbTk::I18n::instance()
 
 // ignore the description, it's for helping translators
 
 // Text for X
-#define _FB_XTEXT(msgset, msgid, default_text, description)                    \
-  i18n.getMessage(FBNLS::msgset##Set, FBNLS::msgset##msgid, default_text, true)
+#define _FB_XTEXT(msgset, msgid, default_text, description) \
+    i18n.getMessage(FBNLS::msgset##Set, FBNLS::msgset##msgid, default_text, true)
 
 // Text for console
-#define _FB_CONSOLETEXT(msgset, msgid, default_text, description)              \
-  i18n.getMessage(FBNLS::msgset##Set, FBNLS::msgset##msgid, default_text, false)
+#define _FB_CONSOLETEXT(msgset, msgid, default_text, description) \
+    i18n.getMessage(FBNLS::msgset##Set, FBNLS::msgset##msgid, default_text, false)
 
 // This ensure that FbTk nls stuff is in a kind of namespace of its own
-#define _FBTK_XTEXT(msgset, msgid, default_text, description)                  \
-  i18n.getMessage(FBNLS::FbTk##msgset##Set, FBNLS::FbTk##msgset##msgid,        \
-                  default_text, true)
+#define _FBTK_XTEXT(msgset, msgid, default_text, description)             \
+    i18n.getMessage(FBNLS::FbTk##msgset##Set, FBNLS::FbTk##msgset##msgid, \
+        default_text, true)
 
-#define _FBTK_CONSOLETEXT(msgset, msgid, default_text, description)            \
-  i18n.getMessage(FBNLS::FbTk##msgset##Set, FBNLS::FbTk##msgset##msgid,        \
-                  default_text, false)
+#define _FBTK_CONSOLETEXT(msgset, msgid, default_text, description)       \
+    i18n.getMessage(FBNLS::FbTk##msgset##Set, FBNLS::FbTk##msgset##msgid, \
+        default_text, false)
 
 #else // no NLS
 
 #define _FB_USES_NLS
 
-#define _FB_XTEXT(msgset, msgid, default_text, description)                    \
-  std::string(default_text)
+#define _FB_XTEXT(msgset, msgid, default_text, description) \
+    std::string(default_text)
 
-#define _FB_CONSOLETEXT(msgset, msgid, default_text, description)              \
-  std::string(default_text)
+#define _FB_CONSOLETEXT(msgset, msgid, default_text, description) \
+    std::string(default_text)
 
-#define _FBTK_XTEXT(msgset, msgid, default_text, description)                  \
-  std::string(default_text)
+#define _FBTK_XTEXT(msgset, msgid, default_text, description) \
+    std::string(default_text)
 
-#define _FBTK_CONSOLETEXT(msgset, msgid, default_text, description)            \
-  std::string(default_text)
+#define _FBTK_CONSOLETEXT(msgset, msgid, default_text, description) \
+    std::string(default_text)
 
 #endif // defined NLS
 
 namespace FbTk {
 
-class I18n {
-public:
-  static void init(const char *);
-  static I18n &instance();
+    class I18n {
+    public:
+        static void init(const char*);
+        static I18n& instance();
 
-  const char *getLocale() const { return m_locale.c_str(); }
-  bool multibyte() const { return m_multibyte; }
-  FbString getMessage(int set_number, int message_number,
-                      const char *default_messsage = 0,
-                      bool translate_fb = false) const;
+        const char* getLocale() const { return m_locale.c_str(); }
+        bool multibyte() const { return m_multibyte; }
+        FbString getMessage(int set_number, int message_number,
+            const char* default_messsage = 0,
+            bool translate_fb = false) const;
 
-private:
-  I18n();
-  ~I18n();
-  std::string m_locale;
-  bool m_multibyte;
-  bool m_utf8_translate;
-};
+    private:
+        I18n();
+        ~I18n();
+        std::string m_locale;
+        bool m_multibyte;
+        bool m_utf8_translate;
+    };
 
 } // end namespace FbTk
 

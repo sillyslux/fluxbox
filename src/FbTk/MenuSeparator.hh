@@ -27,14 +27,14 @@
 
 namespace FbTk {
 
-class MenuSeparator : public MenuItem {
-public:
-  virtual void draw(FbDrawable &drawable,
-                    const FbTk::ThemeProxy<MenuTheme> &theme, bool highlight,
-                    bool draw_foreground, bool draw_background, int x, int y,
-                    unsigned int width, unsigned int height) const;
-  virtual bool isEnabled() const { return false; }
-};
+    class MenuSeparator : public MenuItem {
+    public:
+        virtual void draw(FbDrawable& drawable,
+            const FbTk::ThemeProxy<MenuTheme>& theme, bool highlight,
+            bool draw_foreground, bool draw_background, int x, int y,
+            unsigned int width, unsigned int height) const;
+        virtual bool isEnabled() const { return false; }
+    };
 
 } // end namespace FbTk
 

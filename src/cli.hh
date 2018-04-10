@@ -27,21 +27,21 @@
 
 namespace FluxboxCli {
 
-struct Options {
-  Options();
-  int parse(int argc, char **argv);
+    struct Options {
+        Options();
+        int parse(int argc, char** argv);
 
-  std::string session_display;
-  std::string rc_path;
-  std::string rc_file;
-  std::string log_filename;
-  bool xsync;
-};
+        std::string session_display;
+        std::string rc_path;
+        std::string rc_file;
+        std::string log_filename;
+        bool xsync;
+    };
 
-void showInfo(std::ostream &);
+    void showInfo(std::ostream&);
 
-void setupConfigFiles(const std::string &dirname, const std::string &rc);
-void updateConfigFilesIfNeeded(const std::string &rc_file);
+    void setupConfigFiles(const std::string& dirname, const std::string& rc);
+    void updateConfigFilesIfNeeded(const std::string& rc_file);
 }
 
 #endif /* end of include guard: CLI_HH */

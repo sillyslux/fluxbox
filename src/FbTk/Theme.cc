@@ -44,193 +44,208 @@ using std::string;
 
 namespace FbTk {
 
-struct LoadThemeHelper {
-  LoadThemeHelper() : m_tm(ThemeManager::instance()) {}
-  void operator()(Theme *tm) { m_tm.loadTheme(*tm); }
-  void operator()(ThemeManager::ThemeList &tmlist) {
+    struct LoadThemeHelper {
+        LoadThemeHelper()
+            : m_tm(ThemeManager::instance())
+        {
+        }
+        void operator()(Theme* tm) { m_tm.loadTheme(*tm); }
+        void operator()(ThemeManager::ThemeList& tmlist)
+        {
 
-    STLUtil::forAll(tmlist, *this);
-    // send reconfiguration signal to theme and listeners
-    ThemeManager::ThemeList::iterator it = tmlist.begin();
-    ThemeManager::ThemeList::iterator it_end = tmlist.end();
-    for (; it != it_end; ++it) {
-      (*it)->reconfigSig().emit();
+            STLUtil::forAll(tmlist, *this);
+            // send reconfiguration signal to theme and listeners
+            ThemeManager::ThemeList::iterator it = tmlist.begin();
+            ThemeManager::ThemeList::iterator it_end = tmlist.end();
+            for (; it != it_end; ++it) {
+                (*it)->reconfigSig().emit();
+            }
+        }
+
+        ThemeManager& m_tm;
+    };
+
+    Theme::Theme(int screen_num)
+        : m_screen_num(screen_num)
+    {
+        ThemeManager::instance().registerTheme(*this);
     }
-  }
 
-  ThemeManager &m_tm;
-};
+    Theme::~Theme() { ThemeManager::instance().unregisterTheme(*this); }
 
-Theme::Theme(int screen_num) : m_screen_num(screen_num) {
-  ThemeManager::instance().registerTheme(*this);
-}
+    ThemeManager& ThemeManager::instance()
+    {
+        static ThemeManager tm;
+        return tm;
+    }
 
-Theme::~Theme() { ThemeManager::instance().unregisterTheme(*this); }
+    ThemeManager::ThemeManager()
+        : // max_screens: we initialize this later so we can set m_verbose
+        // without having a display connection
+        m_max_screens(-1)
+        , m_verbose(false)
+        , m_themelocation("")
+    {
+    }
 
-ThemeManager &ThemeManager::instance() {
-  static ThemeManager tm;
-  return tm;
-}
+    bool ThemeManager::registerTheme(Theme& tm)
+    {
+        if (m_max_screens < 0) {
+            m_max_screens = ScreenCount(FbTk::App::instance()->display());
+            m_themes.resize(m_max_screens);
+        }
 
-ThemeManager::ThemeManager()
-    : // max_screens: we initialize this later so we can set m_verbose
-      // without having a display connection
-      m_max_screens(-1),
-      m_verbose(false), m_themelocation("") {}
+        // valid screen num?
+        if (m_max_screens < tm.screenNum() || tm.screenNum() < 0)
+            return false;
 
-bool ThemeManager::registerTheme(Theme &tm) {
-  if (m_max_screens < 0) {
-    m_max_screens = ScreenCount(FbTk::App::instance()->display());
-    m_themes.resize(m_max_screens);
-  }
-
-  // valid screen num?
-  if (m_max_screens < tm.screenNum() || tm.screenNum() < 0)
-    return false;
-
-  ThemeList::const_iterator it = m_themes[tm.screenNum()].begin(),
-                            it_end = m_themes[tm.screenNum()].end();
-  if (std::find(it, it_end, &tm) == it_end) {
-    m_themes[tm.screenNum()].push_back(&tm);
-    return true;
-  }
-  return false;
-}
-
-bool ThemeManager::unregisterTheme(Theme &tm) {
-  if (m_max_screens < tm.screenNum() || tm.screenNum() < 0)
-    return false;
-
-  m_themes[tm.screenNum()].remove(&tm);
-
-  return true;
-}
-
-bool ThemeManager::load(const string &filename, const string &overlay_filename,
-                        int screen_num) {
-
-  string location = FbTk::StringUtil::expandFilename(filename);
-  StringUtil::removeTrailingWhitespace(location);
-  StringUtil::removeFirstWhitespace(location);
-  string prefix = "";
-
-  if (FileUtil::isDirectory(location.c_str())) {
-    prefix = location;
-
-    location.append("/theme.cfg");
-    if (!FileUtil::isRegularFile(location.c_str())) {
-      location = prefix;
-      location.append("/style.cfg");
-      if (!FileUtil::isRegularFile(location.c_str())) {
-        cerr << "Error loading theme file " << location
-             << ": not a regular file" << endl;
+        ThemeList::const_iterator it = m_themes[tm.screenNum()].begin(),
+                                  it_end = m_themes[tm.screenNum()].end();
+        if (std::find(it, it_end, &tm) == it_end) {
+            m_themes[tm.screenNum()].push_back(&tm);
+            return true;
+        }
         return false;
-      }
     }
-  } else {
-    // dirname
-    prefix = location.substr(0, location.find_last_of('/'));
-  }
 
-  if (!m_database.load(location.c_str()))
-    return false;
+    bool ThemeManager::unregisterTheme(Theme& tm)
+    {
+        if (m_max_screens < tm.screenNum() || tm.screenNum() < 0)
+            return false;
 
-  if (!overlay_filename.empty()) {
-    string overlay_location =
-        FbTk::StringUtil::expandFilename(overlay_filename);
-    if (FileUtil::isRegularFile(overlay_location.c_str())) {
-      XrmDatabaseHelper overlay_db;
-      if (overlay_db.load(overlay_location.c_str())) {
-        // after a merge the src_db is destroyed
-        // so, make sure XrmDatabaseHelper::m_database == 0
-        XrmMergeDatabases(*overlay_db, &(*m_database));
-        *overlay_db = 0;
-      }
+        m_themes[tm.screenNum()].remove(&tm);
+
+        return true;
     }
-  }
 
-  // relies on the fact that load_rc clears search paths each time
-  if (m_themelocation != "") {
-    Image::removeSearchPath(m_themelocation);
-    m_themelocation.append("/pixmaps");
-    Image::removeSearchPath(m_themelocation);
-  }
+    bool ThemeManager::load(const string& filename, const string& overlay_filename,
+        int screen_num)
+    {
 
-  m_themelocation = prefix;
+        string location = FbTk::StringUtil::expandFilename(filename);
+        StringUtil::removeTrailingWhitespace(location);
+        StringUtil::removeFirstWhitespace(location);
+        string prefix = "";
 
-  location = prefix;
-  Image::addSearchPath(location);
-  location.append("/pixmaps");
-  Image::addSearchPath(location);
+        if (FileUtil::isDirectory(location.c_str())) {
+            prefix = location;
 
-  LoadThemeHelper load_theme_helper;
+            location.append("/theme.cfg");
+            if (!FileUtil::isRegularFile(location.c_str())) {
+                location = prefix;
+                location.append("/style.cfg");
+                if (!FileUtil::isRegularFile(location.c_str())) {
+                    cerr << "Error loading theme file " << location
+                         << ": not a regular file" << endl;
+                    return false;
+                }
+            }
+        } else {
+            // dirname
+            prefix = location.substr(0, location.find_last_of('/'));
+        }
 
-  // get list and go throu all the resources and load them
-  // and then reconfigure them
-  if (screen_num < 0 || screen_num > m_max_screens) {
-    STLUtil::forAll(m_themes, load_theme_helper);
-  } else {
-    load_theme_helper(m_themes[screen_num]);
-  }
+        if (!m_database.load(location.c_str()))
+            return false;
 
-  return true;
-}
+        if (!overlay_filename.empty()) {
+            string overlay_location = FbTk::StringUtil::expandFilename(overlay_filename);
+            if (FileUtil::isRegularFile(overlay_location.c_str())) {
+                XrmDatabaseHelper overlay_db;
+                if (overlay_db.load(overlay_location.c_str())) {
+                    // after a merge the src_db is destroyed
+                    // so, make sure XrmDatabaseHelper::m_database == 0
+                    XrmMergeDatabases(*overlay_db, &(*m_database));
+                    *overlay_db = 0;
+                }
+            }
+        }
 
-void ThemeManager::loadTheme(Theme &tm) {
-  Theme::ItemList::iterator i = tm.itemList().begin();
-  Theme::ItemList::iterator i_end = tm.itemList().end();
-  for (; i != i_end; ++i) {
-    ThemeItem_base *resource = *i;
-    if (!loadItem(*resource)) {
-      // try fallback resource in theme
-      if (!tm.fallback(*resource)) {
-        if (verbose()) {
-          _FB_USES_NLS;
-          cerr << _FBTK_CONSOLETEXT(Error, ThemeItem,
+        // relies on the fact that load_rc clears search paths each time
+        if (m_themelocation != "") {
+            Image::removeSearchPath(m_themelocation);
+            m_themelocation.append("/pixmaps");
+            Image::removeSearchPath(m_themelocation);
+        }
+
+        m_themelocation = prefix;
+
+        location = prefix;
+        Image::addSearchPath(location);
+        location.append("/pixmaps");
+        Image::addSearchPath(location);
+
+        LoadThemeHelper load_theme_helper;
+
+        // get list and go throu all the resources and load them
+        // and then reconfigure them
+        if (screen_num < 0 || screen_num > m_max_screens) {
+            STLUtil::forAll(m_themes, load_theme_helper);
+        } else {
+            load_theme_helper(m_themes[screen_num]);
+        }
+
+        return true;
+    }
+
+    void ThemeManager::loadTheme(Theme& tm)
+    {
+        Theme::ItemList::iterator i = tm.itemList().begin();
+        Theme::ItemList::iterator i_end = tm.itemList().end();
+        for (; i != i_end; ++i) {
+            ThemeItem_base* resource = *i;
+            if (!loadItem(*resource)) {
+                // try fallback resource in theme
+                if (!tm.fallback(*resource)) {
+                    if (verbose()) {
+                        _FB_USES_NLS;
+                        cerr << _FBTK_CONSOLETEXT(Error, ThemeItem,
                                     "Failed to read theme item",
                                     "When reading a style, couldn't read a "
                                     "specific item (following)")
-               << ": " << resource->name() << endl;
+                             << ": " << resource->name() << endl;
+                    }
+                    resource->setDefaultValue();
+                }
+            }
         }
-        resource->setDefaultValue();
-      }
+        // send reconfiguration signal to theme and listeners
     }
-  }
-  // send reconfiguration signal to theme and listeners
-}
 
-bool ThemeManager::loadItem(ThemeItem_base &resource) {
-  return loadItem(resource, resource.name(), resource.altName());
-}
+    bool ThemeManager::loadItem(ThemeItem_base& resource)
+    {
+        return loadItem(resource, resource.name(), resource.altName());
+    }
 
-/// handles resource item loading with specific name/altname
-bool ThemeManager::loadItem(ThemeItem_base &resource, const string &name,
-                            const string &alt_name) {
-  XrmValue value;
-  char *value_type;
-  if (XrmGetResource(*m_database, name.c_str(), alt_name.c_str(), &value_type,
-                     &value)) {
-    resource.setFromString(value.addr);
-    resource.load(&name, &alt_name); // load additional stuff by the ThemeItem
-  } else
-    return false;
+    /// handles resource item loading with specific name/altname
+    bool ThemeManager::loadItem(ThemeItem_base& resource, const string& name,
+        const string& alt_name)
+    {
+        XrmValue value;
+        char* value_type;
+        if (XrmGetResource(*m_database, name.c_str(), alt_name.c_str(), &value_type,
+                &value)) {
+            resource.setFromString(value.addr);
+            resource.load(&name, &alt_name); // load additional stuff by the ThemeItem
+        } else
+            return false;
 
-  return true;
-}
+        return true;
+    }
 
-string ThemeManager::resourceValue(const string &name, const string &altname) {
-  XrmValue value;
-  char *value_type;
-  if (*m_database != 0 &&
-      XrmGetResource(*m_database, name.c_str(), altname.c_str(), &value_type,
-                     &value) &&
-      value.addr != 0)
-    return string(value.addr);
+    string ThemeManager::resourceValue(const string& name, const string& altname)
+    {
+        XrmValue value;
+        char* value_type;
+        if (*m_database != 0 && XrmGetResource(*m_database, name.c_str(), altname.c_str(), &value_type,
+                                    &value)
+            && value.addr != 0)
+            return string(value.addr);
 
-  return "";
-}
+        return "";
+    }
 
-/*
+    /*
 void ThemeManager::listItems() {
     ThemeList::iterator it = m_themelist.begin();
     ThemeList::iterator it_end = m_themelist.end();

@@ -26,41 +26,41 @@
 
 namespace FbTk {
 
-/// renders to drawable together with an alpha mask
-class Transparent {
-public:
-  static bool haveComposite(bool for_real = false);
-  static bool haveRender();
-  static void usePseudoTransparent(bool force);
+    /// renders to drawable together with an alpha mask
+    class Transparent {
+    public:
+        static bool haveComposite(bool for_real = false);
+        static bool haveRender();
+        static void usePseudoTransparent(bool force);
 
-  Transparent(Drawable source, Drawable dest, int alpha, int screen_num);
-  ~Transparent();
-  /// sets alpha value
-  void setAlpha(int alpha);
-  /// sets source drawable
-  void setSource(Drawable src, int screen_num);
-  /// sets destination drawable
-  void setDest(Drawable dest, int screen_num);
-  void freeDest();
-  /**
+        Transparent(Drawable source, Drawable dest, int alpha, int screen_num);
+        ~Transparent();
+        /// sets alpha value
+        void setAlpha(int alpha);
+        /// sets source drawable
+        void setSource(Drawable src, int screen_num);
+        /// sets destination drawable
+        void setDest(Drawable dest, int screen_num);
+        void freeDest();
+        /**
      renders to dest from src with specified coordinates and size
   */
-  void render(int src_x, int src_y, int dest_x, int dest_y, unsigned int width,
-              unsigned int height) const;
+        void render(int src_x, int src_y, int dest_x, int dest_y, unsigned int width,
+            unsigned int height) const;
 
-  int alpha() const { return m_alpha; }
-  Drawable dest() const { return m_dest; }
-  Drawable source() const { return m_source; }
+        int alpha() const { return m_alpha; }
+        Drawable dest() const { return m_dest; }
+        Drawable source() const { return m_source; }
 
-private:
-  void freeAlpha();
-  void allocAlpha(int newval);
-  unsigned long m_alpha_pic;
-  unsigned long m_src_pic;
-  unsigned long m_dest_pic;
-  Drawable m_source, m_dest;
-  unsigned char m_alpha;
-};
+    private:
+        void freeAlpha();
+        void allocAlpha(int newval);
+        unsigned long m_alpha_pic;
+        unsigned long m_src_pic;
+        unsigned long m_dest_pic;
+        Drawable m_source, m_dest;
+        unsigned char m_alpha;
+    };
 
 } // end namespace  FbTk
 

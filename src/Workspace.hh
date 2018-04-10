@@ -41,55 +41,55 @@ class FluxboxWindow;
  */
 class Workspace : private FbTk::NotCopyable {
 public:
-  typedef std::list<FluxboxWindow *> Windows;
+    typedef std::list<FluxboxWindow*> Windows;
 
-  Workspace(BScreen &screen, const std::string &name,
-            unsigned int workspaceid = 0);
-  ~Workspace();
+    Workspace(BScreen& screen, const std::string& name,
+        unsigned int workspaceid = 0);
+    ~Workspace();
 
-  /// Set workspace name
-  void setName(const FbTk::FbString &name);
-  /// Deiconify all windows on this workspace
-  void showAll();
-  void hideAll(bool interrupt_moving);
-  /// Iconify all windows on this workspace
-  void removeAll(unsigned int dest);
-  void reconfigure();
-  void shutdown();
+    /// Set workspace name
+    void setName(const FbTk::FbString& name);
+    /// Deiconify all windows on this workspace
+    void showAll();
+    void hideAll(bool interrupt_moving);
+    /// Iconify all windows on this workspace
+    void removeAll(unsigned int dest);
+    void reconfigure();
+    void shutdown();
 
-  /// Add @a win to this workspace, placing it if @a place is true
-  void addWindow(FluxboxWindow &win);
-  int removeWindow(FluxboxWindow *win, bool still_alive);
-  void updateClientmenu();
+    /// Add @a win to this workspace, placing it if @a place is true
+    void addWindow(FluxboxWindow& win);
+    int removeWindow(FluxboxWindow* win, bool still_alive);
+    void updateClientmenu();
 
-  BScreen &screen() { return m_screen; }
-  const BScreen &screen() const { return m_screen; }
+    BScreen& screen() { return m_screen; }
+    const BScreen& screen() const { return m_screen; }
 
-  FbTk::Menu &menu() { return m_clientmenu; }
-  const FbTk::Menu &menu() const { return m_clientmenu; }
-  ///    name of this workspace
-  const FbTk::FbString &name() const { return m_name; }
-  /**
+    FbTk::Menu& menu() { return m_clientmenu; }
+    const FbTk::Menu& menu() const { return m_clientmenu; }
+    ///    name of this workspace
+    const FbTk::FbString& name() const { return m_name; }
+    /**
      @return the number of this workspace, note: obsolete, should be in BScreen
   */
-  unsigned int workspaceID() const { return m_id; }
+    unsigned int workspaceID() const { return m_id; }
 
-  const Windows &windowList() const { return m_windowlist; }
-  Windows &windowList() { return m_windowlist; }
+    const Windows& windowList() const { return m_windowlist; }
+    Windows& windowList() { return m_windowlist; }
 
-  size_t numberOfWindows() const;
+    size_t numberOfWindows() const;
 
 private:
-  void placeWindow(FluxboxWindow &win);
+    void placeWindow(FluxboxWindow& win);
 
-  BScreen &m_screen;
+    BScreen& m_screen;
 
-  Windows m_windowlist;
-  FbTk::Signal<> m_clientlist_sig;
-  ClientMenu m_clientmenu;
+    Windows m_windowlist;
+    FbTk::Signal<> m_clientlist_sig;
+    ClientMenu m_clientmenu;
 
-  FbTk::FbString m_name; ///< name of this workspace
-  unsigned int m_id;     ///< id, obsolete, this should be in BScreen
+    FbTk::FbString m_name; ///< name of this workspace
+    unsigned int m_id; ///< id, obsolete, this should be in BScreen
 };
 
 #endif // WORKSPACE_HH

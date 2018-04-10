@@ -40,77 +40,79 @@ using namespace std;
 
 class App : public FbTk::App, public FbTk::EventHandler {
 public:
-  App(const char *displayname)
-      : FbTk::App(displayname),
-        m_win(DefaultScreen(display()), 0, 0, 640, 480,
-              KeyPressMask | ExposureMask | ButtonPressMask |
-                  ButtonReleaseMask | ButtonMotionMask) {
+    App(const char* displayname)
+        : FbTk::App(displayname)
+        , m_win(DefaultScreen(display()), 0, 0, 640, 480,
+              KeyPressMask | ExposureMask | ButtonPressMask | ButtonReleaseMask | ButtonMotionMask)
+    {
 
-    m_win.setName("Demand Attention");
-    m_win.show();
-    m_win.setBackgroundColor(FbTk::Color("white", m_win.screenNumber()));
-    FbTk::EventManager::instance()->add(*this, m_win);
+        m_win.setName("Demand Attention");
+        m_win.show();
+        m_win.setBackgroundColor(FbTk::Color("white", m_win.screenNumber()));
+        FbTk::EventManager::instance()->add(*this, m_win);
 
-    m_net_wm_state = XInternAtom(m_win.display(), "_NET_WM_STATE", False);
-    m_net_wm_state_demands_attention =
-        XInternAtom(m_win.display(), "_NET_WM_STATE_DEMANDS_ATTENTION", False);
-    FbTk::RefCount<FbTk::Command<void>> cmd(
-        new FbTk::SimpleCommand<App>(*this, &App::demandAttention));
-    m_timer.setTimeout(5 * FbTk::FbTime::IN_SECONDS);
-    m_timer.setCommand(cmd);
-    m_timer.fireOnce(false);
-    m_timer.start();
-  }
-
-  ~App() {}
-  void eventLoop() {
-    XEvent ev;
-    while (!done()) {
-      if (XPending(display())) {
-        XNextEvent(display(), &ev);
-        FbTk::EventManager::instance()->handleEvent(ev);
-      } else {
-        FbTk::Timer::updateTimers(ConnectionNumber(display()));
-      }
+        m_net_wm_state = XInternAtom(m_win.display(), "_NET_WM_STATE", False);
+        m_net_wm_state_demands_attention = XInternAtom(m_win.display(), "_NET_WM_STATE_DEMANDS_ATTENTION", False);
+        FbTk::RefCount<FbTk::Command<void> > cmd(
+            new FbTk::SimpleCommand<App>(*this, &App::demandAttention));
+        m_timer.setTimeout(5 * FbTk::FbTime::IN_SECONDS);
+        m_timer.setCommand(cmd);
+        m_timer.fireOnce(false);
+        m_timer.start();
     }
-  }
-  void exposeEvent(XExposeEvent &event) { redraw(); }
 
-  void redraw() { m_win.clear(); }
+    ~App() {}
+    void eventLoop()
+    {
+        XEvent ev;
+        while (!done()) {
+            if (XPending(display())) {
+                XNextEvent(display(), &ev);
+                FbTk::EventManager::instance()->handleEvent(ev);
+            } else {
+                FbTk::Timer::updateTimers(ConnectionNumber(display()));
+            }
+        }
+    }
+    void exposeEvent(XExposeEvent& event) { redraw(); }
 
-  void demandAttention() {
-    cerr << "Demand attention!" << endl;
-    XEvent event;
-    event.type = ClientMessage;
-    event.xclient.message_type = m_net_wm_state;
-    event.xclient.display = m_win.display();
-    event.xclient.format = 32;
-    event.xclient.window = m_win.window();
-    event.xclient.data.l[0] = 1; // STATE_ADD
-    event.xclient.data.l[1] = m_net_wm_state_demands_attention;
-    event.xclient.data.l[2] = 0;
-    event.xclient.data.l[3] = 0;
-    event.xclient.data.l[4] = 0;
-    XSendEvent(display(), DefaultRootWindow(display()), False,
-               SubstructureRedirectMask | SubstructureNotifyMask, &event);
-  }
+    void redraw() { m_win.clear(); }
+
+    void demandAttention()
+    {
+        cerr << "Demand attention!" << endl;
+        XEvent event;
+        event.type = ClientMessage;
+        event.xclient.message_type = m_net_wm_state;
+        event.xclient.display = m_win.display();
+        event.xclient.format = 32;
+        event.xclient.window = m_win.window();
+        event.xclient.data.l[0] = 1; // STATE_ADD
+        event.xclient.data.l[1] = m_net_wm_state_demands_attention;
+        event.xclient.data.l[2] = 0;
+        event.xclient.data.l[3] = 0;
+        event.xclient.data.l[4] = 0;
+        XSendEvent(display(), DefaultRootWindow(display()), False,
+            SubstructureRedirectMask | SubstructureNotifyMask, &event);
+    }
 
 private:
-  FbTk::FbWindow m_win;
-  FbTk::Timer m_timer;
-  Atom m_net_wm_state;
-  Atom m_net_wm_state_demands_attention;
+    FbTk::FbWindow m_win;
+    FbTk::Timer m_timer;
+    Atom m_net_wm_state;
+    Atom m_net_wm_state_demands_attention;
 };
 
-int main(int argc, char **argv) {
-  string displayname("");
-  for (int a = 1; a < argc; ++a) {
-    if (strcmp("-display", argv[a]) == 0 && a + 1 < argc) {
-      displayname = argv[++a];
+int main(int argc, char** argv)
+{
+    string displayname("");
+    for (int a = 1; a < argc; ++a) {
+        if (strcmp("-display", argv[a]) == 0 && a + 1 < argc) {
+            displayname = argv[++a];
+        }
     }
-  }
 
-  App app(displayname.c_str());
+    App app(displayname.c_str());
 
-  app.eventLoop();
+    app.eventLoop();
 }

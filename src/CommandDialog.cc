@@ -38,57 +38,59 @@ using std::vector;
 using std::less;
 using std::out_of_range;
 
-CommandDialog::CommandDialog(BScreen &screen, const string &title,
-                             const string &precommand)
-    : TextDialog(screen, title), m_precommand(precommand) {}
-
-void CommandDialog::exec(const std::string &text) {
-
-  // create Command<void> from line
-  std::unique_ptr<FbTk::Command<void>> cmd(
-      FbTk::CommandParser<void>::instance().parse(m_precommand + text));
-  if (cmd.get())
-    cmd->execute();
-  // post execute
-  if (m_postcommand != 0)
-    m_postcommand->execute();
+CommandDialog::CommandDialog(BScreen& screen, const string& title,
+    const string& precommand)
+    : TextDialog(screen, title)
+    , m_precommand(precommand)
+{
 }
 
-void CommandDialog::tabComplete() {
-  try {
-    string::size_type first =
-        m_textbox.text().find_last_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                                          "abcdefghijklmnopqrstuvwxyz"
-                                          "0123456789",
-                                          m_textbox.cursorPosition());
-    if (first == string::npos)
-      first = 0;
-    string prefix = FbTk::StringUtil::toLower(
-        m_textbox.text().substr(first, m_textbox.cursorPosition()));
-    if (prefix.empty()) {
-      XBell(FbTk::App::instance()->display(), 0);
-      return;
+void CommandDialog::exec(const std::string& text)
+{
+
+    // create Command<void> from line
+    std::unique_ptr<FbTk::Command<void> > cmd(
+        FbTk::CommandParser<void>::instance().parse(m_precommand + text));
+    if (cmd.get())
+        cmd->execute();
+    // post execute
+    if (m_postcommand != 0)
+        m_postcommand->execute();
+}
+
+void CommandDialog::tabComplete()
+{
+    try {
+        string::size_type first = m_textbox.text().find_last_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                                                    "abcdefghijklmnopqrstuvwxyz"
+                                                                    "0123456789",
+            m_textbox.cursorPosition());
+        if (first == string::npos)
+            first = 0;
+        string prefix = FbTk::StringUtil::toLower(
+            m_textbox.text().substr(first, m_textbox.cursorPosition()));
+        if (prefix.empty()) {
+            XBell(FbTk::App::instance()->display(), 0);
+            return;
+        }
+
+        FbTk::CommandParser<void>::CreatorMap::const_iterator it = FbTk::CommandParser<void>::instance().creatorMap().begin();
+        const FbTk::CommandParser<void>::CreatorMap::const_iterator it_end = FbTk::CommandParser<void>::instance().creatorMap().end();
+        vector<string> matches;
+        for (; it != it_end; ++it) {
+            if ((*it).first.find(prefix) == 0) {
+                matches.push_back((*it).first);
+            }
+        }
+
+        if (!matches.empty()) {
+            // sort and apply larges match
+            sort(matches.begin(), matches.end(), less<string>());
+            m_textbox.setText(m_textbox.text() + matches[0].substr(prefix.size()));
+        } else
+            XBell(FbTk::App::instance()->display(), 0);
+
+    } catch (out_of_range& oor) {
+        XBell(FbTk::App::instance()->display(), 0);
     }
-
-    FbTk::CommandParser<void>::CreatorMap::const_iterator it =
-        FbTk::CommandParser<void>::instance().creatorMap().begin();
-    const FbTk::CommandParser<void>::CreatorMap::const_iterator it_end =
-        FbTk::CommandParser<void>::instance().creatorMap().end();
-    vector<string> matches;
-    for (; it != it_end; ++it) {
-      if ((*it).first.find(prefix) == 0) {
-        matches.push_back((*it).first);
-      }
-    }
-
-    if (!matches.empty()) {
-      // sort and apply larges match
-      sort(matches.begin(), matches.end(), less<string>());
-      m_textbox.setText(m_textbox.text() + matches[0].substr(prefix.size()));
-    } else
-      XBell(FbTk::App::instance()->display(), 0);
-
-  } catch (out_of_range &oor) {
-    XBell(FbTk::App::instance()->display(), 0);
-  }
 }

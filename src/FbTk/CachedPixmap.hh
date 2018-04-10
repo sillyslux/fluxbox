@@ -26,38 +26,38 @@
 
 namespace FbTk {
 
-class ImageControl;
+    class ImageControl;
 
-/// holds cached pixmap and releases it from cache when it dies
-class CachedPixmap {
-public:
-  /// @param ctrl the image cache control
-  explicit CachedPixmap(FbTk::ImageControl &ctrl);
-  /**
+    /// holds cached pixmap and releases it from cache when it dies
+    class CachedPixmap {
+    public:
+        /// @param ctrl the image cache control
+        explicit CachedPixmap(FbTk::ImageControl& ctrl);
+        /**
    * @param ctrl cache control
    * @param pm pixmap to store
    */
-  CachedPixmap(FbTk::ImageControl &ctrl, Pixmap pm);
-  ~CachedPixmap();
+        CachedPixmap(FbTk::ImageControl& ctrl, Pixmap pm);
+        ~CachedPixmap();
 
-  operator Pixmap() const { return m_pixmap; }
+        operator Pixmap() const { return m_pixmap; }
 
-  /**
+        /**
    * Sets new pixmap and releases the old pixmap from cache
    * @param pm the new pixmap to set
    */
-  void reset(Pixmap pm);
+        void reset(Pixmap pm);
 
-  /// @return pixmap
-  Pixmap operator*() const { return m_pixmap; }
+        /// @return pixmap
+        Pixmap operator*() const { return m_pixmap; }
 
-public:
-  /// releases pixmap from cache
-  void destroy();
+    public:
+        /// releases pixmap from cache
+        void destroy();
 
-  Pixmap m_pixmap;            //< cached pixmap
-  FbTk::ImageControl &m_ctrl; //< cache control
-};
+        Pixmap m_pixmap; //< cached pixmap
+        FbTk::ImageControl& m_ctrl; //< cache control
+    };
 
 } // namespace CachedPixmap
 

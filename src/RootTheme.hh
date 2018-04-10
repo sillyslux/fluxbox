@@ -29,38 +29,39 @@ class BackgroundItem;
 class BScreen;
 
 namespace FbTk {
-class ResourceManager;
-class ImageControl;
+    class ResourceManager;
+    class ImageControl;
 }
 
 /// Contains border color, border size, bevel width and opGC for objects like
 /// geometry window in BScreen
 class RootTheme : public FbTk::Theme, public FbTk::ThemeProxy<RootTheme> {
 public:
-  /// constructor
-  /// @param resmanager resource manager for finding specific resources
-  /// @param image_control for rendering background texture
-  RootTheme(FbTk::ImageControl &image_control);
-  ~RootTheme();
+    /// constructor
+    /// @param resmanager resource manager for finding specific resources
+    /// @param image_control for rendering background texture
+    RootTheme(FbTk::ImageControl& image_control);
+    ~RootTheme();
 
-  bool fallback(FbTk::ThemeItem_base &item);
-  void reconfigTheme();
-  void reset() {
-    m_first = true;
-    reconfigTheme();
-  }
+    bool fallback(FbTk::ThemeItem_base& item);
+    void reconfigTheme();
+    void reset()
+    {
+        m_first = true;
+        reconfigTheme();
+    }
 
-  GC opGC() const { return m_opgc.gc(); }
+    GC opGC() const { return m_opgc.gc(); }
 
-  virtual FbTk::Signal<> &reconfigSig() { return FbTk::Theme::reconfigSig(); }
+    virtual FbTk::Signal<>& reconfigSig() { return FbTk::Theme::reconfigSig(); }
 
-  virtual RootTheme &operator*() { return *this; }
-  virtual const RootTheme &operator*() const { return *this; }
+    virtual RootTheme& operator*() { return *this; }
+    virtual const RootTheme& operator*() const { return *this; }
 
 private:
-  BackgroundItem *m_background; ///< background image/texture
-  FbTk::GContext m_opgc;
-  bool m_first;
+    BackgroundItem* m_background; ///< background image/texture
+    FbTk::GContext m_opgc;
+    bool m_first;
 };
 
 #endif // ROOTTHEME_HH

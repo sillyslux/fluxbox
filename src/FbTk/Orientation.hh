@@ -24,10 +24,15 @@
 
 namespace FbTk {
 
-enum Justify { LEFT, RIGHT, CENTER };
+    enum Justify { LEFT,
+        RIGHT,
+        CENTER };
 
-// clockwise
-enum Orientation { ROT0 = 0, ROT90, ROT180, ROT270 };
+    // clockwise
+    enum Orientation { ROT0 = 0,
+        ROT90,
+        ROT180,
+        ROT270 };
 
 } // end namespace FbTk
 

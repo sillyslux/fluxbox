@@ -34,26 +34,27 @@ class Command;
  */
 class CommandDialog : public TextDialog {
 public:
-  CommandDialog(BScreen &screen, const std::string &title,
-                const std::string &pre_command = "");
+    CommandDialog(BScreen& screen, const std::string& title,
+        const std::string& pre_command = "");
 
-  /**
+    /**
    * Sets the command to be executed after the command is done.
    * @param postcommand the command.
    */
-  void setPostCommand(FbTk::RefCount<FbTk::Command<void>> &postcommand) {
-    m_postcommand = postcommand;
-  }
+    void setPostCommand(FbTk::RefCount<FbTk::Command<void> >& postcommand)
+    {
+        m_postcommand = postcommand;
+    }
 
 private:
-  /// expand the current word, using the history as a references
-  void tabComplete();
-  void exec(const std::string &string);
+    /// expand the current word, using the history as a references
+    void tabComplete();
+    void exec(const std::string& string);
 
-  /// command to do after the first command was issued (like reconfigure)
-  FbTk::RefCount<FbTk::Command<void>> m_postcommand;
-  /// command to be used before the text (usefull for setting workspace name)
-  const std::string m_precommand;
+    /// command to do after the first command was issued (like reconfigure)
+    FbTk::RefCount<FbTk::Command<void> > m_postcommand;
+    /// command to be used before the text (usefull for setting workspace name)
+    const std::string m_precommand;
 };
 
 #endif // SETWORKSPACENAME_HH

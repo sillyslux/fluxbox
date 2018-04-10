@@ -26,36 +26,45 @@
 
 namespace FbTk {
 
-class RadioMenuItem : public MenuItem {
-public:
-  RadioMenuItem() : MenuItem() { setToggleItem(true); }
+    class RadioMenuItem : public MenuItem {
+    public:
+        RadioMenuItem()
+            : MenuItem()
+        {
+            setToggleItem(true);
+        }
 
-  explicit RadioMenuItem(const FbString &label) : MenuItem(label) {
-    setToggleItem(true);
-  }
+        explicit RadioMenuItem(const FbString& label)
+            : MenuItem(label)
+        {
+            setToggleItem(true);
+        }
 
-  RadioMenuItem(const FbString &label, Menu &host_menu)
-      : MenuItem(label, host_menu) {
-    setToggleItem(true);
-  }
+        RadioMenuItem(const FbString& label, Menu& host_menu)
+            : MenuItem(label, host_menu)
+        {
+            setToggleItem(true);
+        }
 
-  /// create a menu item with a specific command to be executed on click
-  RadioMenuItem(const FbString &label, RefCount<Command<void>> &cmd,
-                Menu *menu = 0)
-      : MenuItem(label, cmd, menu) {
-    setToggleItem(true);
-  }
+        /// create a menu item with a specific command to be executed on click
+        RadioMenuItem(const FbString& label, RefCount<Command<void> >& cmd,
+            Menu* menu = 0)
+            : MenuItem(label, cmd, menu)
+        {
+            setToggleItem(true);
+        }
 
-  RadioMenuItem(const FbString &label, Menu *submenu, Menu *host_menu = 0)
-      : MenuItem(label, submenu, host_menu) {
-    setToggleItem(true);
-  }
+        RadioMenuItem(const FbString& label, Menu* submenu, Menu* host_menu = 0)
+            : MenuItem(label, submenu, host_menu)
+        {
+            setToggleItem(true);
+        }
 
-  virtual ~RadioMenuItem() {}
+        virtual ~RadioMenuItem() {}
 
-  virtual bool isSelected() const = 0;
-  bool isEnabled() const { return !isSelected(); }
-};
+        virtual bool isSelected() const = 0;
+        bool isEnabled() const { return !isSelected(); }
+    };
 
 } // end namespace FbTk
 

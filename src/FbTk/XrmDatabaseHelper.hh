@@ -31,50 +31,56 @@
 */
 namespace FbTk {
 
-class XrmDatabaseHelper {
-public:
-  XrmDatabaseHelper(char const *filename = 0) : m_database(0) {
-    if (filename != 0)
-      load(filename);
-  }
+    class XrmDatabaseHelper {
+    public:
+        XrmDatabaseHelper(char const* filename = 0)
+            : m_database(0)
+        {
+            if (filename != 0)
+                load(filename);
+        }
 
-  ~XrmDatabaseHelper() { close(); }
+        ~XrmDatabaseHelper() { close(); }
 
-  /// assignment operator
-  XrmDatabaseHelper &operator=(const XrmDatabase &database) {
-    if (database == m_database) // assignment to self
-      return *this;
+        /// assignment operator
+        XrmDatabaseHelper& operator=(const XrmDatabase& database)
+        {
+            if (database == m_database) // assignment to self
+                return *this;
 
-    if (m_database != 0)
-      close();
-    m_database = database;
-    return *this;
-  }
-  bool load(const char *filename) {
-    if (filename == 0)
-      return false;
-    XrmDatabase db = XrmGetFileDatabase(filename);
-    if (db == 0)
-      return false;
-    close();         // close old database
-    m_database = db; // set new and return true
-    return true;
-  }
-  void close() {
-    if (m_database != 0) {
-      XrmDestroyDatabase(m_database);
-      m_database = 0;
-    }
-  }
+            if (m_database != 0)
+                close();
+            m_database = database;
+            return *this;
+        }
+        bool load(const char* filename)
+        {
+            if (filename == 0)
+                return false;
+            XrmDatabase db = XrmGetFileDatabase(filename);
+            if (db == 0)
+                return false;
+            close(); // close old database
+            m_database = db; // set new and return true
+            return true;
+        }
+        void close()
+        {
+            if (m_database != 0) {
+                XrmDestroyDatabase(m_database);
+                m_database = 0;
+            }
+        }
 
-  bool operator==(const XrmDatabase &database) const {
-    return m_database == database;
-  }
-  XrmDatabase &operator*() { return m_database; }
+        bool operator==(const XrmDatabase& database) const
+        {
+            return m_database == database;
+        }
+        XrmDatabase& operator*() { return m_database; }
 
-private:
-  XrmDatabase m_database;
-};
+    private:
+        XrmDatabase m_database;
+    };
 
 } // namespace FbTk
 

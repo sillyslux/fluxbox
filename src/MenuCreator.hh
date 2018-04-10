@@ -28,8 +28,8 @@
 #include <list>
 
 namespace FbTk {
-class AutoReloadHelper;
-class Menu;
+    class AutoReloadHelper;
+    class Menu;
 }
 
 class FbMenu;
@@ -38,13 +38,13 @@ class BScreen;
 
 namespace MenuCreator {
 
-FbMenu *createMenu(const std::string &label, BScreen &screen);
-FbMenu *createMenu(const std::string &label, int screen_num);
-FbMenu *createMenuType(const std::string &label, int screen_num);
-bool createFromFile(const std::string &filename, FbTk::Menu &inject_into,
-                    FbTk::AutoReloadHelper *reloader = NULL, bool begin = true);
-bool createWindowMenuItem(const std::string &type, const std::string &label,
-                          FbTk::Menu &inject_into);
+    FbMenu* createMenu(const std::string& label, BScreen& screen);
+    FbMenu* createMenu(const std::string& label, int screen_num);
+    FbMenu* createMenuType(const std::string& label, int screen_num);
+    bool createFromFile(const std::string& filename, FbTk::Menu& inject_into,
+        FbTk::AutoReloadHelper* reloader = NULL, bool begin = true);
+    bool createWindowMenuItem(const std::string& type, const std::string& label,
+        FbTk::Menu& inject_into);
 };
 
 #endif // MENUCREATOR_HH

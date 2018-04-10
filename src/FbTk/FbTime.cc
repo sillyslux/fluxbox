@@ -29,17 +29,18 @@
 
 namespace {
 
-uint64_t _mono() {
+    uint64_t _mono()
+    {
 
-  uint64_t t = 0L;
-  timespec ts;
+        uint64_t t = 0L;
+        timespec ts;
 
-  if (clock_gettime(CLOCK_MONOTONIC, &ts) == 0) {
-    t = (ts.tv_sec * FbTk::FbTime::IN_SECONDS) + (ts.tv_nsec / 1000L);
-  }
+        if (clock_gettime(CLOCK_MONOTONIC, &ts) == 0) {
+            t = (ts.tv_sec * FbTk::FbTime::IN_SECONDS) + (ts.tv_nsec / 1000L);
+        }
 
-  return t;
-}
+        return t;
+    }
 }
 
 #endif // HAVE_CLOCK_GETTIME
@@ -54,25 +55,25 @@ uint64_t _mono() {
 
 namespace {
 
-uint64_t _mono() {
+    uint64_t _mono()
+    {
 
-  // mach_absolute_time() * info.numer / info.denom yields
-  // nanoseconds.
+        // mach_absolute_time() * info.numer / info.denom yields
+        // nanoseconds.
 
-  static double micro_scale = 0.001; // 1000ms == 1ns
-  static bool initial = true;
+        static double micro_scale = 0.001; // 1000ms == 1ns
+        static bool initial = true;
 
-  if (initial) {
-    initial = false;
-    mach_timebase_info_data_t info;
-    if (mach_timebase_info(&info) == 0) {
-      micro_scale *=
-          static_cast<double>(info.numer) / static_cast<double>(info.denom);
+        if (initial) {
+            initial = false;
+            mach_timebase_info_data_t info;
+            if (mach_timebase_info(&info) == 0) {
+                micro_scale *= static_cast<double>(info.numer) / static_cast<double>(info.denom);
+            }
+        }
+
+        return static_cast<uint64_t>(mach_absolute_time() * micro_scale);
     }
-  }
-
-  return static_cast<uint64_t>(mach_absolute_time() * micro_scale);
-}
 }
 
 #endif // HAVE_MACH_ABSOLUTE_TIME
@@ -81,8 +82,9 @@ static uint64_t start = ::_mono();
 
 uint64_t FbTk::FbTime::mono() { return ::_mono() - start; }
 
-uint64_t FbTk::FbTime::system() {
-  static timeval v;
-  gettimeofday(&v, NULL);
-  return (v.tv_sec * FbTk::FbTime::IN_SECONDS) + v.tv_usec;
+uint64_t FbTk::FbTime::system()
+{
+    static timeval v;
+    gettimeofday(&v, NULL);
+    return (v.tv_sec * FbTk::FbTime::IN_SECONDS) + v.tv_usec;
 }

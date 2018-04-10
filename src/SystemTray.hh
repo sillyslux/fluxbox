@@ -37,82 +37,84 @@ class ButtonTheme;
 class AtomHandler;
 
 namespace FbTk {
-template <class T> class ThemeProxy;
+    template <class T>
+    class ThemeProxy;
 }
 
 class SystemTray : public ToolbarItem,
                    public FbTk::EventHandler,
                    private FbTk::SignalTracker {
 public:
-  explicit SystemTray(const FbTk::FbWindow &parent,
-                      FbTk::ThemeProxy<ToolTheme> &theme, BScreen &screen);
-  virtual ~SystemTray();
+    explicit SystemTray(const FbTk::FbWindow& parent,
+        FbTk::ThemeProxy<ToolTheme>& theme, BScreen& screen);
+    virtual ~SystemTray();
 
-  void move(int x, int y);
-  void resize(unsigned int width, unsigned int height);
-  void moveResize(int x, int y, unsigned int width, unsigned int height);
-  void show();
-  void hide();
+    void move(int x, int y);
+    void resize(unsigned int width, unsigned int height);
+    void moveResize(int x, int y, unsigned int width, unsigned int height);
+    void show();
+    void hide();
 
-  bool active() { return !m_clients.empty(); }
+    bool active() { return !m_clients.empty(); }
 
-  bool clientMessage(const XClientMessageEvent &event);
-  void exposeEvent(XExposeEvent &event);
-  void handleEvent(XEvent &event);
+    bool clientMessage(const XClientMessageEvent& event);
+    void exposeEvent(XExposeEvent& event);
+    void handleEvent(XEvent& event);
 
-  void addClient(Window win, bool using_xembed);
-  void removeClient(Window win, bool destroyed);
+    void addClient(Window win, bool using_xembed);
+    void removeClient(Window win, bool destroyed);
 
-  unsigned int width() const;
-  unsigned int height() const;
-  unsigned int borderWidth() const;
+    unsigned int width() const;
+    unsigned int height() const;
+    unsigned int borderWidth() const;
 
-  int numClients() const { return m_clients.size(); }
-  const FbTk::FbWindow &window() const { return m_window; }
+    int numClients() const { return m_clients.size(); }
+    const FbTk::FbWindow& window() const { return m_window; }
 
-  void renderTheme(int alpha) {
-    m_window.setBorderWidth(m_theme->border().width());
-    m_window.setBorderColor(m_theme->border().color());
-    m_window.setAlpha(alpha);
-    update();
-  }
+    void renderTheme(int alpha)
+    {
+        m_window.setBorderWidth(m_theme->border().width());
+        m_window.setBorderColor(m_theme->border().color());
+        m_window.setAlpha(alpha);
+        update();
+    }
 
-  void updateSizing() { m_window.setBorderWidth(m_theme->border().width()); }
+    void updateSizing() { m_window.setBorderWidth(m_theme->border().width()); }
 
-  void parentMoved() { m_window.parentMoved(); }
+    void parentMoved() { m_window.parentMoved(); }
 
-  static std::string getNetSystemTrayAtom(int screen_nr);
+    static std::string getNetSystemTrayAtom(int screen_nr);
 
-  static Atom getXEmbedInfoAtom();
+    static Atom getXEmbedInfoAtom();
 
-  static bool doesControl(Window win);
+    static bool doesControl(Window win);
 
 private:
-  void update();
+    void update();
 
-  class TrayWindow;
-  typedef std::list<TrayWindow *> ClientList;
-  ClientList::iterator findClient(Window win);
+    class TrayWindow;
+    typedef std::list<TrayWindow*> ClientList;
+    ClientList::iterator findClient(Window win);
 
-  void rearrangeClients();
-  void removeAllClients();
-  void hideClient(TrayWindow *traywin, bool destroyed = false);
-  void showClient(TrayWindow *traywin);
+    void rearrangeClients();
+    void removeAllClients();
+    void hideClient(TrayWindow* traywin, bool destroyed = false);
+    void showClient(TrayWindow* traywin);
 
-  FbTk::FbWindow m_window;
-  FbTk::ThemeProxy<ToolTheme> &m_theme;
-  BScreen &m_screen;
-  Pixmap m_pixmap;
+    FbTk::FbWindow m_window;
+    FbTk::ThemeProxy<ToolTheme>& m_theme;
+    BScreen& m_screen;
+    Pixmap m_pixmap;
 
-  std::unique_ptr<AtomHandler> m_handler;
+    std::unique_ptr<AtomHandler> m_handler;
 
-  ClientList m_clients;
-  size_t m_num_visible_clients;
+    ClientList m_clients;
+    size_t m_num_visible_clients;
 
-  // gaim/pidgin seems to barf if the selection is not an independent window.
-  // I suspect it's an interacton with parent relationship and gdk window
-  // caching.
-  FbTk::FbWindow m_selection_owner;
+    // gaim/pidgin seems to barf if the selection is not an independent window.
+    // I suspect it's an interacton with parent relationship and gdk window
+    // caching.
+    FbTk::FbWindow m_selection_owner;
 };
 
 #endif // SYSTEMTRAY_HH

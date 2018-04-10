@@ -30,19 +30,20 @@ class Strut;
 
 class HeadArea : private FbTk::NotCopyable {
 public:
-  HeadArea();
+    HeadArea();
 
-  Strut *requestStrut(int head, int left, int right, int top, int bottom,
-                      Strut *next = 0);
-  void clearStrut(Strut *str);
-  bool updateAvailableWorkspaceArea();
-  const Strut *availableWorkspaceArea() const {
-    return m_available_workspace_area.get();
-  }
+    Strut* requestStrut(int head, int left, int right, int top, int bottom,
+        Strut* next = 0);
+    void clearStrut(Strut* str);
+    bool updateAvailableWorkspaceArea();
+    const Strut* availableWorkspaceArea() const
+    {
+        return m_available_workspace_area.get();
+    }
 
 private:
-  std::unique_ptr<Strut> m_available_workspace_area;
-  std::list<Strut *> m_strutlist;
+    std::unique_ptr<Strut> m_available_workspace_area;
+    std::list<Strut*> m_strutlist;
 };
 
 #endif // HEADAREA_HH

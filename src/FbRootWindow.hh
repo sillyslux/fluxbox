@@ -26,31 +26,31 @@
 
 class FbRootWindow : public FbTk::FbWindow {
 public:
-  explicit FbRootWindow(int screen_num);
-  // disable functions that we can't do on root window
-  void move(int x, int y) {}
-  void resize(unsigned int width, unsigned int height) {}
-  void moveResize(int x, int y, unsigned int width, unsigned int height) {}
-  void show() {}
-  void hide() {}
-  // we should not assign a new window to this
-  FbTk::FbWindow &operator=(Window win) { return *this; }
-  Visual *visual() const { return m_visual; }
-  Colormap colormap() const { return m_colormap; }
+    explicit FbRootWindow(int screen_num);
+    // disable functions that we can't do on root window
+    void move(int x, int y) {}
+    void resize(unsigned int width, unsigned int height) {}
+    void moveResize(int x, int y, unsigned int width, unsigned int height) {}
+    void show() {}
+    void hide() {}
+    // we should not assign a new window to this
+    FbTk::FbWindow& operator=(Window win) { return *this; }
+    Visual* visual() const { return m_visual; }
+    Colormap colormap() const { return m_colormap; }
 
-  int decorationDepth() const { return m_decorationDepth; }
-  Visual *decorationVisual() const { return m_decorationVisual; }
-  Colormap decorationColormap() const { return m_decorationColormap; }
-  unsigned maxDepth() const { return m_maxDepth; }
+    int decorationDepth() const { return m_decorationDepth; }
+    Visual* decorationVisual() const { return m_decorationVisual; }
+    Colormap decorationColormap() const { return m_decorationColormap; }
+    unsigned maxDepth() const { return m_maxDepth; }
 
 private:
-  Visual *m_visual;
-  Colormap m_colormap;
+    Visual* m_visual;
+    Colormap m_colormap;
 
-  int m_decorationDepth;
-  Visual *m_decorationVisual;
-  Colormap m_decorationColormap;
-  int m_maxDepth;
+    int m_decorationDepth;
+    Visual* m_decorationVisual;
+    Colormap m_decorationColormap;
+    int m_maxDepth;
 };
 
 #endif // FBROOTWINDOW_HH

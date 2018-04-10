@@ -25,11 +25,11 @@
 #include "Image.hh"
 namespace FbTk {
 
-class ImageImlib2 : public ImageBase {
-public:
-  ImageImlib2();
-  PixmapWithMask *load(const std::string &filename, int screen_num) const;
-};
+    class ImageImlib2 : public ImageBase {
+    public:
+        ImageImlib2();
+        PixmapWithMask* load(const std::string& filename, int screen_num) const;
+    };
 
 } // end namespace FbTk
 

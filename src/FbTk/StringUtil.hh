@@ -32,147 +32,150 @@
 
 namespace FbTk {
 
-namespace StringUtil {
+    namespace StringUtil {
 
-/// \@{
-/// @param in - input string, might be 0xab or 0123
-/// @param out - result if extraction was ok
-/// @return 1 - ok, result stored in 'out'
-int extractNumber(const std::string &in, unsigned int &out);
-int extractNumber(const std::string &in, int &out);
-int extractNumber(const std::string &in, long &out);
-int extractNumber(const std::string &in, long long &out);
-int extractNumber(const std::string &in, unsigned long &out);
-int extractNumber(const std::string &in, unsigned long long &out);
-/// \@}
+        /// \@{
+        /// @param in - input string, might be 0xab or 0123
+        /// @param out - result if extraction was ok
+        /// @return 1 - ok, result stored in 'out'
+        int extractNumber(const std::string& in, unsigned int& out);
+        int extractNumber(const std::string& in, int& out);
+        int extractNumber(const std::string& in, long& out);
+        int extractNumber(const std::string& in, long long& out);
+        int extractNumber(const std::string& in, unsigned long& out);
+        int extractNumber(const std::string& in, unsigned long long& out);
+        /// \@}
 
-/// creates a number to a string
-std::string number2String(long long num);
-std::string number2HexString(long long num);
+        /// creates a number to a string
+        std::string number2String(long long num);
+        std::string number2HexString(long long num);
 
-/// Similar to `strstr' but this function ignores the case of both strings
-const char *strcasestr(const char *str, const char *ptn);
+        /// Similar to `strstr' but this function ignores the case of both strings
+        const char* strcasestr(const char* str, const char* ptn);
 
-/// expands ~ to value of ${HOME} enviroment variable
-std::string expandFilename(const std::string &filename);
+        /// expands ~ to value of ${HOME} enviroment variable
+        std::string expandFilename(const std::string& filename);
 
-/// @return extension of filename (ex: filename.txt will return txt)
-std::string findExtension(const std::string &filename);
+        /// @return extension of filename (ex: filename.txt will return txt)
+        std::string findExtension(const std::string& filename);
 
-/// is the char after a 'trigger' part of an alphabet?
-/// @param in - string to analyze
-/// @param trigger - check for char after trigger
-/// @param alphabet - contains chars to search for
-/// @param len_alphabet - length of alphabet
-/// @param found - position of found char in alphabet (optional)
-/// @return position of trigger if found
-/// @return std::string::npos if nothing found
-std::string::size_type findCharFromAlphabetAfterTrigger(const std::string &in,
-                                                        char trigger,
-                                                        const char alphabet[],
-                                                        size_t len_alphabet,
-                                                        size_t *found);
+        /// is the char after a 'trigger' part of an alphabet?
+        /// @param in - string to analyze
+        /// @param trigger - check for char after trigger
+        /// @param alphabet - contains chars to search for
+        /// @param len_alphabet - length of alphabet
+        /// @param found - position of found char in alphabet (optional)
+        /// @return position of trigger if found
+        /// @return std::string::npos if nothing found
+        std::string::size_type findCharFromAlphabetAfterTrigger(const std::string& in,
+            char trigger,
+            const char alphabet[],
+            size_t len_alphabet,
+            size_t* found);
 
-/// @return copy of original with find_string replaced with "replace"
-std::string replaceString(const std::string &original, const char *find_string,
-                          const char *replace);
+        /// @return copy of original with find_string replaced with "replace"
+        std::string replaceString(const std::string& original, const char* find_string,
+            const char* replace);
 
-///  returns string between character first and last
-int getStringBetween(std::string &out, const char *instr, char first, char last,
-                     const char *ok_chars = " \t\n",
-                     bool allow_nesting = false);
+        ///  returns string between character first and last
+        int getStringBetween(std::string& out, const char* instr, char first, char last,
+            const char* ok_chars = " \t\n",
+            bool allow_nesting = false);
 
-/// @return lower case letters of conv
-std::string toLower(const std::string &conv);
-/// @return upper case letters of conv
-std::string toUpper(const std::string &conv);
+        /// @return lower case letters of conv
+        std::string toLower(const std::string& conv);
+        /// @return upper case letters of conv
+        std::string toUpper(const std::string& conv);
 #ifdef basename
 #undef basename
 #endif // basename
-std::string basename(const std::string &basename);
+        std::string basename(const std::string& basename);
 
-/// removes the first whitespace characters of the string
-std::string::size_type removeFirstWhitespace(std::string &str);
-std::string::size_type removeTrailingWhitespace(std::string &str);
+        /// removes the first whitespace characters of the string
+        std::string::size_type removeFirstWhitespace(std::string& str);
+        std::string::size_type removeTrailingWhitespace(std::string& str);
 
-/// splits input at first non-leading whitespace and returns both parts
-void getFirstWord(const std::string &in, std::string &first, std::string &rest);
+        /// splits input at first non-leading whitespace and returns both parts
+        void getFirstWord(const std::string& in, std::string& first, std::string& rest);
 
-template <typename Container>
-static void stringTokensBetween(Container &container, const std::string &in,
-                                std::string &rest, char first, char last,
-                                const char *ok_chars = " \t\n",
-                                bool allow_nesting = true) {
+        template <typename Container>
+        static void stringTokensBetween(Container& container, const std::string& in,
+            std::string& rest, char first, char last,
+            const char* ok_chars = " \t\n",
+            bool allow_nesting = true)
+        {
 
-  std::string token;
-  int pos = 0;
+            std::string token;
+            int pos = 0;
 
-  while (true) {
-    int err = getStringBetween(token, in.c_str() + pos, first, last, ok_chars,
-                               allow_nesting);
-    if (err <= 0)
-      break;
-    container.push_back(token);
-    pos += err;
-  }
+            while (true) {
+                int err = getStringBetween(token, in.c_str() + pos, first, last, ok_chars,
+                    allow_nesting);
+                if (err <= 0)
+                    break;
+                container.push_back(token);
+                pos += err;
+            }
 
-  rest = in.c_str() + pos;
-}
+            rest = in.c_str() + pos;
+        }
 
-/// Breaks a string into tokens
-template <typename Container>
-static void stringtok(Container &container, std::string const &in,
-                      const char *const delimiters = " \t\n") {
+        /// Breaks a string into tokens
+        template <typename Container>
+        static void stringtok(Container& container, std::string const& in,
+            const char* const delimiters = " \t\n")
+        {
 
-  const std::string::size_type len = in.length();
-  std::string::size_type i = 0;
+            const std::string::size_type len = in.length();
+            std::string::size_type i = 0;
 
-  while (i < len) {
-    // eat leading whitespace
-    i = in.find_first_not_of(delimiters, i);
-    if (i == std::string::npos)
-      return; // nothing left but white space
+            while (i < len) {
+                // eat leading whitespace
+                i = in.find_first_not_of(delimiters, i);
+                if (i == std::string::npos)
+                    return; // nothing left but white space
 
-    // find the end of the token
-    std::string::size_type j = in.find_first_of(delimiters, i);
+                // find the end of the token
+                std::string::size_type j = in.find_first_of(delimiters, i);
 
-    // push token
-    if (j == std::string::npos) {
-      container.push_back(in.substr(i));
-      return;
-    } else
-      container.push_back(in.substr(i, j - i));
+                // push token
+                if (j == std::string::npos) {
+                    container.push_back(in.substr(i));
+                    return;
+                } else
+                    container.push_back(in.substr(i, j - i));
 
-    // set up for next loop
-    i = j + 1;
-  }
-}
+                // set up for next loop
+                i = j + 1;
+            }
+        }
 
-/// Parse token, which might be in formats as follows: <int>, <int>% or *.
-/// @param relative - parsed relative value (percentage suffix)
-/// @param ignore - this token should be ignored (asterisk)
-/// @return parsed integer value or 0 if not applicable
-template <typename Container>
-static int parseSizeToken(Container &container, bool &relative, bool &ignore) {
+        /// Parse token, which might be in formats as follows: <int>, <int>% or *.
+        /// @param relative - parsed relative value (percentage suffix)
+        /// @param ignore - this token should be ignored (asterisk)
+        /// @return parsed integer value or 0 if not applicable
+        template <typename Container>
+        static int parseSizeToken(Container& container, bool& relative, bool& ignore)
+        {
 
-  if (container.empty())
-    return 0;
+            if (container.empty())
+                return 0;
 
-  relative = false;
-  ignore = false;
+            relative = false;
+            ignore = false;
 
-  if (container[0] == '*') {
-    ignore = true;
-    return 0;
-  }
+            if (container[0] == '*') {
+                ignore = true;
+                return 0;
+            }
 
-  if (container[container.size() - 1] == '%')
-    relative = true;
+            if (container[container.size() - 1] == '%')
+                relative = true;
 
-  return atoi(container.c_str());
-}
+            return atoi(container.c_str());
+        }
 
-} // end namespace StringUtil
+    } // end namespace StringUtil
 
 } // end namespace FbTk
 

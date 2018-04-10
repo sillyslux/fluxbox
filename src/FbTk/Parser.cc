@@ -22,5 +22,5 @@
 #include "Parser.hh"
 
 namespace FbTk {
-const Parser::Item Parser::s_empty_item("", "");
+    const Parser::Item Parser::s_empty_item("", "");
 }

@@ -30,54 +30,55 @@ class FluxboxWindow;
 class WinButtonTheme;
 
 namespace FbTk {
-class Color;
-template <class T> class ThemeProxy;
+    class Color;
+    template <class T>
+    class ThemeProxy;
 }
 
 /// draws and handles basic window button graphic
 class WinButton : public FbTk::Button, public FbTk::SignalTracker {
 public:
-  /// draw type for the button
-  enum Type {
-    MAXIMIZE,
-    MINIMIZE,
-    SHADE,
-    STICK,
-    CLOSE,
-    MENUICON,
-    LEFT_HALF,
-    RIGHT_HALF
-  };
+    /// draw type for the button
+    enum Type {
+        MAXIMIZE,
+        MINIMIZE,
+        SHADE,
+        STICK,
+        CLOSE,
+        MENUICON,
+        LEFT_HALF,
+        RIGHT_HALF
+    };
 
-  WinButton(FluxboxWindow &listen_to, FbTk::ThemeProxy<WinButtonTheme> &theme,
-            FbTk::ThemeProxy<WinButtonTheme> &pressed, Type buttontype,
-            const FbTk::FbWindow &parent, int x, int y, unsigned int width,
-            unsigned int height);
-  /// override for drawing
-  void exposeEvent(XExposeEvent &event);
-  void buttonReleaseEvent(XButtonEvent &event);
-  void setBackgroundPixmap(Pixmap pm);
-  void setPressedPixmap(Pixmap pm);
-  void setBackgroundColor(const FbTk::Color &color);
-  void setPressedColor(const FbTk::Color &color);
+    WinButton(FluxboxWindow& listen_to, FbTk::ThemeProxy<WinButtonTheme>& theme,
+        FbTk::ThemeProxy<WinButtonTheme>& pressed, Type buttontype,
+        const FbTk::FbWindow& parent, int x, int y, unsigned int width,
+        unsigned int height);
+    /// override for drawing
+    void exposeEvent(XExposeEvent& event);
+    void buttonReleaseEvent(XButtonEvent& event);
+    void setBackgroundPixmap(Pixmap pm);
+    void setPressedPixmap(Pixmap pm);
+    void setBackgroundColor(const FbTk::Color& color);
+    void setPressedColor(const FbTk::Color& color);
 
-  Pixmap getBackgroundPixmap() const { return getPixmap(m_theme); }
-  Pixmap getPressedPixmap() const { return getPixmap(m_pressed_theme); }
-  /// override for redrawing
-  void clear();
-  void updateAll();
+    Pixmap getBackgroundPixmap() const { return getPixmap(m_theme); }
+    Pixmap getPressedPixmap() const { return getPixmap(m_pressed_theme); }
+    /// override for redrawing
+    void clear();
+    void updateAll();
 
 private:
-  void drawType();
-  Pixmap getPixmap(const FbTk::ThemeProxy<WinButtonTheme> &) const;
-  Type m_type; ///< the button type
-  FluxboxWindow &m_listen_to;
-  FbTk::ThemeProxy<WinButtonTheme> &m_theme, &m_pressed_theme;
+    void drawType();
+    Pixmap getPixmap(const FbTk::ThemeProxy<WinButtonTheme>&) const;
+    Type m_type; ///< the button type
+    FluxboxWindow& m_listen_to;
+    FbTk::ThemeProxy<WinButtonTheme> &m_theme, &m_pressed_theme;
 
-  FbTk::FbPixmap m_icon_pixmap;
-  FbTk::FbPixmap m_icon_mask;
+    FbTk::FbPixmap m_icon_pixmap;
+    FbTk::FbPixmap m_icon_mask;
 
-  bool overrode_bg, overrode_pressed;
+    bool overrode_bg, overrode_pressed;
 };
 
 #endif // WINBUTTON_HH

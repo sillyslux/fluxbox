@@ -38,180 +38,189 @@ using std::string;
 
 namespace {
 
-XFontSet createFontSet(const char *fontname, bool &utf8mode) {
+    XFontSet createFontSet(const char* fontname, bool& utf8mode)
+    {
 
-  Display *display = FbTk::App::instance()->display();
-  XFontSet fs = 0;
-  char **missing;
-  const char *constdef = "-";
-  char *def = const_cast<char *>(constdef);
-  int nmissing;
-  string orig_locale = "";
+        Display* display = FbTk::App::instance()->display();
+        XFontSet fs = 0;
+        char** missing;
+        const char* constdef = "-";
+        char* def = const_cast<char*>(constdef);
+        int nmissing;
+        string orig_locale = "";
 
 #ifdef HAVE_SETLOCALE
-  if (utf8mode) {
-    orig_locale = setlocale(LC_CTYPE, NULL);
-    if (setlocale(LC_CTYPE, "UTF-8") == NULL) {
-      utf8mode = false;
+        if (utf8mode) {
+            orig_locale = setlocale(LC_CTYPE, NULL);
+            if (setlocale(LC_CTYPE, "UTF-8") == NULL) {
+                utf8mode = false;
+            }
+        }
+#endif // HAVE_SETLOCALE
+        fs = XCreateFontSet(display, fontname, &missing, &nmissing, &def);
+
+        if (fs && (!nmissing)) {
+#ifdef HAVE_SETLOCALE
+            if (utf8mode)
+                setlocale(LC_CTYPE, orig_locale.c_str());
+#endif // HAVE_SETLOCALE
+            return fs;
+        }
+
+#ifdef HAVE_SETLOCALE
+        if (!fs) {
+            if (nmissing)
+                XFreeStringList(missing);
+
+            setlocale(LC_CTYPE, "C");
+            fs = XCreateFontSet(display, fontname, &missing, &nmissing, &def);
+            setlocale(LC_CTYPE, orig_locale.c_str());
+            return fs;
+        }
+        if (utf8mode)
+            setlocale(LC_CTYPE, orig_locale.c_str());
+#endif // HAVE_SETLOCALE
+
+        // set to false because our strings won't be utf8-happy
+        utf8mode = false;
+
+        return fs;
     }
-  }
-#endif // HAVE_SETLOCALE
-  fs = XCreateFontSet(display, fontname, &missing, &nmissing, &def);
-
-  if (fs && (!nmissing)) {
-#ifdef HAVE_SETLOCALE
-    if (utf8mode)
-      setlocale(LC_CTYPE, orig_locale.c_str());
-#endif // HAVE_SETLOCALE
-    return fs;
-  }
-
-#ifdef HAVE_SETLOCALE
-  if (!fs) {
-    if (nmissing)
-      XFreeStringList(missing);
-
-    setlocale(LC_CTYPE, "C");
-    fs = XCreateFontSet(display, fontname, &missing, &nmissing, &def);
-    setlocale(LC_CTYPE, orig_locale.c_str());
-    return fs;
-  }
-  if (utf8mode)
-    setlocale(LC_CTYPE, orig_locale.c_str());
-#endif // HAVE_SETLOCALE
-
-  // set to false because our strings won't be utf8-happy
-  utf8mode = false;
-
-  return fs;
-}
 }
 
 namespace FbTk {
 
-XmbFontImp::XmbFontImp(const char *filename, bool utf8)
-    : m_fontset(0), m_setextents(0), m_utf8mode(utf8) {
-  if (filename != 0)
-    load(filename);
-}
-
-XmbFontImp::~XmbFontImp() {
-  if (m_fontset != 0)
-    XFreeFontSet(App::instance()->display(), m_fontset);
-}
-
-bool XmbFontImp::load(const string &fontname) {
-  if (fontname.empty())
-    return false;
-
-  XFontSet set = createFontSet(fontname.c_str(), m_utf8mode);
-  if (set == 0)
-    return false;
-
-  if (m_fontset != 0)
-    XFreeFontSet(App::instance()->display(), m_fontset);
-
-  m_fontset = set;
-  m_setextents = XExtentsOfFontSet(m_fontset);
-
-  return true;
-}
-
-void XmbFontImp::drawText(const FbDrawable &d, int screen, GC main_gc,
-                          const char *text, size_t len, int x, int y,
-                          FbTk::Orientation orient) {
-
-  if (!text || !*text || m_fontset == 0)
-    return;
-
-  if (orient == ROT0) {
-#ifdef X_HAVE_UTF8_STRING
-    if (m_utf8mode) {
-      Xutf8DrawString(d.display(), d.drawable(), m_fontset, main_gc, x, y, text,
-                      len);
-    } else
-#endif // X_HAVE_UTF8_STRING
+    XmbFontImp::XmbFontImp(const char* filename, bool utf8)
+        : m_fontset(0)
+        , m_setextents(0)
+        , m_utf8mode(utf8)
     {
-      std::string localestr = FbStringUtil::FbStrToLocale(FbString(text, len));
-      XmbDrawString(d.display(), d.drawable(), m_fontset, main_gc, x, y,
-                    localestr.data(), localestr.size());
+        if (filename != 0)
+            load(filename);
     }
-    return;
-  }
 
-  Display *dpy = App::instance()->display();
+    XmbFontImp::~XmbFontImp()
+    {
+        if (m_fontset != 0)
+            XFreeFontSet(App::instance()->display(), m_fontset);
+    }
 
-  int xpos = x, ypos = y;
-  unsigned int w = d.width();
-  unsigned int h = d.height();
+    bool XmbFontImp::load(const string& fontname)
+    {
+        if (fontname.empty())
+            return false;
 
-  translateSize(orient, w, h);
-  untranslateCoords(orient, xpos, ypos, w, h);
+        XFontSet set = createFontSet(fontname.c_str(), m_utf8mode);
+        if (set == 0)
+            return false;
 
-  // not straight forward, we actually draw it elsewhere, then rotate it
-  FbTk::FbPixmap canvas(d.drawable(), w, h, 1);
+        if (m_fontset != 0)
+            XFreeFontSet(App::instance()->display(), m_fontset);
 
-  // create graphic context for our canvas
-  FbTk::GContext font_gc(canvas);
-  font_gc.setBackground(None);
-  font_gc.setForeground(None);
+        m_fontset = set;
+        m_setextents = XExtentsOfFontSet(m_fontset);
 
-  XFillRectangle(dpy, canvas.drawable(), font_gc.gc(), 0, 0, canvas.width(),
-                 canvas.height());
-  font_gc.setForeground(1);
+        return true;
+    }
+
+    void XmbFontImp::drawText(const FbDrawable& d, int screen, GC main_gc,
+        const char* text, size_t len, int x, int y,
+        FbTk::Orientation orient)
+    {
+
+        if (!text || !*text || m_fontset == 0)
+            return;
+
+        if (orient == ROT0) {
+#ifdef X_HAVE_UTF8_STRING
+            if (m_utf8mode) {
+                Xutf8DrawString(d.display(), d.drawable(), m_fontset, main_gc, x, y, text,
+                    len);
+            } else
+#endif // X_HAVE_UTF8_STRING
+            {
+                std::string localestr = FbStringUtil::FbStrToLocale(FbString(text, len));
+                XmbDrawString(d.display(), d.drawable(), m_fontset, main_gc, x, y,
+                    localestr.data(), localestr.size());
+            }
+            return;
+        }
+
+        Display* dpy = App::instance()->display();
+
+        int xpos = x, ypos = y;
+        unsigned int w = d.width();
+        unsigned int h = d.height();
+
+        translateSize(orient, w, h);
+        untranslateCoords(orient, xpos, ypos, w, h);
+
+        // not straight forward, we actually draw it elsewhere, then rotate it
+        FbTk::FbPixmap canvas(d.drawable(), w, h, 1);
+
+        // create graphic context for our canvas
+        FbTk::GContext font_gc(canvas);
+        font_gc.setBackground(None);
+        font_gc.setForeground(None);
+
+        XFillRectangle(dpy, canvas.drawable(), font_gc.gc(), 0, 0, canvas.width(),
+            canvas.height());
+        font_gc.setForeground(1);
 
 #ifdef X_HAVE_UTF8_STRING
-  if (m_utf8mode) {
-    Xutf8DrawString(dpy, canvas.drawable(), m_fontset, font_gc.gc(), xpos, ypos,
-                    text, len);
-  } else
+        if (m_utf8mode) {
+            Xutf8DrawString(dpy, canvas.drawable(), m_fontset, font_gc.gc(), xpos, ypos,
+                text, len);
+        } else
 #endif // X_HAVE_UTF8_STRING
-  {
-    std::string localestr = FbStringUtil::FbStrToLocale(FbString(text, len));
-    XmbDrawString(dpy, canvas.drawable(), m_fontset, font_gc.gc(), xpos, ypos,
-                  localestr.data(), localestr.size());
-  }
+        {
+            std::string localestr = FbStringUtil::FbStrToLocale(FbString(text, len));
+            XmbDrawString(dpy, canvas.drawable(), m_fontset, font_gc.gc(), xpos, ypos,
+                localestr.data(), localestr.size());
+        }
 
-  canvas.rotate(orient);
+        canvas.rotate(orient);
 
-  GC my_gc = XCreateGC(dpy, d.drawable(), 0, 0);
+        GC my_gc = XCreateGC(dpy, d.drawable(), 0, 0);
 
-  XCopyGC(dpy, main_gc, GCForeground | GCBackground, my_gc);
+        XCopyGC(dpy, main_gc, GCForeground | GCBackground, my_gc);
 
-  // vertical or upside down
-  XSetFillStyle(dpy, my_gc, FillStippled);
-  XSetStipple(dpy, my_gc, canvas.drawable());
-  XSetTSOrigin(dpy, my_gc, 0, 0);
+        // vertical or upside down
+        XSetFillStyle(dpy, my_gc, FillStippled);
+        XSetStipple(dpy, my_gc, canvas.drawable());
+        XSetTSOrigin(dpy, my_gc, 0, 0);
 
-  XFillRectangle(dpy, d.drawable(), my_gc, 0, 0, canvas.width(),
-                 canvas.height());
+        XFillRectangle(dpy, d.drawable(), my_gc, 0, 0, canvas.width(),
+            canvas.height());
 
-  XFreeGC(dpy, my_gc);
-}
+        XFreeGC(dpy, my_gc);
+    }
 
-unsigned int XmbFontImp::textWidth(const char *text, unsigned int len) const {
+    unsigned int XmbFontImp::textWidth(const char* text, unsigned int len) const
+    {
 
-  if (m_fontset == 0)
-    return 0;
+        if (m_fontset == 0)
+            return 0;
 
-  XRectangle ink, logical;
+        XRectangle ink, logical;
 #ifdef X_HAVE_UTF8_STRING
-  if (m_utf8mode) {
-    Xutf8TextExtents(m_fontset, text, len, &ink, &logical);
-    if (logical.width != 0)
-      return logical.width;
-  }
+        if (m_utf8mode) {
+            Xutf8TextExtents(m_fontset, text, len, &ink, &logical);
+            if (logical.width != 0)
+                return logical.width;
+        }
 #endif // X_HAVE_UTF8_STRING
 
-  std::string localestr = FbStringUtil::FbStrToLocale(FbString(text, len));
-  XmbTextExtents(m_fontset, localestr.data(), localestr.size(), &ink, &logical);
-  return logical.width;
-}
+        std::string localestr = FbStringUtil::FbStrToLocale(FbString(text, len));
+        XmbTextExtents(m_fontset, localestr.data(), localestr.size(), &ink, &logical);
+        return logical.width;
+    }
 
-unsigned int XmbFontImp::height() const {
-  if (m_fontset == 0)
-    return 0;
-  return m_setextents->max_ink_extent.height;
-}
+    unsigned int XmbFontImp::height() const
+    {
+        if (m_fontset == 0)
+            return 0;
+        return m_setextents->max_ink_extent.height;
+    }
 
 } // end namespace FbTk

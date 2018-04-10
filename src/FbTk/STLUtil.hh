@@ -24,63 +24,74 @@
 
 /// contains useful utilities for STL
 namespace FbTk {
-namespace STLUtil {
+    namespace STLUtil {
 
-template <bool C, typename Ta, typename Tb> struct IfThenElse;
+        template <bool C, typename Ta, typename Tb>
+        struct IfThenElse;
 
-template <typename Ta, typename Tb> struct IfThenElse<true, Ta, Tb> {
-  Ta &operator()(Ta &ta, Tb &tb) const { return ta; }
-  typedef Ta ResultType;
-};
+        template <typename Ta, typename Tb>
+        struct IfThenElse<true, Ta, Tb> {
+            Ta& operator()(Ta& ta, Tb& tb) const { return ta; }
+            typedef Ta ResultType;
+        };
 
-template <typename Ta, typename Tb> struct IfThenElse<false, Ta, Tb> {
-  Tb &operator()(Ta &ta, Tb &tb) const { return tb; }
-  typedef Tb ResultType;
-};
+        template <typename Ta, typename Tb>
+        struct IfThenElse<false, Ta, Tb> {
+            Tb& operator()(Ta& ta, Tb& tb) const { return tb; }
+            typedef Tb ResultType;
+        };
 
-/// calls delete on each item in the container and then clears the container
-template <typename A> void destroyAndClear(A &a) {
-  typedef typename A::iterator iterator;
-  iterator it = a.begin();
-  iterator it_end = a.end();
-  for (; it != it_end; ++it)
-    delete (*it);
+        /// calls delete on each item in the container and then clears the container
+        template <typename A>
+        void destroyAndClear(A& a)
+        {
+            typedef typename A::iterator iterator;
+            iterator it = a.begin();
+            iterator it_end = a.end();
+            for (; it != it_end; ++it)
+                delete (*it);
 
-  a.clear();
-}
+            a.clear();
+        }
 
-/// calls delete on each item value in the map and then clears the map
-template <typename A> void destroyAndClearSecond(A &a) {
-  typedef typename A::iterator iterator;
-  iterator it = a.begin();
-  iterator it_end = a.end();
-  for (; it != it_end; ++it)
-    delete it->second;
-  a.clear();
-}
+        /// calls delete on each item value in the map and then clears the map
+        template <typename A>
+        void destroyAndClearSecond(A& a)
+        {
+            typedef typename A::iterator iterator;
+            iterator it = a.begin();
+            iterator it_end = a.end();
+            for (; it != it_end; ++it)
+                delete it->second;
+            a.clear();
+        }
 
-template <typename C, typename F> F forAll(C &c, F f) {
-  typedef typename C::iterator iterator;
-  iterator i = c.begin();
-  iterator e = c.end();
-  for (; i != e; i++) {
-    f(*i);
-  }
-  return f;
-}
+        template <typename C, typename F>
+        F forAll(C& c, F f)
+        {
+            typedef typename C::iterator iterator;
+            iterator i = c.begin();
+            iterator e = c.end();
+            for (; i != e; i++) {
+                f(*i);
+            }
+            return f;
+        }
 
-template <typename C, typename I, typename F> F forAllIf(C &c, I i, F f) {
-  typedef typename C::iterator iterator;
-  iterator it = c.begin();
-  iterator end = c.end();
-  for (; it != end; ++it) {
-    if (i(*it))
-      f(*it);
-  }
-  return f;
-}
+        template <typename C, typename I, typename F>
+        F forAllIf(C& c, I i, F f)
+        {
+            typedef typename C::iterator iterator;
+            iterator it = c.begin();
+            iterator end = c.end();
+            for (; it != end; ++it) {
+                if (i(*it))
+                    f(*it);
+            }
+            return f;
+        }
 
-} // end namespace STLUtil
+    } // end namespace STLUtil
 } // end namespace FbTk
 
 #endif // STLUTIL_Hh

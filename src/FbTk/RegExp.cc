@@ -33,59 +33,64 @@ using std::endl;
 
 namespace FbTk {
 
-// full_match is to say if we match on this regexp using the full string
-// or just a substring. Substrings aren't supported if not HAVE_REGEXP
-RegExp::RegExp(const string &str, bool full_match)
-    :
+    // full_match is to say if we match on this regexp using the full string
+    // or just a substring. Substrings aren't supported if not HAVE_REGEXP
+    RegExp::RegExp(const string& str, bool full_match)
+        :
 #ifdef USE_REGEXP
-      m_regex(0) {
-  string match;
-  if (full_match) {
-    match = "^";
-    match.append(str);
-    match.append("$");
-  } else {
-    match = str;
-  }
+        m_regex(0)
+    {
+        string match;
+        if (full_match) {
+            match = "^";
+            match.append(str);
+            match.append("$");
+        } else {
+            match = str;
+        }
 
-  m_regex = new regex_t;
-  int ret = regcomp(m_regex, match.c_str(), REG_NOSUB | REG_EXTENDED);
-  if (ret != 0) {
-    delete m_regex; // I don't think I regfree a failed compile?
-    m_regex = 0;
-  }
-}
-#else  // notdef USE_REGEXP
-      m_str(str) {
-}
+        m_regex = new regex_t;
+        int ret = regcomp(m_regex, match.c_str(), REG_NOSUB | REG_EXTENDED);
+        if (ret != 0) {
+            delete m_regex; // I don't think I regfree a failed compile?
+            m_regex = 0;
+        }
+    }
+#else // notdef USE_REGEXP
+        m_str(str)
+    {
+    }
 #endif // USE_REGEXP
 
-RegExp::~RegExp() {
+    RegExp::~RegExp()
+    {
 #ifdef USE_REGEXP
-  if (m_regex != 0) {
-    regfree(m_regex);
-    delete m_regex;
-  }
+        if (m_regex != 0) {
+            regfree(m_regex);
+            delete m_regex;
+        }
 #endif // USE_REGEXP
-}
+    }
 
-bool RegExp::match(const string &str) const {
+    bool RegExp::match(const string& str) const
+    {
 #ifdef USE_REGEXP
-  if (m_regex)
-    return regexec(m_regex, str.c_str(), 0, 0, 0) == 0;
-  else
-    return false;
-#else  // notdef USE_REGEXP
-  return (m_str == str);
+        if (m_regex)
+            return regexec(m_regex, str.c_str(), 0, 0, 0) == 0;
+        else
+            return false;
+#else // notdef USE_REGEXP
+        return (m_str == str);
 #endif // USE_REGEXP
-}
+    }
 
-bool RegExp::error() const {
+    bool RegExp::error() const
+    {
 #ifdef USE_REGEXP
-  return m_regex == 0;
+        return m_regex == 0;
 #else
-  return m_str == "";
+        return m_str == "";
 #endif // USE_REGEXP
-}
+    }
 
 } // end namespace FbTk
