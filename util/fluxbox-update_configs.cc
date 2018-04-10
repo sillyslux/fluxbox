@@ -214,8 +214,8 @@ void update_window_patterns_for_iconbar(FbTk::ResourceManager& rm,
     // it won't get freed, but that's ok
     FbTk::Resource<string> *rc_mode =
         new FbTk::Resource<string>(rm, "Workspace",
-                                   "session.screen0.iconbar.mode",
-                                   "Session.Screen0.Iconbar.Mode");
+                                   "iconbar.mode",
+                                   "");
 
     std::string mode = FbTk::StringUtil::toLower(**rc_mode);
     if (mode == "none")
@@ -292,8 +292,8 @@ void update_disable_icons_in_tabs_for_backwards_compatibility(FbTk::ResourceMana
 
     FbTk::Resource<bool> *show =
         new FbTk::Resource<bool>(rm, false,
-                "session.screen0.tabs.usePixmap",
-                "Session.Screen0.Tabs.UsePixmap");
+                "window.tab.usePixmap",
+                "");
     if (!*show) // only change if the setting didn't already exist
         *show = false;
 }
@@ -306,13 +306,13 @@ void update_change_format_of_split_placement_menu(FbTk::ResourceManager& rm,
 
     FbTk::Resource<string> *placement =
         new FbTk::Resource<string>(rm, "BottomRight",
-                "session.screen0.slit.placement",
-                "Session.Screen0.Slit.Placement");
+                "slit.placement",
+                "");
 
     FbTk::Resource<string> *direction =
         new FbTk::Resource<string>(rm, "Vertical",
-                "session.screen0.slit.direction",
-                "Session.Screen0.Slit.Direction");
+                "slit.direction",
+                "");
 
     if (strcasecmp((**direction).c_str(), "vertical") == 0) {
         if (strcasecmp((**placement).c_str(), "BottomRight") == 0)

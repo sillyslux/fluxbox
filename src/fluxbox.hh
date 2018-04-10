@@ -107,7 +107,7 @@ public:
   std::string getDefaultDataFilename(const char *name) const;
 
   bool &getPseudoTrans() { return *m_config.pseudotrans; }
-  bool getIgnoreBorder() const { return *m_config.ignore_border; }
+  bool getIgnoreBorder() const { return !*m_config.ignore_border; }
   Fluxbox::TabsAttachArea getTabsAttachArea() const {
     return *m_config.tabs_attach_area;
   }

@@ -225,30 +225,22 @@ int Fluxbox::shapeEventbase() const { return s_shape_eventbase; }
 Fluxbox *Fluxbox::instance() { return s_singleton; }
 
 Fluxbox::Config::Config(FbTk::ResourceManager &rm, const std::string &path)
-    : ignore_border(rm, false, "session.ignoreBorder", "Session.IgnoreBorder"),
-      pseudotrans(rm, false, "session.forcePseudoTransparency",
-                  "Session.forcePseudoTransparency"),
-      colors_per_channel(rm, 4, "session.colorsPerChannel",
-                         "Session.ColorsPerChannel"),
-      double_click_interval(rm, 250, "session.doubleClickInterval",
-                            "Session.DoubleClickInterval"),
-      tabs_padding(rm, 0, "session.tabPadding", "Session.TabPadding"),
-      style_file(rm, DEFAULTSTYLE, "session.styleFile", "Session.StyleFile"),
-      overlay_file(rm, path + "/overlay", "session.styleOverlay",
-                   "Session.StyleOverlay"),
-      menu_file(rm, path + "/menu", "session.menuFile", "Session.MenuFile"),
-      key_file(rm, path + "/keys", "session.keyFile", "Session.KeyFile"),
-      slit_file(rm, path + "/slitlist", "session.slitlistFile",
-                "Session.SlitlistFile"),
-      apps_file(rm, path + "/apps", "session.appsFile", "Session.AppsFile"),
-      tabs_attach_area(rm, ATTACH_AREA_WINDOW, "session.tabsAttachArea",
-                       "Session.TabsAttachArea"),
-      menusearch(rm, FbTk::MenuSearch::DEFAULT, "session.menuSearch",
-                 "Session.MenuSearch"),
-      cache_life(rm, 5, "session.cacheLife", "Session.CacheLife"),
-      cache_max(rm, 200, "session.cacheMax", "Session.CacheMax"),
-      auto_raise_delay(rm, 250, "session.autoRaiseDelay",
-                       "Session.AutoRaiseDelay") {}
+    : ignore_border(rm, false, "window.dragHandleBorder", ""),
+      pseudotrans(rm, false, "session.forcePseudoTransparency", ""),
+      colors_per_channel(rm, 4, "session.colorsPerChannel", ""),
+      double_click_interval(rm, 250, "session.doubleClickInterval", ""),
+      tabs_padding(rm, 0, "window.tab.padding", ""),
+      style_file(rm, DEFAULTSTYLE, "file.theme", ""),
+      overlay_file(rm, path + "/overlay", "file.overlay", ""),
+      menu_file(rm, path + "/menu", "file.menu", ""),
+      key_file(rm, path + "/keys", "file.keys", ""),
+      slit_file(rm, path + "/slitlist", "file.slit", ""),
+      apps_file(rm, path + "/apps", "file.apps", ""),
+      tabs_attach_area(rm, ATTACH_AREA_WINDOW, "window.tab.attachArea", ""),
+      menusearch(rm, FbTk::MenuSearch::DEFAULT, "menu.search", ""),
+      cache_life(rm, 5, "session.cacheLife", ""),
+      cache_max(rm, 200, "session.cacheMax", ""),
+      auto_raise_delay(rm, 250, "session.autoRaiseDelay", "") {}
 
 Fluxbox::Fluxbox(int argc, char **argv, const std::string &dpy_name,
                  const std::string &rc_path, const std::string &rc_filename,
@@ -1112,10 +1104,7 @@ void Fluxbox::save_rc() {
   for (; it != it_end; ++it) {
     BScreen *screen = *it;
 
-    std::string workspaces_string("session.screen");
-    workspaces_string +=
-        FbTk::StringUtil::number2String(screen->screenNumber());
-    workspaces_string += ".workspaceNames: ";
+    std::string workspaces_string("workspace.names: ");
 
     // these are static, but may not be saved in the users resource file,
     // writing these resources will allow the user to edit them at a later
@@ -1213,17 +1202,11 @@ void Fluxbox::load_rc(BScreen &screen) {
   std::string screen_number =
       FbTk::StringUtil::number2String(screen.screenNumber());
 
-  std::string name_lookup("session.screen");
-  name_lookup += screen_number;
-  name_lookup += ".workspaceNames";
-  std::string class_lookup("session.screen");
-  class_lookup += screen_number;
-  class_lookup += ".WorkspaceNames";
+  std::string name_lookup("workspace.names");
 
   XrmValue value;
   char *value_type;
-  if (XrmGetResource(*database, name_lookup.c_str(), class_lookup.c_str(),
-                     &value_type, &value)) {
+  if (XrmGetResource(*database, name_lookup.c_str(), "", &value_type, &value)) {
 
     string values(value.addr);
     BScreen::WorkspaceNames names;

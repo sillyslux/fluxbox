@@ -3660,14 +3660,11 @@ void FluxboxWindow::setupWindow() {
     size_t n_buttons;
     WinButton::Type buttons[3];
   } side[2] = {{
-                   screen().name() + ".titlebar.left",
-                   screen().name() + ".Titlebar.Left",
-                   1,
-                   {WinButton::STICK},
+                   "window.buttons.left", "", 1, {WinButton::STICK},
                },
                {
-                   screen().name() + ".titlebar.right",
-                   screen().name() + ".Titlebar.Right",
+                   "window.buttons.right",
+                   "",
                    3,
                    {WinButton::MINIMIZE, WinButton::MAXIMIZE, WinButton::CLOSE},
                }};
@@ -3697,8 +3694,7 @@ void FluxboxWindow::updateButtons() {
     std::string name;
     WBR *res;
   } sides[2] = {
-      {screen().name() + ".titlebar.left", 0},
-      {screen().name() + ".titlebar.right", 0},
+      {"window.buttons.left", 0}, {"window.buttons.right", 0},
   };
   const size_t n_sides = sizeof(sides) / sizeof(sides[0]);
   bool need_update = false;

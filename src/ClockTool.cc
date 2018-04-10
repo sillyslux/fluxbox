@@ -145,8 +145,7 @@ ClockTool::ClockTool(const FbTk::FbWindow &parent,
       m_button(parent, theme->font(), FbTk::BiDiString("")), m_theme(theme),
       m_screen(screen), m_pixmap(0),
       m_timeformat(screen.resourceManager(), std::string("%k:%M"),
-                   screen.name() + ".strftimeFormat",
-                   screen.altName() + ".StrftimeFormat"),
+                   "toolbar.clock.format", ""),
       m_stringconvertor(FbTk::StringConvertor::ToFbString) {
   // attach signals
   m_tracker.join(theme.reconfigSig(),

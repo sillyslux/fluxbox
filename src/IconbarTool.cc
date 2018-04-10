@@ -262,20 +262,13 @@ IconbarTool::IconbarTool(const FbTk::FbWindow &parent, IconbarTheme &theme,
       m_empty_pm(screen.imageControl()), m_winlist(new FocusableList(screen)),
       m_mode("none"),
       m_rc_mode(screen.resourceManager(), "{static groups} (workspace)",
-                screen.name() + ".iconbar.mode",
-                screen.altName() + ".Iconbar.Mode"),
+                "iconbar.mode", ""),
       m_rc_alignment(screen.resourceManager(), FbTk::Container::RELATIVE,
-                     screen.name() + ".iconbar.alignment",
-                     screen.altName() + ".Iconbar.Alignment"),
-      m_rc_client_width(screen.resourceManager(), 128,
-                        screen.name() + ".iconbar.iconWidth",
-                        screen.altName() + ".Iconbar.IconWidth"),
+                     "iconbar.alignment", ""),
+      m_rc_client_width(screen.resourceManager(), 128, "iconbar.iconWidth", ""),
       m_rc_client_padding(screen.resourceManager(), 10,
-                          screen.name() + ".iconbar.iconTextPadding",
-                          screen.altName() + ".Iconbar.IconTextPadding"),
-      m_rc_use_pixmap(screen.resourceManager(), true,
-                      screen.name() + ".iconbar.usePixmap",
-                      screen.altName() + ".Iconbar.UsePixmap"),
+                          "iconbar.iconTextPadding", ""),
+      m_rc_use_pixmap(screen.resourceManager(), true, "iconbar.usePixmap", ""),
       m_menu(screen.menuTheme(), screen.imageControl(),
              *screen.layerManager().getLayer(ResourceLayer::MENU)),
       m_alpha(255) {
@@ -477,9 +470,7 @@ void IconbarTool::update(UpdateReason reason, Focusable *win) {
 
 void IconbarTool::updateIconifiedPattern() {
   FbTk::Resource<std::string> p(m_screen.resourceManager(), "( %t )",
-                                m_screen.name() + ".iconbar.iconifiedPattern",
-                                m_screen.altName() +
-                                    ".Iconbar.IconifiedPattern");
+                                "iconbar.iconifiedPattern", "");
   size_t tidx = p->find("%t");
   s_iconifiedDecoration[0].clear();
   s_iconifiedDecoration[1].clear();
